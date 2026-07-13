@@ -1,5 +1,51 @@
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+}
+
+@font-face {
+  font-family: "Alpino";
+  src: url("./assets/fonts/Alpino-Thin.woff2") format("woff2");
+  font-weight: 100;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Alpino";
+  src: url("./assets/fonts/Alpino-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Alpino";
+  src: url("./assets/fonts/Alpino-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Alpino";
+  src: url("./assets/fonts/Alpino-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Alpino";
+  src: url("./assets/fonts/Alpino-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Alpino";
+  src: url("./assets/fonts/Alpino-Black.woff2") format("woff2");
+  font-weight: 900;
+  font-display: swap;
+}
+
 @theme {
   --color-primary: #E85D25;
   --color-primary-dark: #C44A1A;
@@ -7,4 +53,12 @@
   --color-secondary-light: #8A8A8A;
   --color-surface: #FFFFFF;
   --color-ink: #1A1A1A;
+
+  --font-display: "Alpino", sans-serif;
+  --font-body: "Alpino", sans-serif;
+}
+
+body {
+  font-family: var(--font-body);
+  font-weight: 400;
 }
