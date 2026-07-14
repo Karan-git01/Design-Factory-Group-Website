@@ -1,4 +1,11 @@
+import { usePageMeta } from "../hooks/usePageMeta";
+  
 export default function TermsOfUse() {
+  usePageMeta(
+    "Terms of Use",
+    "Review the terms and conditions governing your use of this website.",
+  );
+
   return (
     <main className="min-h-screen bg-ink px-6 pt-32 pb-24 sm:px-12">
       <div className="mx-auto max-w-3xl">

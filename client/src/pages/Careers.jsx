@@ -1,8 +1,14 @@
+import { usePageMeta } from "../hooks/usePageMeta";
 import { useEffect, useState } from "react";
 import { useApi } from "../context/ApiContext";
 import JobCard from "../components/JobCard";
 
 export default function Careers() {
+  usePageMeta(
+    "Careers",
+    "Explore current job openings at Design Factory Group.",
+  );
+
   const api = useApi();
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);

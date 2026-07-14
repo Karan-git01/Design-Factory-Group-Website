@@ -14,6 +14,7 @@ export default function AboutPreview() {
         <img
           src="https://images.unsplash.com/photo-1613977257363-707ba9348227?q=80&w=1600"
           alt="Design Factory Group project exterior"
+          loading="lazy"
           className="h-[420px] w-full object-cover sm:h-[520px]"
         />
         <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-ink/90 via-ink/20 to-transparent p-8">

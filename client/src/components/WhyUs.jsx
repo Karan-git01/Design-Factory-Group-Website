@@ -32,6 +32,7 @@ export default function WhyUs() {
         <img
           src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?q=80&w=1600"
           alt="Interior living space"
+          loading="lazy"
           className="h-[320px] w-full object-cover sm:h-[420px]"
         />
       </div>

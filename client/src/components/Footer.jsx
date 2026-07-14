@@ -31,6 +31,13 @@ export default function Footer() {
       <p className="text-sm text-secondary-light">
         © {new Date().getFullYear()} Design Factory Group. All rights reserved.
       </p>
+
+      <Link
+        to="/admin/login"
+        className="mt-4 inline-block text-xs text-secondary-light/50 transition hover:text-secondary-light"
+      >
+        Admin
+      </Link>
     </footer>
   );
 }

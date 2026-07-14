@@ -10,6 +10,7 @@ export default function BranchCard({ branch }) {
         <img
           src={branch.photoUrl}
           alt={branch.name}
+          loading="lazy"
           className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
         />
         {branch.isMain && (

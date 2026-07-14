@@ -1,6 +1,11 @@
+import { usePageMeta } from "../hooks/usePageMeta";
 import { Link } from "react-router-dom";
 
 export default function NotFound() {
+  usePageMeta(
+    "404 Not Found",
+    "The page you're looking for doesn't exist. Return to the homepage.",
+  );
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-6 bg-ink px-6 text-center">
       <span className="font-display text-8xl font-medium text-primary sm:text-9xl">

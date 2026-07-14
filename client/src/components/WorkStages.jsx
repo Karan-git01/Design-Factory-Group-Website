@@ -35,6 +35,7 @@ export default function WorkStages() {
       <img
         src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=1600"
         alt="Architectural detail"
+        loading="lazy"
         className="absolute inset-0 h-full w-full object-cover opacity-30"
       />
       <div className="absolute inset-0 bg-ink/60" />

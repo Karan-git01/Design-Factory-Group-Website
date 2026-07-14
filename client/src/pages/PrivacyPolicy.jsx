@@ -1,4 +1,11 @@
+import { usePageMeta } from "../hooks/usePageMeta";
+
 export default function PrivacyPolicy() {
+  usePageMeta(
+    "Privacy Policy",
+    "Learn how we collect, use, and protect your personal information.",
+  );
+  
   return (
     <main className="min-h-screen bg-ink px-6 pt-32 pb-24 sm:px-12">
       <div className="mx-auto max-w-3xl">

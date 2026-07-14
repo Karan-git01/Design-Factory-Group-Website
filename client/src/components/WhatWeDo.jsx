@@ -5,6 +5,7 @@ export default function WhatWeDo() {
         <img
           src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=1600"
           alt="Contemporary residential project"
+          loading="lazy"
           className="h-[480px] w-full object-cover sm:h-[560px]"
         />
         <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-ink/90 via-ink/10 to-transparent p-8">

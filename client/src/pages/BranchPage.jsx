@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { useApi } from "../context/ApiContext";
+import { usePageMeta } from "../hooks/usePageMeta";
 
 export default function BranchPage() {
   const { slug } = useParams();
@@ -9,6 +10,8 @@ export default function BranchPage() {
   const [branch, setBranch] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  usePageMeta(branch?.name, branch ? `${branch.name} — ${branch.address}` : undefined);
 
   useEffect(() => {
     setLoading(true);
@@ -18,6 +21,22 @@ export default function BranchPage() {
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   }, [api, slug]);
+
+  const branchSchema = branch
+    ? {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        name: `Design Factory Group — ${branch.name}`,
+        address: branch.address,
+        telephone: branch.phone,
+        email: branch.email,
+        geo: {
+          "@type": "GeoCoordinates",
+          latitude: branch.latitude,
+          longitude: branch.longitude,
+        },
+      }
+    : null;
 
   if (loading) {
     return (
@@ -48,10 +67,17 @@ export default function BranchPage() {
 
   return (
     <main className="min-h-screen bg-ink px-6 pt-32 pb-24 sm:px-12">
+      {branchSchema && (
+        <script type="application/ld+json">
+          {JSON.stringify(branchSchema)}
+        </script>
+      )}
+
       <div className="mb-12 overflow-hidden rounded-3xl">
         <img
           src={branch.photoUrl}
           alt={branch.name}
+          loading="lazy"
           className="h-[360px] w-full object-cover sm:h-[480px]"
         />
       </div>

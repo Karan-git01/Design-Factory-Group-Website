@@ -35,6 +35,19 @@ const FAQS = [
   },
 ];
 
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQS.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: f.a,
+    },
+  })),
+};
+
 export default function FAQ() {
   const [index, setIndex] = useState(0);
 
@@ -43,6 +56,10 @@ export default function FAQ() {
 
   return (
     <section id="faq" className="bg-ink px-6 py-24 sm:px-12">
+      <script type="application/ld+json">
+        {JSON.stringify(faqSchema)}
+      </script>
+
       <h2 className="font-display mb-16 text-4xl font-medium text-surface sm:text-5xl">
         Questions <span className="text-secondary-light">&amp; answers</span>
       </h2>

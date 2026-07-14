@@ -5,6 +5,7 @@ export default function TeamMemberCard({ member }) {
         <img
           src={member.photoUrl}
           alt={member.name}
+          loading="lazy"
           className="h-full w-full object-cover"
         />
       </div>

@@ -1,6 +1,11 @@
+import { usePageMeta } from "../hooks/usePageMeta";
 import ContactForm from "../components/ContactForm";
 
 export default function Contact() {
+  usePageMeta(
+    "Contact",
+    "Get in touch with Design Factory Group for your next project.",
+  );
   return (
     <main className="min-h-screen bg-ink px-6 pt-32 pb-24 sm:px-12">
       <h1 className="font-display mb-4 text-5xl font-medium text-surface sm:text-6xl">

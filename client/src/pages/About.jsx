@@ -1,3 +1,4 @@
+import { usePageMeta } from "../hooks/usePageMeta";
 import TeamMemberCard from "../components/TeamMemberCard";
 
 // Placeholder team — swap in real names, roles, bios, and photos whenever ready.
@@ -30,6 +31,10 @@ const TEAM = [
 ];
 
 export default function About() {
+  usePageMeta(
+    "About Us",
+    "Meet the Design Factory Group team and learn about our approach to architecture and construction.",
+  );
   return (
     <main className="min-h-screen bg-ink px-6 pt-32 pb-24 sm:px-12">
       <h1 className="font-display mb-8 text-5xl font-medium text-surface sm:text-6xl">

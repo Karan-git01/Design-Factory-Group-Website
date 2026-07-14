@@ -1,3 +1,4 @@
+import { usePageMeta } from "../hooks/usePageMeta";
 import Hero from "../components/Hero";
 import StudioFocus from "../components/StudioFocus";
 import AboutPreview from "../components/AboutPreview";
@@ -10,6 +11,11 @@ import BranchesSection from "../components/BranchesSection";
 import FAQ from "../components/FAQ";
 
 export default function Home() {
+  usePageMeta(
+    "Home",
+    "High-end residential design & build. Design Factory Group delivers architecture, construction, and interior design with precision and care."
+  );
+
   return (
     <main>
       <Hero />

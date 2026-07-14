@@ -1,3 +1,4 @@
+import { usePageMeta } from "../hooks/usePageMeta";
 import { useEffect, useState } from "react";
 import { useApi } from "../context/ApiContext";
 import ProjectCard from "../components/ProjectCard";
@@ -5,6 +6,11 @@ import ProjectCard from "../components/ProjectCard";
 const FILTERS = ["All", "Ongoing", "Completed"];
 
 export default function Projects() {
+  usePageMeta(
+    "Projects",
+    "Explore ongoing and completed residential and commercial projects by Design Factory Group.",
+  );
+
   const api = useApi();
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
