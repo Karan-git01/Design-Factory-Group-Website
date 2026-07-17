@@ -6,10 +6,11 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // PUBLIC — submit the contact form
 export async function submitContact(req, res) {
   try {
-    const { name, email, phone, message, consent, honeypot } = req.body;
+    const { name, email, phone, message, consent, website } = req.body;
 
     // Honeypot spam trap — real users never fill this hidden field
-    if (honeypot) {
+    // browser bots were auto filling it so changed the name to "website" and added a hidden input field in the form
+    if (website) {
       return res.status(201).json({ success: true }); // pretend success, silently drop
     }
 

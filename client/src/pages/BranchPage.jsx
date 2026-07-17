@@ -66,88 +66,109 @@ export default function BranchPage() {
   }
 
   return (
-    <main className="min-h-screen bg-ink px-6 pt-32 pb-24 sm:px-12">
+    <main className="min-h-screen border-t border-secondary/20 bg-ink pt-28 pb-20">
       {branchSchema && (
-        <script type="application/ld+json">
-          {JSON.stringify(branchSchema)}
-        </script>
+        <script type="application/ld+json">{JSON.stringify(branchSchema)}</script>
       )}
 
-      <div className="mb-12 overflow-hidden rounded-3xl">
-        <img
-          src={branch.photoUrl}
-          alt={branch.name}
-          loading="lazy"
-          className="h-[360px] w-full object-cover sm:h-[480px]"
-        />
-      </div>
-
-      <div className="mb-3 flex items-center gap-3">
-        <h1 className="font-display text-4xl font-medium text-surface sm:text-5xl">
-          {branch.name}
-        </h1>
-        {branch.isMain && (
-          <span className="rounded-full bg-primary px-4 py-1 text-xs font-medium text-surface">
-            Main Branch
+      <div className="mx-auto max-w-6xl px-6 sm:px-8 lg:px-12">
+        <div className="mb-8 flex items-center gap-4">
+          <div className="h-px w-12 bg-primary" />
+          <span className="text-[10px] uppercase tracking-[0.45em] text-secondary-light">
+            Our Branch
           </span>
-        )}
-      </div>
-
-      <div className="mb-12 grid grid-cols-1 gap-8 sm:grid-cols-2">
-        <div className="space-y-4">
-          <div>
-            <p className="text-sm uppercase tracking-wide text-secondary-light">
-              Address
-            </p>
-            <p className="text-lg text-surface">{branch.address}</p>
-          </div>
-          <div>
-            <p className="text-sm uppercase tracking-wide text-secondary-light">
-              Phone
-            </p>
-            <a
-              href={`tel:${branch.phone}`}
-              className="text-lg text-surface hover:text-primary"
-            >
-              {branch.phone}
-            </a>
-          </div>
-          <div>
-            <p className="text-sm uppercase tracking-wide text-secondary-light">
-              Email
-            </p>
-            <a
-              href={`mailto:${branch.email}`}
-              className="text-lg text-surface hover:text-primary"
-            >
-              {branch.email}
-            </a>
-          </div>
-          {branch.workingHours && (
-            <div>
-              <p className="text-sm uppercase tracking-wide text-secondary-light">
-                Working Hours
-              </p>
-              <p className="text-lg text-surface">{branch.workingHours}</p>
-            </div>
-          )}
         </div>
 
-        <div className="h-72 overflow-hidden rounded-3xl sm:h-full">
-          <MapContainer
-            center={[branch.latitude, branch.longitude]}
-            zoom={15}
-            scrollWheelZoom={false}
-            style={{ height: "100%", width: "100%" }}
-          >
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            <Marker position={[branch.latitude, branch.longitude]}>
-              <Popup>{branch.name}</Popup>
-            </Marker>
-          </MapContainer>
+        <div className="mb-14 overflow-hidden rounded-[1.75rem] border border-secondary/20">
+          <img
+            src={branch.photoUrl}
+            alt={branch.name}
+            loading="lazy"
+            className="h-[260px] w-full object-cover transition duration-700 hover:scale-[1.03] sm:h-[360px] lg:h-[470px]"
+          />
+        </div>
+
+        <div className="mb-16 grid gap-8 lg:grid-cols-[1fr_320px] lg:items-end">
+          <div>
+            {branch.isMain && (
+              <span className="mb-5 inline-flex rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-[10px] uppercase tracking-[0.3em] text-primary">
+                Main Branch
+              </span>
+            )}
+            <h1 className="font-display text-4xl font-light leading-[0.94] tracking-[-0.05em] text-surface sm:text-5xl lg:text-6xl">
+              {branch.name}
+            </h1>
+          </div>
+
+          <p className="text-sm leading-7 text-secondary-light">
+            Visit our office to discuss your residential or commercial project
+            with our architecture and construction team.
+          </p>
+        </div>
+
+        <div className="grid gap-8 lg:grid-cols-[340px_1fr]">
+          <div className="rounded-[1.75rem] border border-secondary/20 bg-ink-light p-7">
+            <div className="space-y-7">
+              <div>
+                <p className="mb-2 text-[10px] uppercase tracking-[0.35em] text-secondary">
+                  Address
+                </p>
+                <p className="text-[15px] leading-7 text-surface/90">{branch.address}</p>
+              </div>
+
+              <div className="border-t border-secondary/20 pt-6">
+                <p className="mb-2 text-[10px] uppercase tracking-[0.35em] text-secondary">
+                  Phone
+                </p>
+                <a
+                  href={`tel:${branch.phone}`}
+                  className="text-[15px] text-surface/90 transition hover:text-primary"
+                >
+                  {branch.phone}
+                </a>
+              </div>
+
+              <div className="border-t border-secondary/20 pt-6">
+                <p className="mb-2 text-[10px] uppercase tracking-[0.35em] text-secondary">
+                  Email
+                </p>
+                <a
+                  href={`mailto:${branch.email}`}
+                  className="break-all text-[15px] text-surface/90 transition hover:text-primary"
+                >
+                  {branch.email}
+                </a>
+              </div>
+
+              {branch.workingHours && (
+                <div className="border-t border-secondary/20 pt-6">
+                  <p className="mb-2 text-[10px] uppercase tracking-[0.35em] text-secondary">
+                    Working Hours
+                  </p>
+                  <p className="text-[15px] text-surface/90">{branch.workingHours}</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="overflow-hidden rounded-[1.75rem] border border-secondary/20">
+            <div className="h-[320px] lg:h-full lg:min-h-[430px]">
+              <MapContainer
+                center={[branch.latitude, branch.longitude]}
+                zoom={15}
+                scrollWheelZoom={false}
+                style={{ height: "100%", width: "100%" }}
+              >
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <Marker position={[branch.latitude, branch.longitude]}>
+                  <Popup>{branch.name}</Popup>
+                </Marker>
+              </MapContainer>
+            </div>
+          </div>
         </div>
       </div>
     </main>

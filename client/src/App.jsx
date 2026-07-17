@@ -5,6 +5,7 @@ import { ThemeProvider } from "./context/ThemeContext";
 import { ApiProvider } from "./context/ApiContext";
 import { LenisProvider } from "./context/LenisContext";
 import { AdminAuthProvider } from "./context/AdminAuthContext";
+import ScrollToTop from "./components/ScrollToTop";
 import SplashScreen from "./components/SplashScreen";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -13,6 +14,7 @@ import ProtectedRoute from "./components/admin/ProtectedRoute";
 import Home from "./pages/Home";
 import Projects from "./pages/Projects";
 import BranchPage from "./pages/BranchPage";
+import ProjectDetail from "./pages/ProjectDetail";
 import Careers from "./pages/Careers";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
@@ -36,7 +38,6 @@ function PublicLayout({ children }) {
   );
 }
 
-
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
 
@@ -51,18 +52,81 @@ export default function App() {
         <LenisProvider>
           <AdminAuthProvider>
             <SplashScreen show={showSplash} />
+            <ScrollToTop />
             <Routes>
-              {/* Public site — Header/Footer wrap every page */}
-              <Route path="/" element={<PublicLayout><Home /></PublicLayout>} />
-              <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
-              <Route path="/projects" element={<PublicLayout><Projects /></PublicLayout>} />
-              <Route path="/branches/:slug" element={<PublicLayout><BranchPage /></PublicLayout>} />
-              <Route path="/careers" element={<PublicLayout><Careers /></PublicLayout>} />
-              <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />
-              <Route path="/privacy-policy" element={<PublicLayout><PrivacyPolicy /></PublicLayout>} />
-              <Route path="/terms" element={<PublicLayout><TermsOfUse /></PublicLayout>} />
+              <Route
+                path="/"
+                element={
+                  <PublicLayout>
+                    <Home />
+                  </PublicLayout>
+                }
+              />
+              <Route
+                path="/about"
+                element={
+                  <PublicLayout>
+                    <About />
+                  </PublicLayout>
+                }
+              />
+              <Route
+                path="/projects"
+                element={
+                  <PublicLayout>
+                    <Projects />
+                  </PublicLayout>
+                }
+              />
+              <Route
+                path="/projects/:id"
+                element={
+                  <PublicLayout>
+                    <ProjectDetail />
+                  </PublicLayout>
+                }
+              />
+              <Route
+                path="/branches/:slug"
+                element={
+                  <PublicLayout>
+                    <BranchPage />
+                  </PublicLayout>
+                }
+              />
+              <Route
+                path="/careers"
+                element={
+                  <PublicLayout>
+                    <Careers />
+                  </PublicLayout>
+                }
+              />
+              <Route
+                path="/contact"
+                element={
+                  <PublicLayout>
+                    <Contact />
+                  </PublicLayout>
+                }
+              />
+              <Route
+                path="/privacy-policy"
+                element={
+                  <PublicLayout>
+                    <PrivacyPolicy />
+                  </PublicLayout>
+                }
+              />
+              <Route
+                path="/terms"
+                element={
+                  <PublicLayout>
+                    <TermsOfUse />
+                  </PublicLayout>
+                }
+              />
 
-              {/* Admin — no public Header/Footer */}
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route
                 path="/admin"
@@ -105,7 +169,14 @@ export default function App() {
                 }
               />
 
-              <Route path="*" element={<PublicLayout><NotFound /></PublicLayout>} />
+              <Route
+                path="*"
+                element={
+                  <PublicLayout>
+                    <NotFound />
+                  </PublicLayout>
+                }
+              />
             </Routes>
           </AdminAuthProvider>
         </LenisProvider>

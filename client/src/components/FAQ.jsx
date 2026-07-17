@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const FAQS = [
   {
@@ -41,10 +42,7 @@ const faqSchema = {
   mainEntity: FAQS.map((f) => ({
     "@type": "Question",
     name: f.q,
-    acceptedAnswer: {
-      "@type": "Answer",
-      text: f.a,
-    },
+    acceptedAnswer: { "@type": "Answer", text: f.a },
   })),
 };
 
@@ -55,61 +53,88 @@ export default function FAQ() {
   const prev = () => setIndex((i) => (i - 1 + FAQS.length) % FAQS.length);
 
   return (
-    <section id="faq" className="bg-ink px-6 py-24 sm:px-12">
-      <script type="application/ld+json">
-        {JSON.stringify(faqSchema)}
-      </script>
+    <section id="faq" className="relative overflow-hidden border-t border-secondary/20 bg-ink">
+      <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
 
-      <h2 className="font-display mb-16 text-4xl font-medium text-surface sm:text-5xl">
-        Questions <span className="text-secondary-light">&amp; answers</span>
-      </h2>
+      <div className="mx-auto max-w-7xl px-6 py-20 sm:px-8 md:px-12 lg:px-16 xl:px-20 xl:py-28">
+        <div className="mb-16">
+          <div className="mb-6 flex items-center gap-4">
+            <div className="h-px w-14 bg-primary" />
+            <span className="text-[11px] font-medium uppercase tracking-[0.45em] text-secondary-light">
+              Frequently Asked Questions
+            </span>
+          </div>
 
-      <div className="rounded-3xl bg-surface p-10 sm:p-14">
-        <div className="mb-10 flex items-start justify-between">
-          <span className="font-display text-4xl font-medium text-ink">
-            {String(index + 1).padStart(2, "0")}
-          </span>
+          <h2 className="font-display max-w-4xl text-4xl font-light leading-[0.95] tracking-[-0.04em] text-surface sm:text-5xl lg:text-7xl">
+            Questions
+            <br />
+            <span className="text-secondary-light">&amp; answers</span>
+          </h2>
         </div>
-        <h3 className="font-display mb-4 text-2xl font-medium text-ink">
-          {FAQS[index].q}
-        </h3>
-        <p className="text-secondary">{FAQS[index].a}</p>
-      </div>
 
-      <div className="mt-8 flex items-center justify-between">
-        <div className="flex gap-2">
-          {FAQS.map((_, i) => (
-            <span
-              key={i}
-              className={`h-1 w-8 rounded-full transition ${
-                i === index ? "bg-surface" : "bg-secondary/40"
-              }`}
-            />
-          ))}
+        <div className="rounded-[2rem] border border-secondary/20 bg-ink-light p-8 sm:p-12 lg:p-16">
+          <div className="mb-12 flex items-start justify-between">
+            <span className="font-display text-5xl font-light tracking-[-0.05em] text-primary sm:text-6xl">
+              {String(index + 1).padStart(2, "0")}
+            </span>
+            <div className="hidden h-px flex-1 bg-secondary/20 lg:ml-12 lg:block" />
+          </div>
+
+          <h3 className="font-display max-w-4xl text-3xl font-light leading-tight tracking-[-0.03em] text-surface sm:text-4xl lg:text-5xl">
+            {FAQS[index].q}
+          </h3>
+
+          <p className="mt-8 max-w-3xl text-base leading-8 text-secondary-light sm:text-lg">
+            {FAQS[index].a}
+          </p>
+
+          <div className="mt-16 flex flex-col gap-8 border-t border-secondary/20 pt-8 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex gap-3">
+              {FAQS.map((_, i) => (
+                <span
+                  key={i}
+                  className={`h-[2px] rounded-full transition-all duration-500 ${
+                    i === index ? "w-16 bg-primary" : "w-8 bg-secondary/30"
+                  }`}
+                />
+              ))}
+            </div>
+
+            <div className="flex gap-4">
+              <button
+                onClick={prev}
+                className="flex h-14 w-14 items-center justify-center rounded-full border border-secondary/20 text-lg text-surface transition-all duration-300 hover:border-primary hover:bg-primary hover:text-ink"
+              >
+                ←
+              </button>
+              <button
+                onClick={next}
+                className="flex h-14 w-14 items-center justify-center rounded-full border border-secondary/20 text-lg text-surface transition-all duration-300 hover:border-primary hover:bg-primary hover:text-ink"
+              >
+                →
+              </button>
+            </div>
+          </div>
         </div>
-        <div className="flex gap-3">
-          <button
-            onClick={prev}
-            className="flex h-12 w-12 items-center justify-center rounded-xl bg-ink text-surface transition hover:bg-primary"
+
+        <div className="mt-20 flex flex-col items-start justify-between gap-8 border-t border-secondary/20 pt-12 lg:flex-row lg:items-end">
+          <p className="text-base leading-8 text-secondary-light sm:text-lg">
+            Have more questions or need additional information?
+            <br />
+            We'd be delighted to discuss your project.
+          </p>
+
+          <Link
+            to="/contact"
+            className="group inline-flex items-center gap-5 text-sm font-medium uppercase tracking-[0.28em] text-surface transition-colors duration-300 hover:text-primary"
           >
-            ←
-          </button>
-          <button
-            onClick={next}
-            className="flex h-12 w-12 items-center justify-center rounded-xl bg-ink text-surface transition hover:bg-primary"
-          >
-            →
-          </button>
+            <span>Get in touch</span>
+            <span className="flex h-12 w-12 items-center justify-center rounded-full border border-secondary/20 transition-all duration-300 group-hover:border-primary group-hover:bg-primary group-hover:text-ink">
+              →
+            </span>
+          </Link>
         </div>
       </div>
-
-      <p className="mt-16 text-center text-secondary-light">
-        Have more questions or need additional information? We are here to
-        help.
-      </p>
-      <button className="mx-auto mt-6 block w-full rounded-full bg-surface py-4 text-base font-medium text-ink transition hover:bg-primary hover:text-surface sm:w-auto sm:px-10">
-        Get in touch
-      </button>
     </section>
   );
 }
