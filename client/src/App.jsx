@@ -13,8 +13,8 @@ import ProtectedRoute from "./components/admin/ProtectedRoute";
 
 import Home from "./pages/Home";
 import Projects from "./pages/Projects";
-import BranchPage from "./pages/BranchPage";
 import ProjectDetail from "./pages/ProjectDetail";
+import BranchPage from "./pages/BranchPage";
 import Careers from "./pages/Careers";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
@@ -27,6 +27,17 @@ import AdminProjects from "./pages/admin/AdminProjects";
 import AdminBranches from "./pages/admin/AdminBranches";
 import AdminCareers from "./pages/admin/AdminCareers";
 import AdminEnquiries from "./pages/admin/AdminEnquiries";
+
+// Sitewide structured data — helps search engines and AI answer engines
+// identify the business as a single, consistent entity. Update the "url"
+// once the real domain is live.
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Design Factory Group",
+  description: "High-end residential and commercial design and build studio.",
+  url: "https://designfactorygroup.com",
+};
 
 function PublicLayout({ children }) {
   return (
@@ -51,8 +62,13 @@ export default function App() {
       <ApiProvider>
         <LenisProvider>
           <AdminAuthProvider>
+            <script type="application/ld+json">
+              {JSON.stringify(organizationSchema)}
+            </script>
+
             <SplashScreen show={showSplash} />
             <ScrollToTop />
+
             <Routes>
               <Route
                 path="/"

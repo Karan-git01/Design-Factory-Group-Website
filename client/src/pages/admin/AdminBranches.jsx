@@ -118,7 +118,7 @@ export default function AdminBranches() {
 
         <button
           onClick={openCreateForm}
-          className="inline-flex items-center justify-center rounded-full border border-primary/30 bg-primary px-7 py-3 text-sm font-medium text-black transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_12px_35px_rgba(214,170,74,0.25)]"
+          className="inline-flex items-center justify-center rounded-full border border-primary/30 bg-primary px-7 py-3 text-sm font-medium text-surface transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_12px_35px_rgba(214,170,74,0.25)]"
         >
           + Add Branch
         </button>

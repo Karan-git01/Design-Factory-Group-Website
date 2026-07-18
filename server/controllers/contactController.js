@@ -3,16 +3,9 @@ import { sendContactNotification } from "../config/mailer.js";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// PUBLIC — submit the contact form
 export async function submitContact(req, res) {
   try {
-    const { name, email, phone, message, consent, website } = req.body;
-
-    // Honeypot spam trap — real users never fill this hidden field
-    // browser bots were auto filling it so changed the name to "website" and added a hidden input field in the form
-    if (website) {
-      return res.status(201).json({ success: true }); // pretend success, silently drop
-    }
+    const { name, email, phone, message, consent } = req.body;
 
     if (!name || !email || !message) {
       return res.status(400).json({ error: "Name, email, and message are required." });
@@ -26,7 +19,7 @@ export async function submitContact(req, res) {
 
     const submission = await ContactSubmission.create({ name, email, phone, message, consent });
 
-    sendContactNotification(submission); // fire-and-forget
+    sendContactNotification(submission);
 
     res.status(201).json({ success: true });
   } catch (err) {
@@ -34,7 +27,6 @@ export async function submitContact(req, res) {
   }
 }
 
-// ADMIN — view all submissions
 export async function getAllSubmissions(req, res) {
   try {
     const submissions = await ContactSubmission.find().sort({ createdAt: -1 });
@@ -44,7 +36,6 @@ export async function getAllSubmissions(req, res) {
   }
 }
 
-// ADMIN — update status (new / contacted / closed)
 export async function updateSubmissionStatus(req, res) {
   try {
     const { status } = req.body;
@@ -66,7 +57,6 @@ export async function updateSubmissionStatus(req, res) {
   }
 }
 
-// ADMIN — delete
 export async function deleteSubmission(req, res) {
   try {
     const submission = await ContactSubmission.findByIdAndDelete(req.params.id);

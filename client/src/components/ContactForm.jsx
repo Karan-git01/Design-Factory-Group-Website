@@ -9,7 +9,6 @@ export default function ContactForm() {
     phone: "",
     message: "",
     consent: false,
-    website: "",
   });
   const [status, setStatus] = useState("idle");
   const [errorMsg, setErrorMsg] = useState("");
@@ -34,7 +33,7 @@ export default function ContactForm() {
     try {
       await api.post("/contact", form);
       setStatus("success");
-      setForm({ name: "", email: "", phone: "", message: "", consent: false, website: "" });
+      setForm({ name: "", email: "", phone: "", message: "", consent: false });
     } catch (err) {
       setStatus("error");
       setErrorMsg(err.message || "Something went wrong. Please try again.");
@@ -65,17 +64,6 @@ export default function ContactForm() {
       onSubmit={handleSubmit}
       className="relative rounded-[2rem] bg-ink-light p-6 sm:p-8 lg:p-10"
     >
-      <input
-  type="text"
-  name="website"
-  value={form.website}
-  onChange={handleChange}
-  tabIndex="-1"
-  autoComplete="off"
-  style={{ position: "absolute", left: "-9999px", opacity: 0, height: 0, width: 0 }}
-  aria-hidden="true"
-/>
-
       <div className="mb-8">
         <label className="mb-3 block text-[11px] uppercase tracking-[0.3em] text-secondary-light">
           Name
@@ -183,110 +171,3 @@ export default function ContactForm() {
     </form>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- // <form onSubmit={handleSubmit} className="rounded-3xl bg-surface p-8 sm:p-10">
-    //   {/* website field — hidden from real users via CSS, bots fill it blindly */}
-    //   <input
-    //     type="text"
-    //     name="website"
-    //     value={form.website}
-    //     onChange={handleChange}
-    //     tabIndex="-1"
-    //     autoComplete="off"
-    //     className="absolute -left-[9999px]"
-    //     aria-hidden="true"
-    //   />
-
-    //   <div className="mb-6">
-    //     <label className="mb-2 block text-sm text-secondary">Name</label>
-    //     <input
-    //       type="text"
-    //       name="name"
-    //       value={form.name}
-    //       onChange={handleChange}
-    //       required
-    //       className="w-full border-b border-secondary/30 bg-transparent pb-3 text-ink outline-none focus:border-primary"
-    //     />
-    //   </div>
-
-    //   <div className="mb-6">
-    //     <label className="mb-2 block text-sm text-secondary">Email</label>
-    //     <input
-    //       type="email"
-    //       name="email"
-    //       value={form.email}
-    //       onChange={handleChange}
-    //       required
-    //       className="w-full border-b border-secondary/30 bg-transparent pb-3 text-ink outline-none focus:border-primary"
-    //     />
-    //   </div>
-
-    //   <div className="mb-6">
-    //     <label className="mb-2 block text-sm text-secondary">Phone</label>
-    //     <input
-    //       type="tel"
-    //       name="phone"
-    //       value={form.phone}
-    //       onChange={handleChange}
-    //       className="w-full border-b border-secondary/30 bg-transparent pb-3 text-ink outline-none focus:border-primary"
-    //     />
-    //   </div>
-
-    //   <div className="mb-6">
-    //     <label className="mb-2 block text-sm text-secondary">Message</label>
-    //     <textarea
-    //       name="message"
-    //       value={form.message}
-    //       onChange={handleChange}
-    //       required
-    //       rows={4}
-    //       className="w-full border-b border-secondary/30 bg-transparent pb-3 text-ink outline-none focus:border-primary"
-    //     />
-    //   </div>
-
-    //   <label className="mb-8 flex items-start gap-3 text-sm text-secondary">
-    //     <input
-    //       type="checkbox"
-    //       name="consent"
-    //       checked={form.consent}
-    //       onChange={handleChange}
-    //       className="mt-1"
-    //     />
-    //     By submitting this form, you agree to the processing of your personal
-    //     data in accordance with our{" "}
-    //     <a href="/privacy-policy" className="underline hover:text-primary">
-    //       Privacy Policy
-    //     </a>
-    //     .
-    //   </label>
-
-    //   {status === "error" && (
-    //     <p className="mb-4 text-sm text-red-600">{errorMsg}</p>
-    //   )}
-
-    //   <button
-    //     type="submit"
-    //     disabled={status === "submitting"}
-    //     className="w-full rounded-full bg-ink py-4 text-base font-medium text-surface transition hover:bg-primary disabled:opacity-50"
-    //   >
-    //     {status === "submitting" ? "Sending..." : "Get in touch"}
-    //   </button>
-    // </form>

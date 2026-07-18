@@ -1,0 +1,10 @@
+# Design Factory Group
+
+> Design Factory Group is a high-end residential and commercial design and build studio, integrating architecture and construction into one coordinated process.
+
+## Pages
+- [Home](https://designfactorygroup.com/): Overview of services and approach
+- [About](https://designfactorygroup.com/about): Company story and team
+- [Projects](https://designfactorygroup.com/projects): Portfolio of ongoing and completed projects
+- [Careers](https://designfactorygroup.com/careers): Current job openings
+- [Contact](https://designfactorygroup.com/contact): Contact information and enquiry form
