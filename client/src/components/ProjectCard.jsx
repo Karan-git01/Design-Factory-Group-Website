@@ -1,69 +1,55 @@
+// ProjectCard.jsx
 import { Link } from "react-router-dom";
+import { ArrowUpRight } from "lucide-react";
 
 export default function ProjectCard({ project }) {
   return (
-    <Link
-      to={`/projects/${project._id}`}
-      className="group block h-full overflow-hidden rounded-[2rem] border border-secondary/20 bg-ink-light transition-all duration-500 hover:-translate-y-2 hover:border-primary/40 hover:shadow-[0_30px_80px_rgba(0,0,0,0.45)]"
-    >
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 z-10 bg-gradient-to-t from-ink/55 via-transparent to-ink/10" />
-
-        <img
-          src={project.imageUrl}
-          alt={project.name}
-          loading="lazy"
-          className="h-64 w-full object-cover transition duration-700 group-hover:scale-110 sm:h-72 lg:h-80"
-        />
-
-        <span
-          className={`absolute left-5 top-5 z-20 rounded-full border px-4 py-2 text-[11px] font-medium uppercase tracking-[0.18em] backdrop-blur-xl transition-all duration-300 ${
-            project.status === "Ongoing"
-              ? "border-primary/30 bg-primary text-ink"
-              : "border-secondary/20 bg-ink/45 text-surface"
-          }`}
-        >
-          {project.status}
+    <Link to={`/projects/${project._id}`} className="group block">
+      <div className="img-zoom relative overflow-hidden rounded-3xl border border-border bg-card">
+        <div className="aspect-[4/3] w-full">
+          <img
+            src={project.imageUrl}
+            alt={project.name}
+            className="h-full w-full object-cover"
+            loading="lazy"
+          />
+        </div>
+        <div className="absolute left-4 top-4 flex items-center gap-2">
+          <span
+            className={`label-caps rounded-full px-3 py-1.5 backdrop-blur ${
+              project.status === "Ongoing"
+                ? "bg-copper/90 text-primary-foreground"
+                : "bg-background/90 text-foreground"
+            }`}
+          >
+            {project.status}
+          </span>
+          <span className="label-caps rounded-full bg-background/90 px-3 py-1.5 text-foreground backdrop-blur">
+            {project.year}
+          </span>
+        </div>
+        <span className="absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full bg-background/90 text-foreground opacity-0 backdrop-blur transition group-hover:opacity-100">
+          <ArrowUpRight size={16} />
         </span>
-
-        <div className="absolute bottom-5 right-5 z-20 rounded-full border border-secondary/20 bg-ink/45 px-4 py-2 text-xs font-medium text-surface/80 backdrop-blur-xl">
-          {project.year}
+      </div>
+      <div className="mt-5 flex items-start justify-between gap-6">
+        <div>
+          <h3 className="font-display text-2xl tracking-tight md:text-3xl">{project.name}</h3>
+          <p className="mt-1 label-caps text-muted-foreground">{project.location}</p>
         </div>
       </div>
-
-      <div className="flex flex-col p-6 sm:p-7">
-        <div className="flex items-start justify-between gap-4">
-          <h3 className="font-display text-2xl font-light leading-tight tracking-[-0.03em] text-surface transition-colors duration-300 group-hover:text-primary">
-            {project.name}
-          </h3>
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-secondary/20 text-secondary-light transition-all duration-300 group-hover:border-primary group-hover:bg-primary group-hover:text-ink group-hover:translate-x-1">
-            →
-          </div>
-        </div>
-
-        <div className="mt-4 flex items-center gap-2">
-          <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-          <p className="text-sm tracking-wide text-secondary-light">
-            {project.location}
-          </p>
-        </div>
-
-        <p className="mt-5 line-clamp-3 text-[15px] leading-7 text-secondary-light">
-          {project.description}
-        </p>
-
-        {project.scope?.length > 0 && (
-          <div className="mt-8 flex flex-wrap gap-2">
-            {project.scope.map((tag) => (
-              <span
-                key={tag}
-                className="rounded-full border border-secondary/20 bg-surface/[0.03] px-4 py-2 text-[11px] uppercase tracking-[0.16em] text-secondary-light transition-all duration-300 group-hover:border-primary/30 group-hover:text-primary"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
+      <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
+        {project.description}
+      </p>
+      <div className="mt-4 flex flex-wrap gap-2">
+        {project.scope?.map((s) => (
+          <span
+            key={s}
+            className="rounded-full border border-border px-3 py-1 text-xs text-foreground/80"
+          >
+            {s}
+          </span>
+        ))}
       </div>
     </Link>
   );

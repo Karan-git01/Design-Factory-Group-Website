@@ -20,93 +20,80 @@ const LEGAL_LINKS = [
   { label: "Terms of Use", to: "/terms" },
 ];
 
+// Inline SVGs replacing lucide-react brand icons (Instagram/Facebook/Linkedin
+// aren't exported by this project's lucide-react version)
+const InstagramIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+  </svg>
+);
+
+const FacebookIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+  </svg>
+);
+
+const LinkedinIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-13h4v1.5A5.98 5.98 0 0 1 16 8z" />
+    <rect x="2" y="9" width="4" height="12" />
+    <circle cx="4" cy="4" r="2" />
+  </svg>
+);
+
+const SOCIAL_ICONS = [InstagramIcon, FacebookIcon, LinkedinIcon];
+
+function FooterCol({ title, links }) {
+  return (
+    <div>
+      <h3 className="label-caps mb-4 text-muted-foreground">{title}</h3>
+      <ul className="space-y-2.5">
+        {links.map(({ label, to }) => (
+          <li key={to + label}>
+            <Link to={to} className="text-sm text-foreground/80 transition hover:text-copper">
+              {label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 export default function Footer() {
   return (
-    <footer className="relative overflow-hidden border-t border-secondary/20 bg-ink">
-      <div className="mx-auto flex max-w-7xl flex-col px-6 py-16 sm:px-8 md:px-12 lg:px-16 xl:px-20 xl:py-24">
-        <div className="mb-16">
-          <div className="mb-6 flex items-center gap-4">
-            <div className="h-px w-14 bg-primary" />
-            <span className="text-[11px] font-medium uppercase tracking-[0.45em] text-secondary-light">
-              Design Factory Group
-            </span>
+    <footer className="border-t border-border bg-cream-alt">
+      <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 md:py-24">
+        <div className="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+          <div>
+            <h2 className="font-display text-3xl leading-[1.1] tracking-tight md:text-5xl">
+              Designing spaces that <em className="text-copper">stand the test</em> of time.
+            </h2>
+            <div className="mt-8 flex items-center gap-3">
+              {SOCIAL_ICONS.map((Icon, i) => (
+                <a
+                  key={i}
+                  href="#"
+                  aria-label="Social link"
+                  className="grid h-10 w-10 place-items-center rounded-full border border-border bg-card transition hover:border-foreground/40 hover:bg-foreground hover:text-background"
+                >
+                  <Icon />
+                </a>
+              ))}
+            </div>
           </div>
 
-          <h2 className="font-display max-w-4xl text-4xl font-light leading-[0.92] tracking-[-0.05em] text-surface sm:text-5xl md:text-6xl lg:text-7xl">
-            Designing spaces
-            <br />
-            that stand
-            <br />
-            the test of time.
-          </h2>
+          <FooterCol title="Pages" links={NAV_LINKS} />
+          <FooterCol title="Explore" links={SECTION_LINKS} />
+          <FooterCol title="Legal" links={LEGAL_LINKS} />
         </div>
 
-        <div className="grid grid-cols-2 gap-8 border-t border-secondary/20 py-10 sm:grid-cols-3">
-          {/* Pages */}
-          <div>
-            <p className="mb-5 text-[11px] uppercase tracking-[0.3em] text-secondary">
-              Pages
-            </p>
-            <nav className="flex flex-col gap-3">
-              {NAV_LINKS.map((link) => (
-                <Link
-                  key={link.label}
-                  to={link.to}
-                  className="text-sm font-medium tracking-wide text-secondary-light transition-all duration-300 hover:text-primary"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-          </div>
-
-          {/* Explore (on-page sections) */}
-          <div>
-            <p className="mb-5 text-[11px] uppercase tracking-[0.3em] text-secondary">
-              Explore
-            </p>
-            <nav className="flex flex-col gap-3">
-              {SECTION_LINKS.map((link) => (
-                <Link
-                  key={link.label}
-                  to={link.to}
-                  className="text-sm font-medium tracking-wide text-secondary-light transition-all duration-300 hover:text-primary"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-          </div>
-
-          {/* Legal */}
-          <div>
-            <p className="mb-5 text-[11px] uppercase tracking-[0.3em] text-secondary">
-              Legal
-            </p>
-            <nav className="flex flex-col gap-3">
-              {LEGAL_LINKS.map((link) => (
-                <Link
-                  key={link.label}
-                  to={link.to}
-                  className="text-sm font-medium tracking-wide text-secondary-light transition-all duration-300 hover:text-primary"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-          </div>
-        </div>
-
-        <div className="mt-2 flex flex-col gap-6 border-t border-secondary/20 pt-8 text-sm text-secondary sm:flex-row sm:items-center sm:justify-between">
-          <p>
-            © {new Date().getFullYear()} Design Factory Group. All rights
-            reserved.
-          </p>
-
-          <Link
-            to="/admin/login"
-            className="w-fit uppercase tracking-[0.25em] transition-colors duration-300 hover:text-primary"
-          >
+        <div className="mt-16 flex flex-wrap items-center justify-between gap-4 border-t border-border pt-6 text-xs text-muted-foreground">
+          <span>© {new Date().getFullYear()} Design Factory Group. All rights reserved.</span>
+          <Link to="/admin/login" className="text-muted-foreground/70 hover:text-foreground">
             Admin
           </Link>
         </div>
@@ -114,3 +101,127 @@ export default function Footer() {
     </footer>
   );
 }
+
+
+
+
+
+
+
+
+// import { Link } from "react-router-dom";
+
+// const NAV_LINKS = [
+//   { label: "Home", to: "/" },
+//   { label: "About", to: "/about" },
+//   { label: "Projects", to: "/projects" },
+//   { label: "Careers", to: "/careers" },
+//   { label: "Contact", to: "/contact" },
+// ];
+
+// const SECTION_LINKS = [
+//   { label: "Why Us", to: "/#why-us" },
+//   { label: "Work Stages", to: "/#work-stages" },
+//   { label: "Branches", to: "/#branches" },
+//   { label: "FAQ", to: "/#faq" },
+// ];
+
+// const LEGAL_LINKS = [
+//   { label: "Privacy Policy", to: "/privacy-policy" },
+//   { label: "Terms of Use", to: "/terms" },
+// ];
+
+// export default function Footer() {
+//   return (
+//     <footer className="relative overflow-hidden border-t border-secondary/20 bg-ink">
+//       <div className="mx-auto flex max-w-7xl flex-col px-6 py-16 sm:px-8 md:px-12 lg:px-16 xl:px-20 xl:py-24">
+//         <div className="mb-16">
+//           <div className="mb-6 flex items-center gap-4">
+//             <div className="h-px w-14 bg-primary" />
+//             <span className="text-[11px] font-medium uppercase tracking-[0.45em] text-secondary-light">
+//               Design Factory Group
+//             </span>
+//           </div>
+
+//           <h2 className="font-display max-w-4xl text-4xl font-light leading-[0.92] tracking-[-0.05em] text-surface sm:text-5xl md:text-6xl lg:text-7xl">
+//             Designing spaces
+//             <br />
+//             that stand
+//             <br />
+//             the test of time.
+//           </h2>
+//         </div>
+
+//         <div className="grid grid-cols-2 gap-8 border-t border-secondary/20 py-10 sm:grid-cols-3">
+//           {/* Pages */}
+//           <div>
+//             <p className="mb-5 text-[11px] uppercase tracking-[0.3em] text-secondary">
+//               Pages
+//             </p>
+//             <nav className="flex flex-col gap-3">
+//               {NAV_LINKS.map((link) => (
+//                 <Link
+//                   key={link.label}
+//                   to={link.to}
+//                   className="text-sm font-medium tracking-wide text-secondary-light transition-all duration-300 hover:text-primary"
+//                 >
+//                   {link.label}
+//                 </Link>
+//               ))}
+//             </nav>
+//           </div>
+
+//           {/* Explore (on-page sections) */}
+//           <div>
+//             <p className="mb-5 text-[11px] uppercase tracking-[0.3em] text-secondary">
+//               Explore
+//             </p>
+//             <nav className="flex flex-col gap-3">
+//               {SECTION_LINKS.map((link) => (
+//                 <Link
+//                   key={link.label}
+//                   to={link.to}
+//                   className="text-sm font-medium tracking-wide text-secondary-light transition-all duration-300 hover:text-primary"
+//                 >
+//                   {link.label}
+//                 </Link>
+//               ))}
+//             </nav>
+//           </div>
+
+//           {/* Legal */}
+//           <div>
+//             <p className="mb-5 text-[11px] uppercase tracking-[0.3em] text-secondary">
+//               Legal
+//             </p>
+//             <nav className="flex flex-col gap-3">
+//               {LEGAL_LINKS.map((link) => (
+//                 <Link
+//                   key={link.label}
+//                   to={link.to}
+//                   className="text-sm font-medium tracking-wide text-secondary-light transition-all duration-300 hover:text-primary"
+//                 >
+//                   {link.label}
+//                 </Link>
+//               ))}
+//             </nav>
+//           </div>
+//         </div>
+
+//         <div className="mt-2 flex flex-col gap-6 border-t border-secondary/20 pt-8 text-sm text-secondary sm:flex-row sm:items-center sm:justify-between">
+//           <p>
+//             © {new Date().getFullYear()} Design Factory Group. All rights
+//             reserved.
+//           </p>
+
+//           <Link
+//             to="/admin/login"
+//             className="w-fit uppercase tracking-[0.25em] transition-colors duration-300 hover:text-primary"
+//           >
+//             Admin
+//           </Link>
+//         </div>
+//       </div>
+//     </footer>
+//   );
+// }

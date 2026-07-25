@@ -1,50 +1,70 @@
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
-function AnimatedLetter({ letter, scrollYProgress, start, end }) {
-  const color = useTransform(
-    scrollYProgress,
-    [start, end],
-    ["rgba(138,138,138,0.35)", "rgba(255,255,255,1)"]
-  );
-
-  return (
-    <motion.span style={{ color }} className="inline">
-      {letter}
-    </motion.span>
-  );
-}
-
-export default function TextReveal({ text, className = "" }) {
+export default function TextReveal({ text, className = "", emphasize = [] }) {
   const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
 
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start 90%", "start 25%"],
-  });
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
 
-  const letters = text.split("");
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setVisible(true);
+            io.unobserve(el);
+          }
+        });
+      },
+      { threshold: 0.2, rootMargin: "0px 0px -60px 0px" }
+    );
+
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  const lines = text.split("\n").filter(Boolean);
+  let wordIndex = 0;
+  const isEmphasized = (word) =>
+    emphasize.some(
+      (w) =>
+        w.replace(/[.,]+$/, "").toLowerCase() ===
+        word.replace(/[.,]+$/, "").toLowerCase()
+    );
 
   return (
-    <div ref={ref} className={`relative whitespace-pre-wrap ${className}`}>
-      {letters.map((letter, index) => {
-        const start = index / letters.length;
-        const end = start + 0.04;
-
+    <h2 ref={ref} className={className}>
+      {lines.map((line, li) => {
+        const words = line.split(" ");
         return (
-          <AnimatedLetter
-            key={index}
-            letter={letter}
-            scrollYProgress={scrollYProgress}
-            start={start}
-            end={end}
-          />
+          <span key={li} className="block overflow-hidden">
+            {words.map((word, wi) => {
+              const delay = wordIndex * 40;
+              wordIndex += 1;
+              return (
+                <span
+                  key={wi}
+                  className={`hero-word inline-block ${
+                    isEmphasized(word) ? "italic text-copper" : ""
+                  }`}
+                  style={
+                    visible
+                      ? { animationDelay: `${delay}ms` }
+                      : { opacity: 0, animationPlayState: "paused" }
+                  }
+                >
+                  {word}
+                  {wi < words.length - 1 ? "\u00A0" : ""}
+                </span>
+              );
+            })}
+          </span>
         );
       })}
-    </div>
+    </h2>
   );
 }
-
 
 
 // import { motion, useScroll, useTransform } from "framer-motion";
