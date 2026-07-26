@@ -2,39 +2,43 @@ import { Phone, Mail, MapPin } from "lucide-react";
 
 export default function JobCard({ job }) {
   return (
-    <article className="card-lift grid gap-8 rounded-3xl border border-border bg-card p-7 md:grid-cols-[1.4fr_1fr] md:p-10">
-      <div>
-        <div className="flex flex-wrap items-center gap-3">
-          <span className="label-caps rounded-full border border-border px-3 py-1.5 text-foreground/80">
+    <article className="card-lift grid gap-5 overflow-hidden rounded-2xl border border-border bg-card p-5 sm:p-6 md:grid-cols-[1.5fr_1fr] md:gap-6 md:p-7">
+      <div className="min-w-0">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="label-caps rounded-full border border-border px-2.5 py-1 text-foreground/80">
             {job.employmentType}
           </span>
           {job.location && (
             <span className="inline-flex items-center gap-1.5 label-caps text-muted-foreground">
-              <MapPin size={12} /> {job.location}
+              <MapPin size={11} /> {job.location}
             </span>
           )}
         </div>
-        <h2 className="mt-4 font-display text-3xl tracking-tight md:text-4xl">
+        <h2 className="mt-3 font-display text-2xl tracking-tight md:text-3xl">
           {job.title}
         </h2>
-        <p className="mt-3 max-w-xl text-muted-foreground">{job.description}</p>
+        <p className="mt-2 max-w-xl text-sm text-muted-foreground md:text-base">
+          {job.description}
+        </p>
       </div>
 
-      <div className="flex flex-col justify-center gap-3 border-t border-border pt-6 md:border-l md:border-t-0 md:pl-10 md:pt-0">
+      <div className="flex min-w-0 flex-col justify-center gap-2.5 border-t border-border pt-4 md:border-l md:border-t-0 md:pl-7 md:pt-0">
         <p className="label-caps text-muted-foreground">Apply directly</p>
         <a
           href={`tel:${job.contactNumber}`}
-          className="btn-arrow inline-flex items-center gap-3 rounded-full border border-border bg-background px-5 py-3 text-sm transition hover:border-foreground/40"
+          className="btn-arrow inline-flex w-full min-w-0 items-center gap-2 rounded-full border border-border bg-background px-4 py-2.5 text-sm transition hover:border-foreground/40 sm:w-auto"
         >
-          <Phone size={14} /> {job.contactNumber}
+          <Phone size={13} className="shrink-0" />
+          <span className="truncate">{job.contactNumber}</span>
         </a>
         <a
           href={`mailto:${job.contactEmail}?subject=${encodeURIComponent(
             `Application: ${job.title}`
           )}`}
-          className="btn-arrow inline-flex items-center gap-3 rounded-full bg-foreground px-5 py-3 text-sm text-background transition hover:bg-copper"
+          className="btn-arrow inline-flex w-full min-w-0 items-center gap-2 rounded-full bg-foreground px-4 py-2.5 text-sm text-background transition hover:bg-copper sm:w-auto"
         >
-          <Mail size={14} /> {job.contactEmail}
+          <Mail size={12} className="shrink-0" />
+          <span className="truncate">{job.contactEmail}</span>
         </a>
       </div>
     </article>
@@ -50,134 +54,45 @@ export default function JobCard({ job }) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+// import { Phone, Mail, MapPin } from "lucide-react";
 
 // export default function JobCard({ job }) {
 //   return (
-//     <div className="rounded-[1.75rem] border border-secondary/20 bg-ink-light p-6 transition-all duration-300 hover:border-primary/30 sm:p-8 lg:p-10">
-//       <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-//         <div className="max-w-3xl">
-//           <h3 className="font-display text-3xl font-light tracking-[-0.04em] text-surface sm:text-4xl">
-//             {job.title}
-//           </h3>
+//     <article className="card-lift grid gap-8 rounded-3xl border border-border bg-card p-7 md:grid-cols-[1.4fr_1fr] md:p-10">
+//       <div>
+//         <div className="flex flex-wrap items-center gap-3">
+//           <span className="label-caps rounded-full border border-border px-3 py-1.5 text-foreground/80">
+//             {job.employmentType}
+//           </span>
 //           {job.location && (
-//             <p className="mt-4 text-xs uppercase tracking-[0.3em] text-secondary-light">
-//               {job.location}
-//             </p>
+//             <span className="inline-flex items-center gap-1.5 label-caps text-muted-foreground">
+//               <MapPin size={12} /> {job.location}
+//             </span>
 //           )}
 //         </div>
-
-//         <span className="self-start rounded-full border border-secondary/20 px-4 py-2 text-[11px] uppercase tracking-[0.28em] text-secondary-light">
-//           {job.employmentType}
-//         </span>
+//         <h2 className="mt-4 font-display text-3xl tracking-tight md:text-4xl">
+//           {job.title}
+//         </h2>
+//         <p className="mt-3 max-w-xl text-muted-foreground">{job.description}</p>
 //       </div>
 
-//       <div className="mt-10 max-w-3xl">
-//         <p className="leading-8 text-secondary-light">{job.description}</p>
-//       </div>
-
-//       <div className="mt-10 flex flex-col gap-8 border-t border-secondary/20 pt-6 lg:flex-row lg:items-end lg:justify-between">
-//         <div className="flex flex-col gap-6 sm:flex-row sm:gap-16">
-//           <div>
-//             <p className="mb-2 text-[11px] uppercase tracking-[0.28em] text-secondary">
-//               Phone
-//             </p>
-//             <a
-//               href={`tel:${job.contactNumber}`}
-//               className="text-lg font-light text-surface transition-colors duration-300 hover:text-primary"
-//             >
-//               {job.contactNumber}
-//             </a>
-//           </div>
-
-//           <div>
-//             <p className="mb-2 text-[11px] uppercase tracking-[0.28em] text-secondary">
-//               Email
-//             </p>
-//             <a
-//               href={`mailto:${job.contactEmail}`}
-//               className="break-all text-lg font-light text-surface transition-colors duration-300 hover:text-primary"
-//             >
-//               {job.contactEmail}
-//             </a>
-//           </div>
-//         </div>
-
-//         {/* "Apply" is now a real mailto link — matches the no-upload decision:
-//             interested applicants email the listed address directly. */}
+//       <div className="flex flex-col justify-center gap-3 border-t border-border pt-6 md:border-l md:border-t-0 md:pl-10 md:pt-0">
+//         <p className="label-caps text-muted-foreground">Apply directly</p>
+//         <a
+//           href={`tel:${job.contactNumber}`}
+//           className="btn-arrow inline-flex items-center gap-3 rounded-full border border-border bg-background px-5 py-3 text-sm transition hover:border-foreground/40"
+//         >
+//           <Phone size={14} /> {job.contactNumber}
+//         </a>
 //         <a
 //           href={`mailto:${job.contactEmail}?subject=${encodeURIComponent(
 //             `Application: ${job.title}`
 //           )}`}
-//           className="group flex items-center gap-4 self-start lg:self-end"
+//           className="btn-arrow inline-flex items-center gap-3 rounded-full bg-foreground px-5 py-3 text-sm text-background transition hover:bg-copper"
 //         >
-//           <span className="text-xs uppercase tracking-[0.35em] text-secondary transition-colors duration-300 group-hover:text-primary">
-//             Apply
-//           </span>
-//           <svg
-//             aria-hidden="true"
-//             viewBox="0 0 24 24"
-//             fill="none"
-//             stroke="currentColor"
-//             strokeWidth="1.8"
-//             strokeLinecap="round"
-//             strokeLinejoin="round"
-//             className="h-5 w-5 text-surface transition-all duration-300 group-hover:translate-x-1 group-hover:text-primary"
-//           >
-//             <path d="M5 12h14" />
-//             <path d="M13 6l6 6-6 6" />
-//           </svg>
+//           <Mail size={14} /> {job.contactEmail}
 //         </a>
 //       </div>
-//     </div>
-//   );
-// }
-
-
-
-// export default function JobCard({ job }) {
-//   return (
-//     <div className="rounded-3xl bg-surface p-8 sm:p-10">
-//       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-//         <h3 className="font-display text-2xl font-medium text-ink">
-//           {job.title}
-//         </h3>
-//         <span className="rounded-full bg-ink px-4 py-1 text-xs font-medium text-surface">
-//           {job.employmentType}
-//         </span>
-//       </div>
-
-//       {job.location && (
-//         <p className="mb-4 text-sm text-secondary">{job.location}</p>
-//       )}
-
-//       <p className="mb-6 text-secondary">{job.description}</p>
-
-//       <div className="flex flex-col gap-2 border-t border-secondary/20 pt-6 sm:flex-row sm:gap-8">
-//         <a
-//           href={`tel:${job.contactNumber}`}
-//           className="text-ink transition hover:text-primary"
-//         >
-//           📞 {job.contactNumber}
-//         </a>
-//         <a
-//           href={`mailto:${job.contactEmail}`}
-//           className="text-ink transition hover:text-primary"
-//         >
-//           ✉️ {job.contactEmail}
-//         </a>
-//       </div>
-//     </div>
+//     </article>
 //   );
 // }

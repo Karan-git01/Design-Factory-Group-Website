@@ -116,7 +116,7 @@ export default function Testimonials({
   }, [index, autoPlay, reduced, paused, autoPlayInterval, total]);
 
   return (
-    <section id="testimonials" className="mx-auto max-w-7xl px-5 pt-25 pb-25 text-ink sm:px-8 md:py-32">
+    <section id="testimonials" className="mx-auto max-w-7xl px-5 pt-10 pb-25 text-ink sm:px-8 md:py-32">
       <div className="hairline mb-16" />
 
       <Reveal>
@@ -141,7 +141,7 @@ export default function Testimonials({
             aria-hidden="true"
             className="pointer-events-none absolute -right-2 -top-2 hidden h-28 w-28 rotate-180 fill-border stroke-none lg:block"
           />
-          <div className="aspect-[4/5] w-full overflow-hidden">
+          <div className="aspect-square w-full overflow-hidden md:aspect-[4/5]">
             <img
               src={featured.image}
               alt={`Project for ${featured.name}`}
