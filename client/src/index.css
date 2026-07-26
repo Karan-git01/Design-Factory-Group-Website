@@ -352,7 +352,16 @@
   .map-dot-ring, .map-dot-glow { animation: none; opacity: 0.6; }
 }
 
-
+.marquee-track {
+  animation: marquee-scroll 28s linear infinite;
+}
+.marquee-strip:hover .marquee-track {
+  animation-play-state: paused;
+}
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
 
 
 

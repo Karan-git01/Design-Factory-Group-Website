@@ -9,6 +9,8 @@ import Stats from "../components/Stats";
 import WorkStages from "../components/WorkStages";
 import BranchesSection from "../components/BranchesSection";
 import FAQ from "../components/FAQ";
+import MarqueeStrip from "../components/MarqueeStrip";
+import Testimonials from "../components/Testimonials";
 
 export default function Home() {
   usePageMeta(
@@ -19,11 +21,13 @@ export default function Home() {
   return (
     <main>
       <Hero />
+      <MarqueeStrip/>
       <StudioFocus />
       <AboutPreview />
       <WhatWeDo />
       <ProjectsTimeline />
       <WhyUs />
+      <Testimonials/>
       <Stats />
       <WorkStages />
       <BranchesSection />
