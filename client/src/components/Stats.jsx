@@ -1,19 +1,106 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useCountUp } from "react-countup";
 import { Globe, Users, Maximize2 } from "lucide-react";
 import { Reveal } from "../components/Reveal";
 import WorldMapDots from "./WorldMapDots";
 
-const COUNTRIES = ["India", "UAE", "USA", "UK", "Singapore", "Australia"];
+// All 28 Indian states — operations are pan-India, not global.
+const STATES = [
+  "Andhra Pradesh",
+  "Arunachal Pradesh",
+  "Assam",
+  "Bihar",
+  "Chhattisgarh",
+  "Goa",
+  "Gujarat",
+  "Haryana",
+  "Himachal Pradesh",
+  "Jharkhand",
+  "Karnataka",
+  "Kerala",
+  "Madhya Pradesh",
+  "Maharashtra",
+  "Manipur",
+  "Meghalaya",
+  "Mizoram",
+  "Nagaland",
+  "Odisha",
+  "Punjab",
+  "Rajasthan",
+  "Sikkim",
+  "Tamil Nadu",
+  "Telangana",
+  "Tripura",
+  "Uttar Pradesh",
+  "Uttarakhand",
+  "West Bengal",
+];
 
 const STATS = [
-  { target: 17, suffix: "", label: "Countries Worldwide", icon: Globe },
+  { target: STATES.length, suffix: "", label: "States Covered", icon: Globe },
   { target: 260, suffix: "+", label: "Clients Served", icon: Users },
   { target: 850, suffix: "K+", label: "Total Area Delivered", icon: Maximize2 },
 ];
 
 const ROW_HEIGHT_REM = 4;
 const VISIBLE_ROWS = 3;
+// Reserve center-column width based on the longest name ("Arunachal Pradesh"
+// / "Himachal Pradesh", 17 chars) plus generous breathing room on each side,
+// so the dimension lines never sit under the text.
+const LONGEST_NAME_CH = Math.max(...STATES.map((s) => s.length)) + 8;
+// Must match the `duration-700` Tailwind class used on the scroller below.
+const TRANSITION_MS = 700;
+// Fixed type size for every state name, regardless of length, so the
+// scroller reads as a single consistent instrument rather than reflowing.
+const NAME_SIZE_CLASS = "text-xl sm:text-2xl md:text-3xl";
+
+// Append a duplicate of the first state to the end of the display list.
+// This gives the auto-scroller somewhere to animate "past" the last real
+// item, so it can then snap back to index 0 (which looks pixel-identical
+// to the duplicate) without ever animating a jarring reverse jump.
+const DISPLAY_STATES = [...STATES, STATES[0]];
+
+// Small L-shaped ticks in each corner of a relatively-positioned parent —
+// the recurring "technical viewport" mark used across the section: on the
+// state-picker card, on each stat card, framing content like a drawing
+// detail callout.
+function CornerBrackets() {
+  const positions = [
+    "top-0 left-0 border-t border-l",
+    "top-0 right-0 border-t border-r",
+    "bottom-0 left-0 border-b border-l",
+    "bottom-0 right-0 border-b border-r",
+  ];
+  return (
+    <>
+      {positions.map((pos) => (
+        <span
+          key={pos}
+          aria-hidden
+          className={`pointer-events-none absolute h-3 w-3 border-copper/50 transition-colors duration-300 group-hover:border-copper ${pos}`}
+        />
+      ))}
+    </>
+  );
+}
+
+// Dimension-line ornament — a gradient line terminating in a short
+// perpendicular tick at the end nearest the text, the way a measurement
+// line closes on a drawing. Replaces the plain gradient-only version.
+function DimensionLine({ side = "left" }) {
+  const gradient =
+    side === "left"
+      ? "bg-gradient-to-r from-transparent to-copper/70"
+      : "bg-gradient-to-l from-transparent to-copper/70";
+  const tick = <span aria-hidden className="h-2 w-px shrink-0 bg-copper/70" />;
+  return (
+    <span aria-hidden className="flex w-full items-center">
+      {side === "right" && tick}
+      <span className={`block h-[1.5px] w-full rounded-full ${gradient}`} />
+      {side === "left" && tick}
+    </span>
+  );
+}
 
 function Stats({ target, suffix, label, icon: Icon }) {
   const elementId = `stat-${target}-${suffix}`;
@@ -28,51 +115,80 @@ function Stats({ target, suffix, label, icon: Icon }) {
   });
 
   return (
-    <div className="card-lift group flex items-center justify-between gap-4 rounded-3xl border border-border bg-background p-6 transition-colors duration-300 hover:border-copper">
-      <div className="flex items-center gap-4">
-        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-border text-copper transition-colors duration-300 group-hover:border-copper group-hover:bg-copper group-hover:text-background">
-          <Icon size={16} />
-        </span>
+    <div className="card-lift group relative flex items-center gap-5 overflow-hidden rounded-sm border border-border bg-background p-6 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-copper hover:shadow-md">
+      <CornerBrackets />
+      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-border text-copper transition-colors duration-300 group-hover:border-copper group-hover:bg-copper group-hover:text-background">
+        <Icon size={16} />
+      </span>
+      <div className="flex flex-1 items-baseline justify-between gap-4">
         <span
           id={elementId}
           className="font-display text-4xl tracking-tight tabular-nums md:text-5xl"
         />
+        <span className="max-w-[7rem] text-right font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+          {label}
+        </span>
       </div>
-      <span className="max-w-[8rem] text-right text-sm text-muted-foreground">{label}</span>
     </div>
   );
 }
 
-// Ornamental flanking line — a solid line broken into two segments with
-// clear space around a center dot, so nothing touches or overlaps.
-function OrnamentLine() {
-  return (
-    <svg
-      viewBox="0 0 100 8"
-      preserveAspectRatio="none"
-      className="h-1.5 w-full text-copper/70"
-      aria-hidden
-    >
-      <line x1="0" y1="4" x2="38" y2="4" stroke="currentColor" strokeWidth="1.5" />
-      <circle cx="50" cy="4" r="2.5" fill="currentColor" />
-      <line x1="62" y1="4" x2="100" y2="4" stroke="currentColor" strokeWidth="1.5" />
-    </svg>
-  );
-}
-
 export default function GlobalPresence() {
+  // idx counts up indefinitely — it is NOT wrapped with `% STATES.length`.
+  // Wrapping it caused the transform to occasionally jump backward
+  // mid-animation, which read as the list "looping" after only a few
+  // items instead of scrolling smoothly through all 28 states.
   const [idx, setIdx] = useState(0);
+  const [animate, setAnimate] = useState(true);
+  const snapTimeout = useRef(null);
 
   useEffect(() => {
-    const t = setInterval(() => setIdx((i) => (i + 1) % COUNTRIES.length), 1800);
+    const t = setInterval(() => {
+      setIdx((i) => i + 1);
+    }, 1800);
     return () => clearInterval(t);
   }, []);
 
+  // Once we've scrolled onto the appended duplicate of STATES[0], wait for
+  // that transition to finish, disable the transition for one frame, and
+  // reset idx back to 0 — visually seamless since the duplicate is a copy
+  // of the real first item, so the reset is imperceptible.
+  useEffect(() => {
+    if (idx === STATES.length) {
+      snapTimeout.current = setTimeout(() => {
+        setAnimate(false);
+        setIdx(0);
+      }, TRANSITION_MS);
+      return () => clearTimeout(snapTimeout.current);
+    }
+    if (!animate) {
+      const raf = requestAnimationFrame(() => setAnimate(true));
+      return () => cancelAnimationFrame(raf);
+    }
+  }, [idx, animate]);
+
   const containerHeight = ROW_HEIGHT_REM * VISIBLE_ROWS;
   const centerOffset = ROW_HEIGHT_REM * Math.floor(VISIBLE_ROWS / 2);
+  // Which real state (0..27) should be styled as "active" — derived from
+  // idx, decoupled from the raw (unwrapped) scroll position.
+  const highlightIdx = idx % STATES.length;
+  const indexLabel = String(highlightIdx + 1).padStart(2, "0");
+  const totalLabel = String(STATES.length).padStart(2, "0");
 
   return (
     <section className="relative isolate overflow-hidden border-t border-border bg-cream-alt py-20 md:py-32">
+      {/* Faint blueprint grid — ambient, low-contrast, ties the section to
+          a drafting sheet without competing with content. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-0 opacity-[0.04]"
+        style={{
+          backgroundImage:
+            "linear-gradient(var(--foreground) 1px, transparent 1px), linear-gradient(90deg, var(--foreground) 1px, transparent 1px)",
+          backgroundSize: "56px 56px",
+        }}
+      />
+
       <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[420px] overflow-hidden md:h-[560px]">
         <WorldMapDots className="absolute left-1/2 top-0 w-[140%] max-w-none -translate-x-1/2 text-copper/25" />
         <div
@@ -90,18 +206,18 @@ export default function GlobalPresence() {
           <div className="grid gap-8 md:grid-cols-[1fr_1fr] md:items-end">
             <div>
               <Reveal>
-                <span className="label-caps text-copper">— Global Presence</span>
+                <span className="label-caps text-copper">— Presence Across India</span>
               </Reveal>
               <Reveal delay={80}>
-                <h2 className="mt-4 max-w-3xl font-display text-4xl leading-[1.05] tracking-tight md:text-5xl">
-                  Building across <em className="text-copper">multiple countries</em>.
+                <h2 className="mt-4 max-w-3xl font-display text-4xl leading-[1.05] tracking-tight md:text-6xl">
+                  Building across <em className="text-copper">every state</em>.
                 </h2>
               </Reveal>
             </div>
             <Reveal delay={140}>
               <p className="max-w-md text-muted-foreground md:justify-self-end">
                 From private residences to large-scale developments, our studio delivers
-                considered architecture wherever our clients are building.
+                considered architecture across India, wherever our clients are building.
               </p>
             </Reveal>
           </div>
@@ -109,18 +225,28 @@ export default function GlobalPresence() {
 
         <div className="mt-12 grid gap-6 md:grid-cols-[1.2fr_1fr] lg:gap-10">
           <Reveal>
-            <div className="relative overflow-hidden rounded-3xl border border-border bg-background p-8 md:p-10">
+            <div className="relative overflow-hidden rounded-sm border border-border bg-background p-8 shadow-sm md:p-10">
+              <CornerBrackets />
+              <span
+                aria-hidden
+                className="pointer-events-none absolute inset-3 border border-border/40"
+              />
               <div className="dot-grid absolute inset-0 text-foreground/40" />
               <div className="relative">
-                <p className="label-caps flex items-center gap-2 text-muted-foreground">
-                  <span className="relative flex h-2 w-2">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-copper opacity-75" />
-                    <span className="relative inline-flex h-2 w-2 rounded-full bg-copper" />
+                <div className="flex items-center justify-between gap-4">
+                  <p className="label-caps flex items-center gap-2 text-muted-foreground">
+                    <span className="relative flex h-2 w-2">
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-copper opacity-75" />
+                      <span className="relative inline-flex h-2 w-2 rounded-full bg-copper" />
+                    </span>
+                    Currently active in
+                  </p>
+                  <span className="font-mono text-xs tabular-nums tracking-[0.1em] text-muted-foreground">
+                    <span className="text-copper">{indexLabel}</span> / {totalLabel}
                   </span>
-                  Currently active in
-                </p>
+                </div>
 
-                {/* Centered auto-scrolling country picker */}
+                {/* Centered auto-scrolling state picker */}
                 <div
                   className="relative mt-6 overflow-hidden"
                   style={{
@@ -131,43 +257,48 @@ export default function GlobalPresence() {
                       "linear-gradient(to bottom, transparent, black 30%, black 70%, transparent)",
                   }}
                 >
-                  {/* Flanking ornamental SVG lines either side of the centered item */}
+                  {/* Flanking dimension lines either side of the centered
+                      item. The center gap is sized off the longest name in
+                      STATES so it never clips a long name. */}
                   <div
-                    className="pointer-events-none absolute inset-x-0 z-10 flex items-center justify-center gap-3 sm:gap-4"
+                    className="pointer-events-none absolute inset-x-0 z-10 flex items-center justify-center gap-4 px-2 sm:gap-6"
                     style={{
                       top: `${centerOffset}rem`,
                       height: `${ROW_HEIGHT_REM}rem`,
                     }}
                   >
-                    <span className="max-w-[64px] flex-1 sm:max-w-[80px] mx-10">
-                      <OrnamentLine />
+                    <span className="min-w-[12px] flex-1">
+                      <DimensionLine side="left" />
                     </span>
-                    <span className="w-24 shrink-0 sm:w-28" />
-                    <span className="max-w-[64px] flex-1 sm:max-w-[80px] mx-10">
-                      <OrnamentLine />
+                    <span
+                      className="shrink-0"
+                      style={{ width: `${LONGEST_NAME_CH}ch`, maxWidth: "70%" }}
+                    />
+                    <span className="min-w-[12px] flex-1">
+                      <DimensionLine side="right" />
                     </span>
                   </div>
 
                   <div
-                    className="transition-transform duration-700 ease-out"
+                    className={animate ? "transition-transform duration-700 ease-out" : ""}
                     style={{
                       transform: `translateY(-${idx * ROW_HEIGHT_REM - centerOffset}rem)`,
                     }}
                   >
-                    {COUNTRIES.map((c, i) => (
+                    {DISPLAY_STATES.map((s, i) => (
                       <div
-                        key={c}
-                        className="flex items-center justify-center font-display tracking-tight transition-all duration-500"
+                        key={`${s}-${i}`}
+                        className="flex items-center justify-center px-3 font-display tracking-tight transition-all duration-500"
                         style={{ height: `${ROW_HEIGHT_REM}rem` }}
                       >
                         <span
-                          className={`text-2xl md:text-3xl transition-all duration-500 ${
-                            i === idx
-                              ? "text-copper opacity-100 scale-100"
-                              : "text-muted-foreground/50 opacity-60 scale-90"
+                          className={`whitespace-nowrap ${NAME_SIZE_CLASS} transition-all duration-500 ${
+                            i % STATES.length === highlightIdx
+                              ? "scale-100 text-copper opacity-100"
+                              : "scale-90 text-muted-foreground/50 opacity-60"
                           }`}
                         >
-                          {c}
+                          {s}
                         </span>
                       </div>
                     ))}
@@ -189,7 +320,3 @@ export default function GlobalPresence() {
     </section>
   );
 }
-
-
-
-

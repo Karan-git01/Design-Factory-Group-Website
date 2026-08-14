@@ -7,7 +7,7 @@ export default function ProjectCard({ project }) {
 
   return (
     <Link to={`/projects/${project._id}`} className="group block">
-      <div className="img-zoom relative overflow-hidden rounded-3xl border border-border bg-card">
+      <div className="img-zoom relative overflow-hidden rounded-sm border border-border bg-card transition-colors duration-300 group-hover:border-copper/40">
         <div className="aspect-[4/3] w-full">
           <img
             src={project.imageUrl}
@@ -16,9 +16,10 @@ export default function ProjectCard({ project }) {
             loading="lazy"
           />
         </div>
-        <div className="absolute left-4 top-4 flex items-center gap-2">
+
+        <div className="absolute left-3 top-3 flex items-center gap-2">
           <span
-            className={`label-caps flex items-center gap-1.5 rounded-full px-3 py-1.5 shadow-sm backdrop-blur ${
+            className={`label-caps flex items-center gap-1.5 rounded-sm px-2.5 py-1 shadow-sm backdrop-blur ${
               project.status === "Ongoing"
                 ? "bg-copper/90 text-primary-foreground"
                 : "bg-background/90 text-foreground"
@@ -31,22 +32,23 @@ export default function ProjectCard({ project }) {
             />
             {project.status}
           </span>
-          <span className="label-caps rounded-full bg-background/90 px-3 py-1.5 text-foreground shadow-sm backdrop-blur">
+          <span className="label-caps rounded-sm bg-background/90 px-2.5 py-1 text-foreground shadow-sm backdrop-blur">
             {project.year}
           </span>
         </div>
-        <span className="absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full bg-background/90 text-foreground opacity-0 shadow-sm backdrop-blur transition group-hover:opacity-100">
+
+        <span className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-sm bg-background/90 text-foreground opacity-0 shadow-sm backdrop-blur transition-all duration-300 group-hover:opacity-100">
           <ArrowUpRight size={16} />
         </span>
       </div>
 
-      <div className="px-2.5">
+      <div className="px-1">
         <div className="mt-5 flex items-start justify-between gap-6">
           <div>
             <h3 className="relative inline-block pb-1.5 font-display text-2xl tracking-tight md:text-3xl">
               {project.name}
               <span className="absolute inset-x-0 bottom-0 h-px bg-foreground/70" />
-              <span className="absolute inset-x-0 bottom-0 h-[3px] origin-left scale-x-0 bg-copper transition-transform duration-300 ease-out group-hover:scale-x-100" />
+              <span className="absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-copper transition-transform duration-300 ease-out group-hover:scale-x-100" />
             </h3>
             <p className="mt-1.5 flex items-center gap-1.5 label-caps text-muted-foreground">
               <MapPin size={11} className="text-copper" />
@@ -66,13 +68,13 @@ export default function ProjectCard({ project }) {
             {visibleScope.map((s) => (
               <span
                 key={s}
-                className="rounded-full border border-border px-3 py-1 text-xs text-foreground/80"
+                className="rounded-sm border border-border px-2.5 py-1 text-xs text-foreground/80"
               >
                 {s}
               </span>
             ))}
             {extraScope > 0 && (
-              <span className="rounded-full border border-dashed border-border px-3 py-1 text-xs text-muted-foreground">
+              <span className="rounded-sm border border-dashed border-border px-2.5 py-1 text-xs text-muted-foreground">
                 +{extraScope} more
               </span>
             )}
@@ -82,76 +84,3 @@ export default function ProjectCard({ project }) {
     </Link>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import { Link } from "react-router-dom";
-// import { ArrowUpRight } from "lucide-react";
-// export default function ProjectCard({ project }) {
-//   return (
-//     <Link to={`/projects/${project._id}`} className="group block">
-//       <div className="img-zoom relative overflow-hidden rounded-3xl border border-border bg-card">
-//         <div className="aspect-[4/3] w-full">
-//           <img
-//             src={project.imageUrl}
-//             alt={project.name}
-//             className="h-full w-full object-cover"
-//             loading="lazy"
-//           />
-//         </div>
-//         <div className="absolute left-4 top-4 flex items-center gap-2">
-//           <span
-//             className={`label-caps rounded-full px-3 py-1.5 backdrop-blur ${
-//               project.status === "Ongoing"
-//                 ? "bg-copper/90 text-primary-foreground"
-//                 : "bg-background/90 text-foreground"
-//             }`}
-//           >
-//             {project.status}
-//           </span>
-//           <span className="label-caps rounded-full bg-background/90 px-3 py-1.5 text-foreground backdrop-blur">
-//             {project.year}
-//           </span>
-//         </div>
-//         <span className="absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full bg-background/90 text-foreground opacity-0 backdrop-blur transition group-hover:opacity-100">
-//           <ArrowUpRight size={16} />
-//         </span>
-//       </div>
-//       <div className="mt-5 flex items-start justify-between gap-6">
-//         <div>
-//           <h3 className="relative inline-block pb-1.5 font-display text-2xl tracking-tight md:text-3xl">
-//             {project.name}
-//             <span className="absolute inset-x-0 bottom-0 h-px bg-foreground/70" />
-//             <span className="absolute inset-x-0 bottom-0 h-[3px] origin-left scale-x-0 bg-copper transition-transform duration-300 ease-out group-hover:scale-x-100" />
-//           </h3>
-//           <p className="mt-1 label-caps text-muted-foreground">{project.location}</p>
-//         </div>
-//       </div>
-//       <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
-//         {project.description}
-//       </p>
-//       <div className="mt-4 flex flex-wrap gap-2">
-//         {project.scope?.map((s) => (
-//           <span
-//             key={s}
-//             className="rounded-full border border-border px-3 py-1 text-xs text-foreground/80"
-//           >
-//             {s}
-//           </span>
-//         ))}
-//       </div>
-//     </Link>
-//   );
-// }

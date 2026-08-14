@@ -363,7 +363,22 @@
   to { transform: translateX(-50%); }
 }
 
+/* Add to global stylesheet — respects reduced motion globally as a safety net,
+   in case any GSAP call slips past the JS-level guard */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
 
+/* Underline treatment for inline text links elsewhere on the page, kept
+   consistent with the new CTA's premium feel */
+.btn-arrow {
+  -webkit-tap-highlight-color: transparent;
+}
 
 
 

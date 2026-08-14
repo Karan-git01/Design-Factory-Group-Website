@@ -49,197 +49,121 @@ export default function ProjectDetail() {
   }
 
   return (
-    <article className="pb-24">
-      <div className="mx-auto max-w-7xl px-5 pt-10 sm:px-8">
+    <article className="relative pb-24">
+      {/* Page-level background layer: drafting grid + two copper glows (one near the title, one lower
+          near the image). This single full-width, overflow-hidden layer is a sibling to the content —
+          it never wraps the sticky scope rail below, so sticky positioning stays intact. Because it
+          spans edge-to-edge (inset-x-0) and clips its own contents, glows can bleed freely without
+          ever pushing the page wider than the viewport. */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[1000px] overflow-hidden">
+        <div
+          className="absolute inset-0 opacity-[0.07]"
+          style={{
+            backgroundImage:
+              "linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)",
+            backgroundSize: "48px 48px",
+            maskImage:
+              "radial-gradient(ellipse 70% 55% at 50% 0%, black 40%, transparent 85%)",
+            WebkitMaskImage:
+              "radial-gradient(ellipse 70% 55% at 50% 0%, black 40%, transparent 85%)",
+          }}
+        />
+        {/* Glow near the title */}
+        <div
+          className="absolute -top-32 left-[20%] h-[420px] w-[860px] -translate-x-1/2 rounded-full bg-copper/10 blur-[110px]"
+          aria-hidden="true"
+        />
+        {/* Glow near the hero image, sitting lower and to the right */}
+        <div
+          className="absolute right-0 top-[14rem] h-[300px] w-[380px] translate-x-1/3 rounded-full bg-copper/20 blur-[100px]"
+          aria-hidden="true"
+        />
+      </div>
+
+      <div className="mx-auto max-w-6xl px-5 pt-10 sm:px-8">
         <Link
           to="/projects"
           className="btn-arrow inline-flex items-center gap-2 label-caps text-copper"
         >
           <ArrowLeft size={14} /> Back to Projects
         </Link>
-      </div>
 
-      <Reveal>
-        <div className="mx-auto mt-8 max-w-7xl px-5 sm:px-8">
-          <div className="img-zoom overflow-hidden rounded-[2rem] border border-border">
-            <img
-              src={project.imageUrl}
-              alt={project.name}
-              className="aspect-[16/10] w-full object-cover"
-            />
-          </div>
-        </div>
-      </Reveal>
-
-      <div className="mx-auto mt-14 grid max-w-7xl gap-10 px-5 sm:px-8 md:grid-cols-[1.4fr_1fr] md:gap-16">
-        <Reveal>
-          <div className="flex items-center gap-3">
+        <Reveal delay={60}>
+          <div className="mt-8 flex flex-wrap items-center gap-x-3 gap-y-2">
             <span
-              className={`label-caps rounded-full px-3 py-1.5 ${
+              className={`label-caps inline-flex items-center gap-1.5 rounded-sm px-2.5 py-1 shadow-[0_4px_14px_-4px_rgba(0,0,0,0.25)] ${
                 project.status === "Ongoing"
                   ? "bg-copper text-primary-foreground"
                   : "bg-foreground text-background"
               }`}
             >
+              <span
+                className={`h-1.5 w-1.5 rounded-full ${
+                  project.status === "Ongoing" ? "bg-primary-foreground" : "bg-copper"
+                }`}
+              />
               {project.status}
             </span>
+            <span className="h-3 w-px bg-border" />
             <span className="label-caps text-muted-foreground">{project.year}</span>
+            <span className="h-3 w-px bg-border" />
+            <span className="label-caps text-muted-foreground">{project.location}</span>
           </div>
-          <h1 className="mt-5 font-display text-5xl leading-[1.02] tracking-tight md:text-7xl">
-            {project.name}
-          </h1>
-          <p className="mt-4 label-caps text-muted-foreground">{project.location}</p>
         </Reveal>
 
-        <Reveal delay={100}>
-          <p className="text-lg leading-relaxed text-foreground/85">{project.description}</p>
-          {project.scope?.length > 0 && (
-            <div className="mt-8">
-              <p className="label-caps text-muted-foreground">Scope</p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {project.scope.map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded-full border border-border px-3 py-1.5 text-sm"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
+        <Reveal delay={110}>
+          <h1 className="mt-6 max-w-4xl font-display text-4xl leading-[1.02] tracking-tight md:text-7xl">
+            {project.name}
+          </h1>
         </Reveal>
+      </div>
+
+      <Reveal delay={160}>
+        <div className="relative mx-auto mt-12 max-w-6xl px-5 sm:px-8">
+          <div className="img-zoom relative overflow-hidden">
+            <img
+              src={project.imageUrl}
+              alt={project.name}
+              className="aspect-[16/8] w-full object-cover md:aspect-[21/9]"
+            />
+            <span className="pointer-events-none absolute left-0 top-0 h-7 w-7 border-l-2 border-t-2 border-copper" />
+            <span className="pointer-events-none absolute bottom-0 right-0 h-7 w-7 border-b-2 border-r-2 border-copper" />
+          </div>
+        </div>
+      </Reveal>
+
+      <div className="mx-auto mt-16 max-w-6xl px-5 sm:px-8">
+        <div className="grid gap-10 lg:grid-cols-[220px_1fr] lg:gap-16">
+          {project.scope?.length > 0 && (
+            <Reveal delay={100}>
+              <div className="lg:sticky lg:top-24">
+                <div className="flex items-center gap-2">
+                  <span className="h-px w-4 bg-copper" />
+                  <p className="label-caps text-muted-foreground">Scope</p>
+                </div>
+                <div className="mt-4 flex flex-row flex-wrap gap-2 lg:flex-col lg:gap-2.5">
+                  {project.scope.map((tag) => (
+                    <span
+                      key={tag}
+                      className="w-fit rounded-sm border border-border px-2.5 py-1.5 text-sm text-foreground/80 transition-all hover:-translate-y-0.5 hover:border-copper/50 hover:shadow-[0_6px_16px_-6px_rgba(0,0,0,0.2)]"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </Reveal>
+          )}
+
+          <Reveal delay={160}>
+            <div className={project.scope?.length > 0 ? "lg:border-l lg:border-border lg:pl-16" : ""}>
+              <p className="w-full max-w-none text-lg leading-relaxed text-foreground/85">
+                {project.description}
+              </p>
+            </div>
+          </Reveal>
+        </div>
       </div>
     </article>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import { useEffect, useState } from "react";
-// import { useParams, Link } from "react-router-dom";
-// import { useApi } from "../context/ApiContext";
-// import { usePageMeta } from "../hooks/usePageMeta";
-
-// export default function ProjectDetail() {
-//   const { id } = useParams();
-//   const api = useApi();
-//   const [project, setProject] = useState(null);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState(null);
-
-//   usePageMeta(project?.name, project?.description);
-
-//   useEffect(() => {
-//     setLoading(true);
-//     api
-//       .get(`/projects/${id}`)
-//       .then(setProject)
-//       .catch((err) => setError(err.message))
-//       .finally(() => setLoading(false));
-//   }, [api, id]);
-
-//   if (loading) {
-//     return (
-//       <main className="flex min-h-screen items-center justify-center bg-ink">
-//         <p className="text-secondary-light">Loading project...</p>
-//       </main>
-//     );
-//   }
-
-//   if (error || !project) {
-//     return (
-//       <main className="flex min-h-screen flex-col items-center justify-center gap-4 bg-ink px-6 text-center">
-//         <h1 className="font-display text-3xl font-medium text-surface">
-//           Project not found
-//         </h1>
-//         <p className="text-secondary-light">
-//           This project may have been removed or the link is incorrect.
-//         </p>
-//         <Link
-//           to="/projects"
-//           className="rounded-full bg-primary px-8 py-3 text-surface transition hover:bg-primary-dark"
-//         >
-//           Back to Projects
-//         </Link>
-//       </main>
-//     );
-//   }
-
-//   return (
-//     <main className="min-h-screen bg-ink px-6 pt-32 pb-24 sm:px-12">
-//       <div className="mx-auto max-w-5xl">
-//         <Link
-//           to="/projects"
-//           className="mb-10 inline-block text-sm text-secondary-light hover:text-primary"
-//         >
-//           ← Back to Projects
-//         </Link>
-
-//         <div className="mb-10 overflow-hidden rounded-[2rem]">
-//           <img
-//             src={project.imageUrl}
-//             alt={project.name}
-//             className="h-[360px] w-full object-cover sm:h-[480px]"
-//           />
-//         </div>
-
-//         <div className="mb-3 flex flex-wrap items-center gap-3">
-//           <h1 className="font-display text-4xl font-medium text-surface sm:text-5xl">
-//             {project.name}
-//           </h1>
-//           <span
-//             className={`rounded-full px-4 py-1 text-xs font-medium ${
-//               project.status === "Ongoing"
-//                 ? "bg-primary text-ink"
-//                 : "border border-secondary/20 text-secondary-light"
-//             }`}
-//           >
-//             {project.status}
-//           </span>
-//         </div>
-
-//         <p className="mb-8 text-secondary-light">
-//           {project.location} · {project.year}
-//         </p>
-
-//         <p className="mb-8 max-w-2xl text-lg leading-8 text-secondary-light">
-//           {project.description}
-//         </p>
-
-//         {project.scope?.length > 0 && (
-//           <div className="flex flex-wrap gap-2">
-//             {project.scope.map((tag) => (
-//               <span
-//                 key={tag}
-//                 className="rounded-full border border-secondary/20 px-4 py-2 text-xs uppercase tracking-wide text-secondary-light"
-//               >
-//                 {tag}
-//               </span>
-//             ))}
-//           </div>
-//         )}
-//       </div>
-//     </main>
-//   );
-// }

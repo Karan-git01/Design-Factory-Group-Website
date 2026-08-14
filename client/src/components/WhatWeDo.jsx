@@ -6,20 +6,24 @@ export default function WhatWeDo() {
     <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8 md:py-32">
       <div className="grid gap-10 md:grid-cols-[1fr_1.1fr] md:gap-16">
         <div className="relative order-2 md:order-1">
-          <div className="img-zoom overflow-hidden rounded-[2rem] border border-border">
+          <div className="img-zoom overflow-hidden rounded-sm border border-border">
             <img
               src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=1600"
               alt="Contemporary residential project"
               loading="lazy"
-              className="aspect-[4/5] w-full object-cover"
+              className="aspect-[4/3] w-full max-h-[360px] object-cover sm:max-h-[420px] md:aspect-auto md:h-[420px] md:max-h-none lg:aspect-[4/3] lg:h-auto lg:max-h-[480px]"
             />
           </div>
-          <div className="absolute -right-4 top-8 max-w-[240px] rounded-3xl border border-border bg-background p-5 shadow-xl">
-  <p className="label-caps text-copper">Our Expertise</p>
-  <p className="mt-2 font-display text-lg leading-tight">
-    Architecture and construction, one coordinated process.
-  </p>
-</div>
+          <div className="group absolute -right-4 top-8 max-w-[150px] rounded-sm border border-copper bg-copper p-3 shadow-xl sm:max-w-[180px] sm:p-4 md:max-w-[200px] md:p-4 lg:max-w-[240px] lg:p-5">
+            <p className="label-caps relative inline-block w-fit pb-1 text-background/70">
+              Our Expertise
+              <span className="absolute inset-x-0 bottom-0 h-px bg-background/30" />
+              <span className="absolute inset-x-0 bottom-0 h-px origin-left scale-x-0 bg-background transition-transform duration-500 ease-out group-hover:scale-x-100" />
+            </p>
+            <p className="relative mt-2 font-display text-sm leading-tight text-background text-[0.75rem] md:text-base lg:text-lg">
+              Architecture and construction, one coordinated process.
+            </p>
+          </div>
         </div>
 
         <div className="order-1 flex flex-col justify-center md:order-2">
@@ -42,54 +46,3 @@ export default function WhatWeDo() {
     </section>
   );
 }
-
-
-
-// export default function WhatWeDo() {
-//   return (
-//     <section className="bg-ink px-6 py-20 sm:px-8 md:px-12 lg:px-16 xl:px-20">
-//       <div className="mx-auto max-w-7xl">
-//         <div className="mb-12 flex items-center gap-4">
-//           <div className="h-px w-14 bg-primary" />
-//           <span className="text-[11px] font-medium uppercase tracking-[0.45em] text-secondary-light">
-//             What We Do
-//           </span>
-//         </div>
-
-//         <div className="relative overflow-hidden rounded-[2.25rem] border border-secondary/20 bg-surface/5 shadow-[0_30px_80px_rgba(0,0,0,0.45)]">
-//           <div className="pointer-events-none absolute inset-4 rounded-[1.8rem] border border-secondary/20" />
-
-//           <img
-//             src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=1600"
-//             alt="Contemporary residential project"
-//             loading="lazy"
-//             className="h-[420px] w-full object-cover transition duration-700 hover:scale-105 sm:h-[520px] lg:h-[700px]"
-//           />
-
-//           <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/25 to-transparent" />
-
-//           <div className="absolute bottom-5 left-5 right-5 sm:bottom-8 sm:left-8 sm:right-auto sm:max-w-lg">
-//             <div className="rounded-[28px] border border-secondary/20 bg-ink-light/90 p-6 backdrop-blur-2xl sm:p-8">
-//               <div className="mb-5 flex items-center gap-4">
-//                 <div className="h-px w-10 bg-primary" />
-//                 <span className="text-[10px] uppercase tracking-[0.35em] text-secondary-light">
-//                   Our Expertise
-//                 </span>
-//               </div>
-
-//               <h3 className="font-display text-3xl font-light text-surface sm:text-4xl">
-//                 What we do
-//               </h3>
-
-//               <p className="mt-5 text-sm leading-7 text-secondary-light sm:text-base">
-//                 We design and build contemporary residential and commercial
-//                 projects, integrating architecture and construction into one
-//                 coordinated process.
-//               </p>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </section>
-//   );
-// }

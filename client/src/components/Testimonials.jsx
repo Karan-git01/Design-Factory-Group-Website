@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Reveal } from "../components/Reveal";
 
 const DEFAULT_TESTIMONIALS = {
   featured: {
     quote:
-      "The team's attention to detail and ability to translate our vision into a home beyond expectation is rare.",
+      "The team's attention to detail and ability to translate our vision into a home beyond expectation is rare.The team's attention to detail and ability to translate our vision into a home beyond expectation is rare.",
     name: "Alexander R.",
     role: "Private Client",
     location: "Lake Como, Italy",
@@ -59,14 +59,7 @@ const DEFAULT_TESTIMONIALS = {
   ],
 };
 
-function Initial({ name }) {
-  const initial = name?.trim()?.[0] ?? "•";
-  return (
-    <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-ink/5 font-display text-lg text-ink">
-      {initial}
-    </div>
-  );
-}
+const SWIPE_THRESHOLD = 40;
 
 export default function Testimonials({
   featured = DEFAULT_TESTIMONIALS.featured,
@@ -79,13 +72,20 @@ export default function Testimonials({
   ),
   intro = "We collaborate closely with our clients to create residences that are considered, timeless and deeply personal.",
   autoPlay = true,
-  autoPlayInterval = 3000,
+  autoPlayInterval = 5000,
 }) {
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(0);
   const [paused, setPaused] = useState(false);
   const [reduced, setReduced] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const touchStartX = useRef(null);
+  const pausedRef = useRef(paused);
   const total = testimonials.length;
+
+  useEffect(() => {
+    pausedRef.current = paused;
+  }, [paused]);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -104,6 +104,7 @@ export default function Testimonials({
     setIndex(i);
   };
 
+  // Autoplay: advances the slide after autoPlayInterval.
   useEffect(() => {
     if (!autoPlay || reduced || paused || total <= 1) return;
     const t = setInterval(() => {
@@ -111,12 +112,59 @@ export default function Testimonials({
       setIndex((prev) => (prev + 1) % total);
     }, autoPlayInterval);
     return () => clearInterval(t);
-    // Resets the timer to a full interval whenever the slide changes,
-    // whether that change came from autoplay or a manual click.
   }, [index, autoPlay, reduced, paused, autoPlayInterval, total]);
 
+  // Progress-bar fill: driven entirely by requestAnimationFrame instead of
+  // a CSS animation, so pausing/resuming and mobile touch don't leave the
+  // bar stuck at 0% (the old animation-play-state approach was unreliable
+  // on mobile browsers).
+  useEffect(() => {
+    setProgress(0);
+    if (!autoPlay || reduced || total <= 1) return undefined;
+
+    let raf;
+    let start = null;
+    let elapsedAtPause = 0;
+    let pauseStart = pausedRef.current ? performance.now() : null;
+
+    const tick = (t) => {
+      if (pausedRef.current) {
+        if (pauseStart === null) pauseStart = t;
+        raf = requestAnimationFrame(tick);
+        return;
+      }
+      if (pauseStart !== null) {
+        elapsedAtPause += t - pauseStart;
+        pauseStart = null;
+      }
+      if (start === null) start = t;
+      const elapsed = t - start - elapsedAtPause;
+      const pct = Math.min(100, (elapsed / autoPlayInterval) * 100);
+      setProgress(pct);
+      if (pct < 100) raf = requestAnimationFrame(tick);
+    };
+
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [index, autoPlay, reduced, autoPlayInterval, total]);
+
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+    setPaused(true);
+  };
+
+  const handleTouchEnd = (e) => {
+    if (touchStartX.current === null) return;
+    const delta = e.changedTouches[0].clientX - touchStartX.current;
+    if (Math.abs(delta) > SWIPE_THRESHOLD) {
+      go(delta < 0 ? 1 : -1);
+    }
+    touchStartX.current = null;
+    setPaused(false);
+  };
+
   return (
-    <section id="testimonials" className="mx-auto max-w-7xl px-5 pt-10 pb-25 text-ink sm:px-8 md:py-32">
+    <section id="testimonials" className="mx-auto max-w-7xl px-5 pt-10 pb-16 text-ink sm:px-8 md:py-24">
       <div className="hairline mb-16" />
 
       <Reveal>
@@ -127,21 +175,14 @@ export default function Testimonials({
           {heading}
         </h2>
       </Reveal>
+      <Reveal delay={140}>
+        <p className="mt-6 max-w-md text-muted-foreground">{intro}</p>
+      </Reveal>
 
-      <div className="mt-12 grid gap-10 md:grid-cols-[1fr_1.1fr] md:gap-16">
-        <Reveal>
-          <p className="max-w-md text-muted-foreground">{intro}</p>
-        </Reveal>
-      </div>
-
-      {/* Featured card */}
-      <Reveal delay={100}>
-        <article className="relative mt-12 grid grid-cols-1 gap-0 overflow-hidden border border-border bg-card p-4 md:grid-cols-[1fr_1.3fr] md:p-6">
-          <Quote
-            aria-hidden="true"
-            className="pointer-events-none absolute -right-2 -top-2 hidden h-28 w-28 rotate-180 fill-border stroke-none lg:block"
-          />
-          <div className="aspect-square w-full overflow-hidden md:aspect-[4/5]">
+      {/* Featured story */}
+      <Reveal delay={200}>
+        <article className="mt-10 grid grid-cols-1 rounded-sm border border-border bg-card md:grid-cols-[0.7fr_1.3fr]">
+          <div className="img-zoom aspect-[16/10] w-full overflow-hidden rounded-t md:aspect-auto md:max-h-[360px] md:self-center md:rounded-l md:rounded-tr-none">
             <img
               src={featured.image}
               alt={`Project for ${featured.name}`}
@@ -150,49 +191,45 @@ export default function Testimonials({
             />
           </div>
 
-          <div className="flex flex-col justify-center px-4 py-8 md:px-12">
-            <div className="mb-6 flex items-center gap-4">
-              <span className="label-caps text-copper">Featured Client Story</span>
-              <span className="h-px w-10 bg-border" />
-            </div>
-            <div className="flex gap-4">
-              <span aria-hidden className="font-display text-5xl leading-none text-copper">
-                &ldquo;
-              </span>
-              <p className="font-display text-2xl leading-[1.35] text-foreground md:text-3xl">
-                {featured.quote}
-              </p>
-            </div>
-            <div className="mt-8 h-px w-full bg-border" />
-            <div className="mt-6 flex items-center gap-4">
-              <Initial name={featured.name} />
-              <div>
-                <div className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-foreground">
-                  {featured.name}
-                </div>
-                <div className="mt-1 text-[0.68rem] uppercase tracking-[0.22em] text-copper">
-                  {featured.role}
-                </div>
-                <div className="text-[0.68rem] uppercase tracking-[0.22em] text-muted-foreground">
-                  {featured.location}
-                </div>
-              </div>
+          <div className="relative flex flex-col justify-center overflow-visible px-6 py-6 md:px-8 md:py-7">
+            <span
+              aria-hidden
+              className="pointer-events-none absolute -top-4 left-6 select-none font-display text-[5rem] leading-none text-copper/90 md:-top-6 md:left-8 md:text-[8rem] lg:text-[12rem]"
+            >
+              &ldquo;
+            </span>
+
+            <span className="label-caps relative text-copper underline underline-offset-4">Featured Client Story</span>
+
+            <p className="relative mt-3 font-display text-lg leading-[1.35] text-foreground md:text-xl lg:text-2xl">
+              {featured.quote}
+            </p>
+
+            <div className="relative mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.50rem] md:text-[0.64rem] uppercase tracking-[0.2em]">
+              <span className="font-semibold text-foreground">{featured.name}</span>
+              <span className="text-border">/</span>
+              <span className="text-copper">{featured.role}</span>
+              <span className="text-border">/</span>
+              <span className="text-muted-foreground">{featured.location}</span>
             </div>
           </div>
-
         </article>
       </Reveal>
 
       {/* Testimonial slider */}
-      <Reveal delay={160}>
+      <Reveal delay={240}>
         <div
-          className="mt-6 border border-border bg-card"
+          className="mt-6 rounded-sm border border-border bg-card"
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
           onFocus={() => setPaused(true)}
           onBlur={() => setPaused(false)}
         >
-          <div className="relative overflow-hidden px-6 py-10 sm:px-10 sm:py-12 md:px-14 md:py-14">
+          <div
+            className="relative touch-pan-y select-none overflow-hidden px-6 py-6 sm:px-8 sm:py-6 md:px-9 md:py-7"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+          >
             <AnimatePresence mode="wait" custom={direction}>
               <motion.article
                 key={index}
@@ -205,24 +242,26 @@ export default function Testimonials({
               >
                 <span
                   aria-hidden
-                  className="mb-4 font-display text-4xl leading-none text-copper sm:text-5xl"
+                  className="mb-2 font-display text-3xl leading-none text-copper sm:text-4xl"
                 >
                   &ldquo;
                 </span>
-                <p className="max-w-3xl font-display text-xl leading-[1.4] text-foreground sm:text-2xl md:text-[28px]">
+                <p className="max-w-2xl font-display text-lg leading-[1.4] text-foreground sm:text-xl lg:w-[70%] md:max-w-full md:text-xl lg:text-2xl">
                   {testimonials[index].quote}
                 </p>
-                <div className="mt-8 h-px w-full bg-border" />
-                <div className="mt-6 flex flex-wrap items-center gap-4">
-                  <Initial name={testimonials[index].name} />
+                <div className="mt-4 h-px w-full bg-border" />
+                <div className="mt-4 flex flex-wrap items-center gap-3">
+                  <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-ink/5 font-display text-base text-ink">
+                    {testimonials[index].name?.trim()?.[0] ?? "•"}
+                  </div>
                   <div className="min-w-0">
-                    <div className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-foreground">
+                    <div className="text-[0.58rem] font-semibold uppercase tracking-[0.2em] text-foreground">
                       {testimonials[index].name}
                     </div>
-                    <div className="mt-1 text-[0.68rem] uppercase tracking-[0.22em] text-copper">
+                    <div className="mt-0.5 text-[0.54rem] uppercase tracking-[0.2em] text-copper">
                       {testimonials[index].role}
                     </div>
-                    <div className="text-[0.68rem] uppercase tracking-[0.22em] text-muted-foreground">
+                    <div className="text-[0.54rem] uppercase tracking-[0.2em] text-muted-foreground">
                       {testimonials[index].location}
                     </div>
                   </div>
@@ -232,19 +271,29 @@ export default function Testimonials({
           </div>
 
           {/* Slider controls */}
-          <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border px-6 py-5 sm:px-10 md:px-14">
+          <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border px-6 py-3 sm:px-8 md:px-9">
             <div className="flex items-center gap-3">
-              {testimonials.map((_, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  aria-label={`Go to testimonial ${i + 1}`}
-                  onClick={() => goTo(i)}
-                  className={`h-2 rounded-full transition-all ${
-                    i === index ? "w-8 bg-copper" : "w-2 bg-border hover:bg-muted-foreground/40"
-                  }`}
-                />
-              ))}
+              {testimonials.map((_, i) => {
+                const isActive = i === index;
+                return (
+                  <button
+                    key={i}
+                    type="button"
+                    aria-label={`Go to testimonial ${i + 1}`}
+                    onClick={() => goTo(i)}
+                    className={`relative h-1.5 overflow-hidden rounded-full bg-border transition-all ${
+                      isActive ? "w-9" : "w-1.5 hover:bg-muted-foreground/40"
+                    }`}
+                  >
+                    {isActive && (
+                      <span
+                        className="absolute inset-y-0 left-0 h-full rounded-full bg-copper"
+                        style={{ width: `${progress}%` }}
+                      />
+                    )}
+                  </button>
+                );
+              })}
               <span className="ml-3 text-[0.68rem] uppercase tracking-[0.22em] text-muted-foreground">
                 {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
               </span>
@@ -254,7 +303,7 @@ export default function Testimonials({
                 type="button"
                 onClick={() => go(-1)}
                 aria-label="Previous testimonial"
-                className="grid h-11 w-11 place-items-center rounded-full border border-border text-foreground transition-colors hover:border-copper hover:text-copper"
+                className="grid h-9 w-9 place-items-center rounded-full border border-border text-foreground transition-colors hover:border-copper hover:text-copper"
               >
                 <ChevronLeft className="h-4 w-4" strokeWidth={1.5} />
               </button>
@@ -262,7 +311,7 @@ export default function Testimonials({
                 type="button"
                 onClick={() => go(1)}
                 aria-label="Next testimonial"
-                className="grid h-11 w-11 place-items-center rounded-full border border-copper bg-copper text-primary-foreground transition-colors hover:bg-copper-dark"
+                className="grid h-9 w-9 place-items-center rounded-full border border-copper bg-copper text-primary-foreground transition-colors hover:bg-copper-dark"
               >
                 <ChevronRight className="h-4 w-4" strokeWidth={1.5} />
               </button>
