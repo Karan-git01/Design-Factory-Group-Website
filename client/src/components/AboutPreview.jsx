@@ -6,7 +6,7 @@ import TextReveal from "./TextReveal";
 /* ---------- ABOUT PREVIEW ---------- */
 export default function AboutPreview() {
   return (
-    <section className="bg-cream-alt py-16 sm:py-20 md:py-32">
+    <section aria-labelledby="about-heading" className="bg-cream-alt py-16 sm:py-20 md:py-32">
       <div className="mx-auto grid max-w-7xl gap-12 px-5 sm:px-8 md:grid-cols-[1.1fr_1fr] md:gap-16 lg:gap-20">
         {/* ---------- TEXT COLUMN ---------- */}
         <div className="flex flex-col justify-center">
@@ -14,11 +14,13 @@ export default function AboutPreview() {
             <span className="label-caps text-copper">— About</span>
           </Reveal>
 
-          <TextReveal
-            className="mt-4 font-display text-[2.25rem] leading-[1.1] tracking-tight sm:text-4xl md:text-5xl md:leading-[1.08]"
-            text="Design Factory Group is a team working at the intersection of architecture, construction and technology."
-            emphasize={["architecture,"]}
-          />
+          <div id="about-heading">
+            <TextReveal
+              className="mt-4 font-display text-[2.25rem] leading-[1.1] tracking-tight sm:text-4xl md:text-5xl md:leading-[1.08]"
+              text="Design Factory Group is a team working at the intersection of architecture, construction and technology."
+              emphasize={["architecture,"]}
+            />
+          </div>
 
           <Reveal delay={160}>
             <p className="mt-6 max-w-lg text-balance text-muted-foreground">

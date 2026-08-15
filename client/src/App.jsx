@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 
 import { useScrollToHash } from "./hooks/useScrollToHash";
@@ -12,22 +12,26 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./components/admin/ProtectedRoute";
 
-import Home from "./pages/Home";
-import Projects from "./pages/Projects";
-import ProjectDetail from "./pages/ProjectDetail";
-import BranchPage from "./pages/BranchPage";
-import Careers from "./pages/Careers";
-import About from "./pages/About";
-import Contact from "./pages/Contact";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import TermsOfUse from "./pages/TermsOfUse";
-import NotFound from "./pages/NotFound";
+// Route-level code splitting — each page is only downloaded when the user
+// actually navigates to it, instead of all being bundled into the initial
+// load. Header/Footer/SplashScreen/ProtectedRoute stay as regular imports
+// above since they're needed immediately on every route.
+const Home = lazy(() => import("./pages/Home"));
+const Projects = lazy(() => import("./pages/Projects"));
+const ProjectDetail = lazy(() => import("./pages/ProjectDetail"));
+const BranchPage = lazy(() => import("./pages/BranchPage"));
+const Careers = lazy(() => import("./pages/Careers"));
+const About = lazy(() => import("./pages/About"));
+const Contact = lazy(() => import("./pages/Contact"));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
+const TermsOfUse = lazy(() => import("./pages/TermsOfUse"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
-import AdminLogin from "./pages/admin/AdminLogin";
-import AdminProjects from "./pages/admin/AdminProjects";
-import AdminBranches from "./pages/admin/AdminBranches";
-import AdminCareers from "./pages/admin/AdminCareers";
-import AdminEnquiries from "./pages/admin/AdminEnquiries";
+const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
+const AdminProjects = lazy(() => import("./pages/admin/AdminProjects"));
+const AdminBranches = lazy(() => import("./pages/admin/AdminBranches"));
+const AdminCareers = lazy(() => import("./pages/admin/AdminCareers"));
+const AdminEnquiries = lazy(() => import("./pages/admin/AdminEnquiries"));
 
 // Sitewide structured data — helps search engines and AI answer engines
 // identify the business as a single, consistent entity. Update the "url"
@@ -39,6 +43,17 @@ const organizationSchema = {
   description: "High-end residential and commercial design and build studio.",
   url: "https://designfactorygroup.com",
 };
+
+// Shown briefly while a lazy-loaded route chunk is being fetched. Kept
+// minimal and on-brand so it doesn't look like a broken/empty page on
+// slower connections.
+function RouteFallback() {
+  return (
+    <div className="flex min-h-[60vh] items-center justify-center">
+      <span className="label-caps text-muted-foreground">Loading…</span>
+    </div>
+  );
+}
 
 function PublicLayout({ children }) {
   return (
@@ -76,131 +91,133 @@ export default function App() {
             <SplashScreen show={showSplash} />
             <ScrollToTop />
 
-            <Routes>
-              <Route
-                path="/"
-                element={
-                  <PublicLayout>
-                    <Home />
-                  </PublicLayout>
-                }
-              />
-              <Route
-                path="/about"
-                element={
-                  <PublicLayout>
-                    <About />
-                  </PublicLayout>
-                }
-              />
-              <Route
-                path="/projects"
-                element={
-                  <PublicLayout>
-                    <Projects />
-                  </PublicLayout>
-                }
-              />
-              <Route
-                path="/projects/:id"
-                element={
-                  <PublicLayout>
-                    <ProjectDetail />
-                  </PublicLayout>
-                }
-              />
-              <Route
-                path="/branches/:slug"
-                element={
-                  <PublicLayout>
-                    <BranchPage />
-                  </PublicLayout>
-                }
-              />
-              <Route
-                path="/careers"
-                element={
-                  <PublicLayout>
-                    <Careers />
-                  </PublicLayout>
-                }
-              />
-              <Route
-                path="/contact"
-                element={
-                  <PublicLayout>
-                    <Contact />
-                  </PublicLayout>
-                }
-              />
-              <Route
-                path="/privacy-policy"
-                element={
-                  <PublicLayout>
-                    <PrivacyPolicy />
-                  </PublicLayout>
-                }
-              />
-              <Route
-                path="/terms"
-                element={
-                  <PublicLayout>
-                    <TermsOfUse />
-                  </PublicLayout>
-                }
-              />
+            <Suspense fallback={<RouteFallback />}>
+              <Routes>
+                <Route
+                  path="/"
+                  element={
+                    <PublicLayout>
+                      <Home />
+                    </PublicLayout>
+                  }
+                />
+                <Route
+                  path="/about"
+                  element={
+                    <PublicLayout>
+                      <About />
+                    </PublicLayout>
+                  }
+                />
+                <Route
+                  path="/projects"
+                  element={
+                    <PublicLayout>
+                      <Projects />
+                    </PublicLayout>
+                  }
+                />
+                <Route
+                  path="/projects/:id"
+                  element={
+                    <PublicLayout>
+                      <ProjectDetail />
+                    </PublicLayout>
+                  }
+                />
+                <Route
+                  path="/branches/:slug"
+                  element={
+                    <PublicLayout>
+                      <BranchPage />
+                    </PublicLayout>
+                  }
+                />
+                <Route
+                  path="/careers"
+                  element={
+                    <PublicLayout>
+                      <Careers />
+                    </PublicLayout>
+                  }
+                />
+                <Route
+                  path="/contact"
+                  element={
+                    <PublicLayout>
+                      <Contact />
+                    </PublicLayout>
+                  }
+                />
+                <Route
+                  path="/privacy-policy"
+                  element={
+                    <PublicLayout>
+                      <PrivacyPolicy />
+                    </PublicLayout>
+                  }
+                />
+                <Route
+                  path="/terms"
+                  element={
+                    <PublicLayout>
+                      <TermsOfUse />
+                    </PublicLayout>
+                  }
+                />
 
-              <Route path="/admin/login" element={<AdminLogin />} />
-              <Route
-                path="/admin"
-                element={
-                  <ProtectedRoute>
-                    <AdminProjects />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/projects"
-                element={
-                  <ProtectedRoute>
-                    <AdminProjects />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/branches"
-                element={
-                  <ProtectedRoute>
-                    <AdminBranches />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/careers"
-                element={
-                  <ProtectedRoute>
-                    <AdminCareers />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/enquiries"
-                element={
-                  <ProtectedRoute>
-                    <AdminEnquiries />
-                  </ProtectedRoute>
-                }
-              />
+                <Route path="/admin/login" element={<AdminLogin />} />
+                <Route
+                  path="/admin"
+                  element={
+                    <ProtectedRoute>
+                      <AdminProjects />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/projects"
+                  element={
+                    <ProtectedRoute>
+                      <AdminProjects />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/branches"
+                  element={
+                    <ProtectedRoute>
+                      <AdminBranches />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/careers"
+                  element={
+                    <ProtectedRoute>
+                      <AdminCareers />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/enquiries"
+                  element={
+                    <ProtectedRoute>
+                      <AdminEnquiries />
+                    </ProtectedRoute>
+                  }
+                />
 
-              <Route
-                path="*"
-                element={
-                  <PublicLayout>
-                    <NotFound />
-                  </PublicLayout>
-                }
-              />
-            </Routes>
+                <Route
+                  path="*"
+                  element={
+                    <PublicLayout>
+                      <NotFound />
+                    </PublicLayout>
+                  }
+                />
+              </Routes>
+            </Suspense>
           </AdminAuthProvider>
         </LenisProvider>
       </ApiProvider>

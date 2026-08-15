@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import { PhoneCall, ClipboardList, MapPin, Lightbulb, PenTool } from "lucide-react";
 import { Reveal } from "../components/Reveal";
 
@@ -6,36 +9,168 @@ const workStages = [
     n: "01",
     title: "Initial contact",
     body: "You get in touch with us to discuss your goals, preferences and overall expectations for the project.",
+    image:
+      "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1200&auto=format&fit=crop",
   },
   {
     n: "02",
     title: "Project briefing",
     body: "We define the scope, budget range, timeline and key requirements to establish a clear project brief.",
+    image:
+      "https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1200&auto=format&fit=crop",
   },
   {
     n: "03",
     title: "Location analysis",
     body: "The location is carefully reviewed to understand its conditions, context and any existing constraints.",
+    image:
+      "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1200&auto=format&fit=crop",
   },
   {
     n: "04",
     title: "Concept development",
     body: "Initial architectural ideas are developed, focusing on layout, spatial organisation and direction.",
+    image:
+      "https://images.unsplash.com/photo-1503387837-b154d5074bd2?q=80&w=1200&auto=format&fit=crop",
   },
   {
     n: "05",
     title: "Detailed design",
     body: "The approved concept is developed further through detailed architectural and technical solutions.",
+    image:
+      "https://images.unsplash.com/photo-1487958449943-2429e8be8625?q=80&w=1200&auto=format&fit=crop",
   },
 ];
 
 const stageIcons = [PhoneCall, ClipboardList, MapPin, Lightbulb, PenTool];
 
+/**
+ * Continuous scroll progress (0–100) across the whole list, plus which row
+ * has been passed — computed together on every scroll frame instead of at
+ * discrete IntersectionObserver thresholds, so the fill tracks the scroll
+ * position smoothly rather than snapping between states.
+ */
+function useScrollSpine(containerRef, rowRefs) {
+  const [progress, setProgress] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(-1);
+
+  useEffect(() => {
+    let ticking = false;
+
+    const compute = () => {
+      ticking = false;
+      const container = containerRef.current;
+      if (!container) return;
+
+      const rect = container.getBoundingClientRect();
+      const viewportCenter = window.innerHeight * 0.5;
+      const pct = ((viewportCenter - rect.top) / rect.height) * 100;
+      setProgress(Math.min(100, Math.max(0, pct)));
+
+      let last = -1;
+      rowRefs.current.forEach((el, i) => {
+        if (!el) return;
+        if (el.getBoundingClientRect().top <= viewportCenter) last = i;
+      });
+      setActiveIndex(last);
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        window.requestAnimationFrame(compute);
+      }
+    };
+
+    compute();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [containerRef, rowRefs]);
+
+  return { progress, activeIndex };
+}
+
+function StageRow({ s, Icon, index, isActive, rowRef }) {
+  const isEven = index % 2 === 0;
+  return (
+    <div
+      ref={rowRef}
+      data-stage-index={index}
+      className="group relative flex gap-5 py-8 md:grid md:grid-cols-12 md:items-stretch md:gap-x-6 md:py-6"
+    >
+      {/* Spine dot — left column on mobile, middle column on desktop. The
+          connecting line itself is a single continuous rail rendered once
+          behind the whole list (see below), not per row. */}
+      <div className="relative z-10 flex w-8 flex-none items-center justify-center md:order-2 md:col-span-2 md:w-auto md:self-stretch">
+        <span
+          className={`h-3 w-3 flex-none rounded-full border-2 bg-background transition-all duration-300 ${
+            isActive
+              ? "scale-125 border-copper bg-copper shadow-[0_0_0_4px_theme(colors.copper/15%)]"
+              : "border-copper group-hover:bg-copper"
+          }`}
+        />
+      </div>
+
+      {/* Content: stacked column on mobile (display: contents on desktop so
+          the image/text below become direct grid children instead) */}
+      <div className="flex flex-1 flex-col gap-4 md:contents">
+        {/* Image */}
+        <div className={`w-full md:col-span-5 ${isEven ? "md:order-1" : "md:order-3"}`}>
+          <div className="relative aspect-[16/10] w-full overflow-hidden rounded-sm bg-border/30 md:aspect-[4/3]">
+            <img
+              src={s.image}
+              alt={s.title}
+              className="h-full w-full object-cover grayscale-[20%] transition-all duration-700 ease-out group-hover:scale-105 group-hover:grayscale-0"
+              loading="lazy"
+            />
+            <div className="absolute inset-0 ring-1 ring-inset ring-black/5" />
+          </div>
+        </div>
+
+        {/* Text */}
+        <div className={`md:col-span-5 md:flex md:flex-col md:justify-center ${isEven ? "md:order-3" : "md:order-1"}`}>
+          <span
+            className={`label-caps transition-colors duration-300 ${
+              isActive ? "text-copper" : "text-muted-foreground"
+            }`}
+          >
+            Stage {s.n}
+          </span>
+          <h3 className="relative mt-3 block w-fit pb-1.5 font-display text-2xl leading-tight tracking-tight md:text-3xl lg:text-4xl">
+            {s.title}
+            <span className="absolute inset-x-0 bottom-0 h-px bg-foreground/20" />
+            <span className="absolute inset-x-0 bottom-0 h-px origin-left scale-x-0 bg-copper transition-transform duration-500 ease-out group-hover:scale-x-100" />
+          </h3>
+          <p className="mt-3 max-w-md text-[15px] leading-relaxed text-muted-foreground md:mt-4">
+            {s.body}
+          </p>
+          <span className="mt-5 inline-flex h-10 w-10 items-center justify-center rounded-full border border-copper/30 text-copper transition-all duration-500 group-hover:border-copper group-hover:bg-copper group-hover:text-background">
+            <Icon size={16} />
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function WorkStages() {
+  const listRef = useRef(null);
+  const rowRefs = useRef([]);
+  rowRefs.current = [];
+  const addRowRef = (el) => {
+    if (el) rowRefs.current.push(el);
+  };
+
+  const { progress, activeIndex } = useScrollSpine(listRef, rowRefs);
+
   return (
     <section id="work-stages" className="relative overflow-hidden py-20 md:py-32">
       <div
-        className="absolute inset-0 -z-10 opacity-[0.08]"
+        className="absolute inset-0 -z-10 opacity-[0.06]"
         style={{
           backgroundImage:
             "url(https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=1600)",
@@ -44,147 +179,53 @@ export default function WorkStages() {
         }}
       />
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
-        <Reveal>
-          <span className="label-caps text-copper">— Work process</span>
-        </Reveal>
-        <Reveal delay={80}>
-          <h2 className="mt-4 max-w-3xl font-display text-4xl leading-[1.05] tracking-tight md:text-5xl">
-            Steps to your <em className="text-copper">new home</em>.
-          </h2>
-        </Reveal>
+        <div className="grid gap-8 md:grid-cols-2 md:items-end">
+          <div>
+            <Reveal>
+              <span className="label-caps text-copper">— Work process</span>
+            </Reveal>
+            <Reveal delay={80}>
+              <h2 className="mt-4 font-display text-4xl leading-[1.05] tracking-tight md:text-5xl lg:text-6xl">
+                Steps to your <em className="text-copper">new home</em>.
+              </h2>
+            </Reveal>
+          </div>
 
-        <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {workStages.map((s, i) => {
-            const Icon = stageIcons[i];
-            return (
-              <Reveal key={s.n} delay={i * 60}>
-                <div className="card-lift group h-full rounded-3xl border border-border bg-background/90 p-7 backdrop-blur">
-                  <div className="flex items-center justify-between">
-                    <span className="grid h-11 w-11 place-items-center rounded-full border border-border">
-                      <Icon size={18} />
-                    </span>
-                    <span className="font-display text-2xl text-muted-foreground">{s.n}</span>
-                  </div>
-                  <h3 className="mt-8 font-display text-2xl tracking-tight">{s.title}</h3>
-                  <p className="mt-2 text-sm text-muted-foreground">{s.body}</p>
-                </div>
+          <Reveal delay={140}>
+            <div className="flex flex-col items-start gap-3 border-t border-border pt-5 md:items-end md:border-l md:border-t-0 md:pl-8 md:pt-0">
+              <p className="max-w-xs text-sm leading-relaxed text-muted-foreground md:text-right">
+                Five stages, from the first call to a fully resolved design — each one building directly on the last.
+              </p>
+            </div>
+          </Reveal>
+        </div>
+
+        <div className="relative mt-16">
+          {/* Continuous rail — mobile: fixed to the left edge of the spine dots.
+              Desktop: centered in the middle spine column. Two positions,
+              one progress value, both driven by the same scroll math. */}
+          <div className="pointer-events-none absolute left-4 top-0 h-full w-px -translate-x-1/2 bg-border md:left-1/2">
+            <div
+              className="w-px bg-copper"
+              style={{ height: `${progress}%`, transition: "height 120ms linear" }}
+            />
+          </div>
+
+          <div ref={listRef} className="divide-y divide-border">
+            {workStages.map((s, i) => (
+              <Reveal key={s.n} delay={i * 80}>
+                <StageRow
+                  s={s}
+                  Icon={stageIcons[i]}
+                  index={i}
+                  isActive={i <= activeIndex}
+                  rowRef={addRowRef}
+                />
               </Reveal>
-            );
-          })}
+            ))}
+          </div>
         </div>
       </div>
     </section>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const STAGES = [
-//   {
-//     number: "01",
-//     title: "Initial contact",
-//     text: "You get in touch with us to discuss your goals, preferences and overall expectations for the project.",
-//   },
-//   {
-//     number: "02",
-//     title: "Project briefing",
-//     text: "We define the scope, budget range, timeline and key requirements to establish a clear project brief.",
-//   },
-//   {
-//     number: "03",
-//     title: "Location analysis",
-//     text: "The location is carefully reviewed to understand its conditions, context and any existing constraints.",
-//   },
-//   {
-//     number: "04",
-//     title: "Concept development",
-//     text: "Initial architectural ideas are developed, focusing on layout, spatial organisation and direction.",
-//   },
-//   {
-//     number: "05",
-//     title: "Detailed design",
-//     text: "The approved concept is developed further through detailed architectural and technical solutions.",
-//   },
-// ];
-
-// export default function WorkStages() {
-//   return (
-//     <section id="work-stages" className="relative border-t border-secondary/20 bg-ink">
-//       <img
-//         src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=1600"
-//         alt="Architectural detail"
-//         loading="lazy"
-//         className="absolute inset-0 h-full w-full object-cover opacity-20"
-//       />
-//       <div className="absolute inset-0 bg-ink/80 backdrop-blur-[2px]" />
-
-//       <div className="relative z-10 mx-auto max-w-7xl px-6 py-20 sm:px-8 md:px-12 lg:px-16 xl:px-20 xl:py-28">
-//         <div className="mb-16">
-//           <div className="mb-6 flex items-center gap-4">
-//             <div className="h-px w-14 bg-primary" />
-//             <span className="text-[11px] font-medium uppercase tracking-[0.45em] text-secondary-light">
-//               Work Process
-//             </span>
-//           </div>
-
-//           <h2 className="font-display max-w-4xl text-4xl font-light leading-[0.95] tracking-[-0.04em] text-surface sm:text-5xl lg:text-6xl">
-//             Steps to your
-//             <span className="text-primary"> new home</span>
-//           </h2>
-//         </div>
-
-//         {/* Mobile — plain informational cards, no fake interactivity */}
-//         <div className="flex flex-col gap-5 lg:hidden">
-//           {STAGES.map((stage) => (
-//             <div
-//               key={stage.number}
-//               className="sticky top-24 rounded-[2rem] border border-secondary/20 bg-ink-light/95 p-6 shadow-[0_20px_60px_rgba(0,0,0,0.35)] backdrop-blur-xl"
-//             >
-//               <span className="font-display block text-5xl font-light text-primary">
-//                 {stage.number}
-//               </span>
-//               <h3 className="font-display mt-8 text-2xl font-light text-surface">
-//                 {stage.title}
-//               </h3>
-//               <p className="mt-4 text-[15px] leading-7 text-secondary-light">
-//                 {stage.text}
-//               </p>
-//             </div>
-//           ))}
-//         </div>
-
-//         {/* Desktop — hover still adds polish here since a real cursor exists,
-//             but no arrow implying it's clickable */}
-//         <div className="hidden gap-8 lg:grid lg:grid-cols-2">
-//           {STAGES.map((stage) => (
-//             <div
-//               key={stage.number}
-//               className="group rounded-[2rem] border border-secondary/20 bg-ink-light/95 p-10 transition-all duration-500 hover:-translate-y-2 hover:border-primary/40 hover:shadow-[0_25px_70px_rgba(0,0,0,0.35)]"
-//             >
-//               <span className="font-display block text-6xl font-light tracking-[-0.05em] text-primary">
-//                 {stage.number}
-//               </span>
-//               <h3 className="font-display mt-10 text-3xl font-light text-surface transition-colors duration-300 group-hover:text-primary">
-//                 {stage.title}
-//               </h3>
-//               <p className="mt-5 max-w-md text-[15px] leading-8 text-secondary-light">
-//                 {stage.text}
-//               </p>
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-//     </section>
-//   );
-// }

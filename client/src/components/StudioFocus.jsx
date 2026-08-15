@@ -28,7 +28,7 @@ const philosophyIcons = [PenTool, Layers, ShieldCheck, Users];
 
 export default function Philosophy() {
   return (
-    <section className="py-20 md:py-32">
+    <section aria-labelledby="philosophy-heading" className="py-20 md:py-32">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <div className="grid gap-10 md:grid-cols-[1fr_1.4fr]">
           <div>
@@ -36,7 +36,10 @@ export default function Philosophy() {
               <span className="label-caps text-copper">— Studio focus</span>
             </Reveal>
             <Reveal delay={80}>
-              <h2 className="mt-4 font-display text-4xl leading-[1.05] tracking-tight md:text-5xl">
+              <h2
+                id="philosophy-heading"
+                className="mt-4 font-display text-4xl leading-[1.05] tracking-tight md:text-5xl"
+              >
                 A modern studio with a clear <em className="text-copper">focus</em>.
               </h2>
             </Reveal>
@@ -45,40 +48,42 @@ export default function Philosophy() {
       </div>
 
       <div className="mt-12 px-5 sm:px-8 md:mx-auto md:max-w-7xl">
-        <div className="grid gap-5 sm:grid-cols-2">
+        <ul className="grid list-none gap-5 p-0 m-0 sm:grid-cols-2">
           {philosophyPoints.map((p, i) => {
             const Icon = philosophyIcons[i];
             return (
-              <Reveal key={p.n} delay={i * 70}>
-                <div className="group relative flex h-full flex-col rounded-sm border border-border bg-card p-7 shadow-sm transition-all duration-500 ease-out hover:-translate-y-1.5 hover:border-copper/40 hover:shadow-[0_20px_45px_-15px_rgba(0,0,0,0.18)] md:p-9">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-baseline gap-2.5">
-                      <span className="font-display text-3xl leading-none tracking-tight text-foreground/85">
-                        {p.n}
-                      </span>
-                      <span className="label-caps text-muted-foreground">
-                        Principle
+              <li key={p.n} className="flex">
+                <Reveal delay={i * 70}>
+                  <div className="group relative flex h-full flex-col rounded-sm border border-border bg-card p-7 shadow-sm transition-all duration-500 ease-out hover:-translate-y-1.5 hover:border-copper/40 hover:shadow-[0_20px_45px_-15px_rgba(0,0,0,0.18)] md:p-9">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-baseline gap-2.5">
+                        <span className="font-display text-3xl leading-none tracking-tight text-foreground/85">
+                          {p.n}
+                        </span>
+                        <span className="label-caps text-muted-foreground">
+                          Principle
+                        </span>
+                      </div>
+                      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-copper/20 bg-copper/[0.07] text-copper shadow-sm transition-all duration-500 group-hover:-translate-y-0.5 group-hover:rotate-12 group-hover:border-copper group-hover:bg-copper group-hover:text-background group-hover:shadow-[0_8px_20px_-6px_theme(colors.copper)]">
+                        <Icon size={17} />
                       </span>
                     </div>
-                    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-copper/20 bg-copper/[0.07] text-copper shadow-sm transition-all duration-500 group-hover:-translate-y-0.5 group-hover:rotate-12 group-hover:border-copper group-hover:bg-copper group-hover:text-background group-hover:shadow-[0_8px_20px_-6px_theme(colors.copper)]">
-                      <Icon size={17} />
-                    </span>
-                  </div>
-                  <span className="mt-5 block h-px w-full bg-border transition-colors duration-500 group-hover:bg-copper/25" />
+                    <span className="mt-5 block h-px w-full bg-border transition-colors duration-500 group-hover:bg-copper/25" />
 
-                  <h3 className="relative mt-6 inline-block w-fit pb-1.5 font-display text-2xl tracking-tight md:text-3xl">
-                    {p.title}
-                    <span className="absolute inset-x-0 bottom-0 h-px bg-foreground/70" />
-                    <span className="absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-copper transition-transform duration-500 ease-out group-hover:scale-x-100" />
-                  </h3>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                    {p.body}
-                  </p>
-                </div>
-              </Reveal>
+                    <h3 className="relative mt-6 inline-block w-fit pb-1.5 font-display text-2xl tracking-tight md:text-3xl">
+                      {p.title}
+                      <span className="absolute inset-x-0 bottom-0 h-px bg-foreground/70" />
+                      <span className="absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-copper transition-transform duration-500 ease-out group-hover:scale-x-100" />
+                    </h3>
+                    <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                      {p.body}
+                    </p>
+                  </div>
+                </Reveal>
+              </li>
             );
           })}
-        </div>
+        </ul>
       </div>
     </section>
   );

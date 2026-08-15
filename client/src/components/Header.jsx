@@ -25,7 +25,7 @@ const INLINE_LINKS = [
 
 const SOCIAL_LINKS = [
   {
-    href: "#",
+    href: "https://www.instagram.com/design_factory_group?igsh=MTgybzU2aG94Nmg2dw==",
     label: "Instagram",
     svg: (
       <svg
@@ -40,7 +40,7 @@ const SOCIAL_LINKS = [
     ),
   },
   {
-    href: "#",
+    href: "https://www.facebook.com/share/1CU3XF4ge8/",
     label: "Facebook",
     svg: (
       <svg
@@ -55,21 +55,71 @@ const SOCIAL_LINKS = [
     ),
   },
   {
-    href: "#",
-    label: "LinkedIn",
+    href: "https://youtube.com/@designfactorygroup?si=9BS0WxsK1qII5Igb",
+    label: "YouTube",
     svg: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="18"
-        height="18"
+        width="20"
+        height="20"
         fill="currentColor"
         viewBox="0 0 16 16"
       >
-        <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854zm4.943 12.248V6.169H2.542v7.225zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248S2.4 3.226 2.4 3.934c0 .694.521 1.248 1.327 1.248zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016l.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225z" />
+        <path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.01 2.01 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.01 2.01 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.05 9.82l-.008-.104A31 31 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.01 2.01 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A100 100 0 0 1 7.858 2zM6.4 5.209v4.818l4.157-2.408z" />
       </svg>
     ),
   },
 ];
+
+// Brand mark — three-tower skyline logo (red / black / blue), pixel-matched
+// vector version of the studio's mark. Reused for both the sticky header
+// and the full-screen mobile menu header.
+function Logo({ className }) {
+  return (
+    <svg
+      viewBox="0 0 512 577"
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+        {/* red tower */}
+        <path d="M102,220 L77,206" stroke="#a8a8a8" strokeWidth="4" />
+        <path d="M102,220 L102,188" stroke="#a8a8a8" strokeWidth="4" />
+        <path d="M245,299 L270,313" stroke="#a8a8a8" strokeWidth="4" />
+        <path d="M245,299 L245,267" stroke="#a8a8a8" strokeWidth="4" />
+        <path
+          d="M102,220 L245,299 L245,568 M102,220 L102,568 M102,568 L245,568"
+          stroke="#e6120a"
+          strokeWidth="9"
+        />
+
+        {/* blue tower */}
+        <path d="M331,422 L306,436" stroke="#a8a8a8" strokeWidth="4" />
+        <path d="M331,422 L331,390" stroke="#a8a8a8" strokeWidth="4" />
+        <path d="M478,338 L503,324" stroke="#a8a8a8" strokeWidth="4" />
+        <path d="M478,338 L478,311" stroke="#a8a8a8" strokeWidth="4" />
+        <path d="M478,568 L511,568" stroke="#a8a8a8" strokeWidth="4" />
+        <path
+          d="M331,422 L478,338 L478,568 M331,422 L331,568 M331,568 L478,568"
+          stroke="#0d0dc9"
+          strokeWidth="9"
+        />
+
+        {/* black tower */}
+        <path d="M195,54 L171,38" stroke="#a8a8a8" strokeWidth="4" />
+        <path d="M195,54 L195,22" stroke="#a8a8a8" strokeWidth="4" />
+        <path d="M393,185 L417,201" stroke="#a8a8a8" strokeWidth="4" />
+        <path d="M393,185 L393,154" stroke="#a8a8a8" strokeWidth="4" />
+        <path
+          d="M195,54 L393,185 L393,568 M195,54 L195,568 M195,568 L393,568"
+          stroke="#000000"
+          strokeWidth="9"
+        />
+      </g>
+    </svg>
+  );
+}
+
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const lenisRef = useLenis();
@@ -121,24 +171,9 @@ export default function Header() {
       >
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-5 sm:px-8 md:h-20 lg:px-12">
           <Link to="/" className="flex shrink-0 items-center gap-3">
-            <span className="grid h-9 w-9 place-items-center rounded-full border border-border">
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.4"
-              >
-                <path d="M3 11 12 3l9 8" />
-                <path d="M5 10v10h14V10" />
-                <path d="M10 20v-6h4v6" />
-              </svg>
-            </span>
-            <span className="label-caps text-[0.7rem] leading-tight">
-              Design Factory
-              <br className="sm:hidden" />{" "}
-              <span className="hidden sm:inline">·</span> Group
+            <Logo className="h-11 w-11 shrink-0" />
+            <span className="brand-mark whitespace-nowrap">
+              Design Factory Group
             </span>
           </Link>
 
@@ -188,25 +223,11 @@ export default function Header() {
                 <Link
                   to="/"
                   onClick={() => setMenuOpen(false)}
-                  className="flex items-center gap-3"
+                  className="flex shrink-0 items-center gap-3"
                 >
-                  <span className="grid h-9 w-9 place-items-center rounded-full border border-border">
-                    <svg
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.4"
-                    >
-                      <path d="M3 11 12 3l9 8" />
-                      <path d="M5 10v10h14V10" />
-                      <path d="M10 20v-6h4v6" />
-                    </svg>
-                  </span>
-                  <span className="label-caps text-[0.7rem] leading-tight">
-                    Design Factory
-                    <span className="hidden sm:inline"> · Group</span>
+                  <Logo className="h-11 w-11 shrink-0" />
+                  <span className="brand-mark whitespace-nowrap">
+                    Design Factory Group
                   </span>
                 </Link>
 
@@ -272,7 +293,7 @@ export default function Header() {
                 </nav>
 
                 <aside className="hidden lg:flex lg:flex-col lg:justify-between">
-                  <div className="flex flex-col gap-7 rounded-2xl border border-border bg-card/60 p-7">
+                  <div className="flex flex-col gap-7 rounded-sm border border-border bg-card/60 p-7">
                     <div>
                       <p className="label-caps mb-4 flex items-center gap-2 text-muted-foreground">
                         <svg
@@ -289,10 +310,10 @@ export default function Header() {
                         Get in touch
                       </p>
                       <a
-                        href="mailto:studio@designfactory.group"
+                        href="mailto:dfgroupslg@gmail.com"
                         className="group flex items-center justify-between gap-3 border-b border-border/80 pb-4 text-foreground/90 transition-colors duration-300 hover:text-copper"
                       >
-                        studio@designfactory.group
+                        dfgroupslg@gmail.com
                         <svg
                           width="16"
                           height="16"
@@ -309,9 +330,12 @@ export default function Header() {
                           />
                         </svg>
                       </a>
-                      <p className="mt-4 text-foreground/70">
-                        +1 (415) 555-0148
-                      </p>
+                      <a
+                        href="tel:+919875595155"
+                        className="mt-4 block text-foreground/70 transition-colors duration-300 hover:text-copper"
+                      >
+                        +91 98755 95155
+                      </a>
                     </div>
 
                     <div>
@@ -327,12 +351,11 @@ export default function Header() {
                           <path d="M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21Z" />
                           <circle cx="12" cy="9.5" r="2.4" />
                         </svg>
-                        Studio
+                        Office Address
                       </p>
                       <p className="text-sm leading-relaxed text-foreground/70">
-                        120 Sandstone Avenue
-                        <br />
-                        Suite 4, San Francisco
+                        Ground Floor, Bhakti Apartment, near Dada Bhai
+                        Ground, Deshbandhu Para, Siliguri - 734004
                       </p>
                     </div>
 
@@ -341,8 +364,8 @@ export default function Header() {
                         Currently
                       </p>
                       <p className="text-sm leading-relaxed text-foreground/70">
-                        Accepting new residential and hospitality
-                        commissions for 2027.
+                        Accepting new residential and commercial
+                        commissions.
                       </p>
                     </div>
                   </div>
@@ -359,6 +382,8 @@ export default function Header() {
                       <a
                         key={i}
                         href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         aria-label={label}
                         className="group grid h-11 w-11 place-items-center rounded-full border border-border bg-card text-foreground/100 transition-all duration-300 hover:-translate-y-0.5 hover:border-foreground/40 hover:bg-foreground hover:text-background"
                       >
@@ -377,4 +402,3 @@ export default function Header() {
     </>
   );
 }
-

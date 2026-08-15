@@ -113,6 +113,22 @@
   font-weight: 500;
 }
 
+/* Header wordmark only — deliberately separate from label-caps so nav
+   links, buttons, and eyebrows elsewhere on the site are unaffected. */
+@utility brand-mark {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+@media (min-width: 768px) {
+  @utility brand-mark {
+    font-size: 1.2rem;
+  }
+}
+
 @utility dot-grid {
   background-image: radial-gradient(currentColor 1px, transparent 1px);
   background-size: 12px 12px;
@@ -379,75 +395,3 @@
 .btn-arrow {
   -webkit-tap-highlight-color: transparent;
 }
-
-
-
-
-
-
-
-/* @import "tailwindcss";
-
-@font-face {
-  font-family: "Alpino";
-  src: url("./assets/fonts/Alpino-Thin.woff2") format("woff2");
-  font-weight: 100;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Alpino";
-  src: url("./assets/fonts/Alpino-Light.woff2") format("woff2");
-  font-weight: 300;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Alpino";
-  src: url("./assets/fonts/Alpino-Regular.woff2") format("woff2");
-  font-weight: 400;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Alpino";
-  src: url("./assets/fonts/Alpino-Medium.woff2") format("woff2");
-  font-weight: 500;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Alpino";
-  src: url("./assets/fonts/Alpino-Bold.woff2") format("woff2");
-  font-weight: 700;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Alpino";
-  src: url("./assets/fonts/Alpino-Black.woff2") format("woff2");
-  font-weight: 900;
-  font-display: swap;
-}
-
-@theme {
-  --color-primary: #E85D25;
-  --color-primary-dark: #C44A1A;
-  --color-secondary: #8A8478;
-  --color-secondary-light: #A3A3A3;
-  --color-surface: #FFFFFF;
-  --color-ink: #0F0F10;
-  --color-ink-light: #171717;
-
-  --font-display: "Alpino", sans-serif;
-  --font-body: "Alpino", sans-serif;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  font-family: var(--font-body);
-  font-weight: 400;
-} */
