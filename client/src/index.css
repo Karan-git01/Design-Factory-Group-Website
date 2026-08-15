@@ -114,7 +114,10 @@
 }
 
 /* Header wordmark only — deliberately separate from label-caps so nav
-   links, buttons, and eyebrows elsewhere on the site are unaffected. */
+   links, buttons, and eyebrows elsewhere on the site are unaffected.
+   NOTE: @utility must stay top-level — the responsive size is nested
+   *inside* the single declaration instead of being redeclared in a
+   separate @media block (Tailwind v4 rejects a second/nested @utility). */
 @utility brand-mark {
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -122,9 +125,8 @@
   font-size: 1.05rem;
   font-weight: 600;
   line-height: 1.1;
-}
-@media (min-width: 768px) {
-  @utility brand-mark {
+
+  @media (min-width: 768px) {
     font-size: 1.2rem;
   }
 }
