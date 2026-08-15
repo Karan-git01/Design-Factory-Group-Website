@@ -43,6 +43,13 @@ export default function Philosophy() {
                 A modern studio with a clear <em className="text-copper">focus</em>.
               </h2>
             </Reveal>
+            <Reveal delay={160}>
+              <p className="mt-5 max-w-md text-muted-foreground">
+                Design Factory Group is a Siliguri-based architecture and
+                construction studio serving residential and commercial
+                clients across India, guided by four core principles.
+              </p>
+            </Reveal>
           </div>
         </div>
       </div>
@@ -57,7 +64,10 @@ export default function Philosophy() {
                   <div className="group relative flex h-full flex-col rounded-sm border border-border bg-card p-7 shadow-sm transition-all duration-500 ease-out hover:-translate-y-1.5 hover:border-copper/40 hover:shadow-[0_20px_45px_-15px_rgba(0,0,0,0.18)] md:p-9">
                     <div className="flex items-center justify-between">
                       <div className="flex items-baseline gap-2.5">
-                        <span className="font-display text-3xl leading-none tracking-tight text-foreground/85">
+                        <span
+                          aria-hidden="true"
+                          className="font-display text-3xl leading-none tracking-tight text-foreground/85"
+                        >
                           {p.n}
                         </span>
                         <span className="label-caps text-muted-foreground">
@@ -65,7 +75,7 @@ export default function Philosophy() {
                         </span>
                       </div>
                       <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-copper/20 bg-copper/[0.07] text-copper shadow-sm transition-all duration-500 group-hover:-translate-y-0.5 group-hover:rotate-12 group-hover:border-copper group-hover:bg-copper group-hover:text-background group-hover:shadow-[0_8px_20px_-6px_theme(colors.copper)]">
-                        <Icon size={17} />
+                        <Icon size={17} aria-hidden="true" focusable="false" />
                       </span>
                     </div>
                     <span className="mt-5 block h-px w-full bg-border transition-colors duration-500 group-hover:bg-copper/25" />

@@ -121,8 +121,8 @@
 @utility brand-mark {
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  font-family: var(--font-display);
-  font-size: 1.05rem;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
   font-weight: 600;
   line-height: 1.1;
 

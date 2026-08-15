@@ -18,7 +18,7 @@ const FAQS = [
   },
   {
     q: "Do you work on projects outside your main branch location?",
-    a: "Yes. We take on projects across the regions served by our branches, and can discuss feasibility for other locations during your initial consultation.",
+    a: "Yes. We take on projects across Siliguri and the other regions served by our branches across India, and can discuss feasibility for other locations during your initial consultation.",
   },
   {
     q: "What types of projects do you take on?",
@@ -112,8 +112,12 @@ export default function FAQ() {
       : "-translate-x-3 opacity-0";
 
   return (
-    <section id="faq" className="mx-auto max-w-7xl overflow-x-hidden px-5 py-20 sm:px-8 md:py-32">
-      <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
+    <section id="faq" aria-labelledby="faq-heading" className="mx-auto max-w-7xl overflow-x-hidden px-5 py-20 sm:px-8 md:py-32">
+      {/* eslint-disable-next-line react/no-danger */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
 
       <div className="grid gap-10 md:grid-cols-[1fr_1.4fr] md:gap-16">
         <div>
@@ -121,7 +125,7 @@ export default function FAQ() {
             <span className="label-caps text-copper">— Questions</span>
           </Reveal>
           <Reveal delay={80}>
-            <h2 className="mt-4 font-display text-4xl leading-[1.05] tracking-tight md:text-5xl">
+            <h2 id="faq-heading" className="mt-4 font-display text-4xl leading-[1.05] tracking-tight md:text-5xl">
               Questions <em className="text-copper">&amp;</em> answers.
             </h2>
           </Reveal>
@@ -134,7 +138,7 @@ export default function FAQ() {
               className="group btn-arrow mt-4 inline-flex items-center gap-2 label-caps text-copper"
             >
               Get in touch
-              <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
+              <ArrowRight size={14} aria-hidden="true" focusable="false" className="transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           </Reveal>
 
@@ -149,30 +153,43 @@ export default function FAQ() {
         </div>
 
         <Reveal delay={100}>
-          <div className="rounded-sm border border-border bg-card p-8 shadow-sm md:p-12">
+          <div
+            className="rounded-sm border border-border bg-card p-8 shadow-sm md:p-12"
+            role="group"
+            aria-roledescription="carousel"
+            aria-label="Frequently asked questions"
+          >
             <div className="flex items-center justify-between">
-              <span className="font-display text-4xl text-copper transition-colors duration-300">
+              <span aria-hidden="true" className="font-display text-4xl text-copper transition-colors duration-300">
                 {String(index + 1).padStart(2, "0")}
               </span>
-              <div className="flex gap-1.5">
-                {FAQS.map((_, j) => (
-                  <button
-                    key={j}
-                    onClick={() => goTo(j)}
-                    aria-label={`Go to question ${j + 1}`}
-                    className="group/dot py-2"
-                  >
-                    <span
-                      className={`block h-1.5 w-6 rounded-full transition-all duration-300 ${
-                        j === index ? "bg-copper" : "bg-border group-hover/dot:bg-foreground/30"
-                      }`}
-                    />
-                  </button>
-                ))}
-              </div>
+              <nav aria-label="FAQ navigation">
+                <ul className="flex list-none gap-1.5 p-0 m-0">
+                  {FAQS.map((_, j) => (
+                    <li key={j}>
+                      <button
+                        onClick={() => goTo(j)}
+                        aria-label={`Go to question ${j + 1} of ${FAQS.length}`}
+                        aria-current={j === index ? "true" : undefined}
+                        className="group/dot py-2"
+                      >
+                        <span
+                          className={`block h-1.5 w-6 rounded-full transition-all duration-300 ${
+                            j === index ? "bg-copper" : "bg-border group-hover/dot:bg-foreground/30"
+                          }`}
+                        />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
             </div>
 
-            <div className={`transition-all duration-200 ease-out ${offsetClass}`}>
+            <div
+              className={`transition-all duration-200 ease-out ${offsetClass}`}
+              aria-live="polite"
+              aria-atomic="true"
+            >
               <h3 className="mt-8 font-display text-2xl leading-tight tracking-tight md:text-4xl">
                 {current.q}
               </h3>
@@ -185,14 +202,14 @@ export default function FAQ() {
                 aria-label="Previous question"
                 className="grid h-12 w-12 place-items-center rounded-full border border-border transition-colors duration-300 hover:border-copper hover:text-copper"
               >
-                <ArrowLeft size={16} />
+                <ArrowLeft size={16} aria-hidden="true" focusable="false" />
               </button>
               <button
                 onClick={next}
                 aria-label="Next question"
                 className="grid h-12 w-12 place-items-center rounded-full bg-foreground text-background transition-colors duration-300 hover:bg-copper"
               >
-                <ArrowRight size={16} />
+                <ArrowRight size={16} aria-hidden="true" focusable="false" />
               </button>
             </div>
           </div>

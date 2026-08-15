@@ -20,7 +20,10 @@ export default function ProjectsTimeline() {
   }, [api]);
 
   return (
-    <section className="border-t border-border bg-cream-alt py-16 sm:py-20 md:py-32">
+    <section
+      aria-labelledby="projects-heading"
+      className="border-t border-border bg-cream-alt py-16 sm:py-20 md:py-32"
+    >
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <div className="flex flex-col gap-8 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
           <div className="max-w-2xl">
@@ -28,7 +31,10 @@ export default function ProjectsTimeline() {
               <span className="label-caps text-copper">— Selected work</span>
             </Reveal>
             <Reveal delay={80}>
-              <h2 className="mt-4 font-display text-[2.25rem] leading-[1.08] tracking-tight sm:text-4xl md:text-5xl">
+              <h2
+                id="projects-heading"
+                className="mt-4 font-display text-[2.25rem] leading-[1.08] tracking-tight sm:text-4xl md:text-5xl"
+              >
                 Premium projects by <em className="text-copper">Design Factory Group</em>.
               </h2>
             </Reveal>
@@ -45,6 +51,8 @@ export default function ProjectsTimeline() {
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-copper text-background">
                 <ArrowRight
                   size={15}
+                  aria-hidden="true"
+                  focusable="false"
                   className="transition-transform duration-300 ease-out group-hover:-rotate-45"
                 />
               </span>
@@ -53,10 +61,16 @@ export default function ProjectsTimeline() {
         </div>
 
         {loading && (
-          <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10">
+          <div
+            role="status"
+            aria-live="polite"
+            className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10"
+          >
+            <span className="sr-only">Loading projects…</span>
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
+                aria-hidden="true"
                 className="animate-pulse overflow-hidden rounded border border-border bg-card"
               >
                 <div className="aspect-[4/3] w-full bg-muted" />
@@ -70,8 +84,11 @@ export default function ProjectsTimeline() {
         )}
 
         {!loading && error && (
-          <div className="mt-16 flex flex-col items-center gap-3 rounded border border-destructive/20 bg-destructive/5 p-12 text-center">
-            <TriangleAlert size={22} className="text-destructive/70" />
+          <div
+            role="alert"
+            className="mt-16 flex flex-col items-center gap-3 rounded border border-destructive/20 bg-destructive/5 p-12 text-center"
+          >
+            <TriangleAlert size={22} aria-hidden="true" focusable="false" className="text-destructive/70" />
             <p className="text-muted-foreground">
               Couldn't load projects right now. Please try again shortly.
             </p>
@@ -80,7 +97,7 @@ export default function ProjectsTimeline() {
 
         {!loading && !error && projects.length === 0 && (
           <div className="mt-16 flex flex-col items-center gap-3 rounded border border-dashed border-border bg-cream-alt p-12 text-center">
-            <FolderOpen size={22} className="text-muted-foreground/70" />
+            <FolderOpen size={22} aria-hidden="true" focusable="false" className="text-muted-foreground/70" />
             <p className="font-display text-2xl">No projects to show</p>
             <p className="text-sm text-muted-foreground">
               Check back soon — more work is on the way.
@@ -89,13 +106,15 @@ export default function ProjectsTimeline() {
         )}
 
         {!loading && !error && projects.length > 0 && (
-          <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10">
+          <ul className="mt-12 grid list-none gap-8 p-0 m-0 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10">
             {projects.map((project, i) => (
-              <Reveal key={project._id} delay={i * 40}>
-                <ProjectCard project={project} />
-              </Reveal>
+              <li key={project._id}>
+                <Reveal delay={i * 40}>
+                  <ProjectCard project={project} />
+                </Reveal>
+              </li>
             ))}
-          </div>
+          </ul>
         )}
       </div>
     </section>

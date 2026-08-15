@@ -6,55 +6,55 @@ import { Reveal } from "../components/Reveal";
 const DEFAULT_TESTIMONIALS = {
   featured: {
     quote:
-      "The team's attention to detail and ability to translate our vision into a home beyond expectation is rare.The team's attention to detail and ability to translate our vision into a home beyond expectation is rare.",
-    name: "Alexander R.",
+      "I recently completed the construction of my house under their guidance, and I am extremely satisfied with the overall experience. From design to execution, the architect provided excellent support, clear planning, and practical solutions at every stage.",
+    name: "Bikash Choudhary",
     role: "Private Client",
-    location: "Lake Como, Italy",
+    location: "Siliguri, West Bengal",
     image:
       "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&h=1000&q=80",
   },
   cards: [
     {
       quote:
-        "Professional, precise and incredibly creative. They designed a home that feels iconic and liveable.",
-      name: "Isabella M.",
+        "I had my house residency built by them and had by studio redone by them. It was a great experience Their expertise on the details is fantastic. I had enough opportunity to express my thought to them, and they were very particular to what suits me.",
+      name: "Devansh Joshi",
       role: "Homeowner",
-      location: "Malibu, California",
+      location: "Siliguri, West Bengal",
     },
     {
       quote:
-        "A seamless experience from concept to completion. The quality of craftsmanship is outstanding.",
-      name: "Matthew L.",
+        "Architect Himanshu Singh had a good knowledge of architecture and interior. I was impressed by his work done on my flat interior. And i referred his firm for good planning and interior. All the best. 👍",
+      name: "Raghubansh prasad Singh",
       role: "Developer",
-      location: "Dubai, UAE",
+      location: "Gangtok, Sikkim",
     },
     {
       quote:
-        "They don't just design buildings, they create environments that elevate everyday living.",
-      name: "Sofia K.",
+        "Ar Himanshu Kr Singh architectural prowess is evident in every project he undertakes. His dedication to creating inspiring and sustainable designs is truly commendable.",
+      name: "Adarsh Singh",
       role: "Private Client",
-      location: "London, UK",
+      location: "Kolkata, West Bengal",
     },
     {
       quote:
-        "Every decision was explained clearly and every deadline was met. Rare to find that level of discipline.",
-      name: "Daniel P.",
+        "I am really thankful for their great work done of interior designing of my home by DESIGN FACTORY GROUP. Their work is neat and clean.They even completed the project on the given schedule. I would really recommend their firm for their exceptional works and the ability to finish the work on time.",
+      name: "Jay Singh",
       role: "Private Client",
-      location: "Zurich, Switzerland",
+      location: "Siliguri, West Bengal",
     },
     {
       quote:
-        "Our home feels like it was designed around how we actually live, not how a brochure said we should.",
-      name: "Priya N.",
+        "This Siliguri interior design company Design Factory Group is fantastic! They create stylish, comfortable spaces. From trendy decor to smart layouts, they nail it. Highly recommend their services!!",
+      name: "Taranjit Singh Parwana",
       role: "Homeowner",
-      location: "Singapore",
+      location: "Guwahati, Assam",
     },
     {
       quote:
-        "Working across three time zones was never an issue. Communication was constant and precise throughout.",
-      name: "Thomas W.",
-      role: "Developer",
-      location: "New York, USA",
+        "Thank you to Ar. Himanshu Singh for the interior of my apartment. Me and my family is very satisfied by the work of you and your team.Best Interior & Architect firm in Siliguri.",
+      name: "Aishik S",
+      role: "Homeowner",
+      location: "New Delhi, India",
     },
   ],
 };
@@ -70,7 +70,7 @@ export default function Testimonials({
       Crafted experiences, <em className="text-copper">trusted by those who live in them</em>.
     </>
   ),
-  intro = "We collaborate closely with our clients to create residences that are considered, timeless and deeply personal.",
+  intro = "We collaborate closely with clients across India, from our studio in Siliguri, to create residences that are considered, timeless and deeply personal.",
   autoPlay = true,
   autoPlayInterval = 5000,
 }) {
@@ -164,14 +164,18 @@ export default function Testimonials({
   };
 
   return (
-    <section id="testimonials" className="mx-auto max-w-7xl px-5 pt-10 pb-16 text-ink sm:px-8 md:py-24">
-      <div className="hairline mb-16" />
+    <section
+      id="testimonials"
+      aria-labelledby="testimonials-heading"
+      className="mx-auto max-w-7xl px-5 pt-10 pb-16 text-ink sm:px-8 md:py-24"
+    >
+      <div className="hairline mb-16" aria-hidden="true" />
 
       <Reveal>
         <span className="label-caps text-copper">— {eyebrow}</span>
       </Reveal>
       <Reveal delay={80}>
-        <h2 className="mt-4 max-w-3xl font-display text-4xl leading-[1.05] tracking-tight md:text-5xl">
+        <h2 id="testimonials-heading" className="mt-4 max-w-3xl font-display text-4xl leading-[1.05] tracking-tight md:text-5xl">
           {heading}
         </h2>
       </Reveal>
@@ -182,18 +186,18 @@ export default function Testimonials({
       {/* Featured story */}
       <Reveal delay={200}>
         <article className="mt-10 grid grid-cols-1 rounded-sm border border-border bg-card md:grid-cols-[0.7fr_1.3fr]">
-          <div className="img-zoom aspect-[16/10] w-full overflow-hidden rounded-t md:aspect-auto md:max-h-[360px] md:self-center md:rounded-l md:rounded-tr-none">
+          <figure className="img-zoom aspect-[16/10] w-full overflow-hidden rounded-t m-0 md:aspect-auto md:max-h-[360px] md:self-center md:rounded-l md:rounded-tr-none">
             <img
               src={featured.image}
-              alt={`Project for ${featured.name}`}
+              alt={`Residential interior completed by Design Factory Group for a private client in ${featured.location}`}
               className="h-full w-full object-cover"
               loading="lazy"
             />
-          </div>
+          </figure>
 
           <div className="relative flex flex-col justify-center overflow-visible px-6 py-6 md:px-8 md:py-7">
             <span
-              aria-hidden
+              aria-hidden="true"
               className="pointer-events-none absolute -top-4 left-6 select-none font-display text-[5rem] leading-none text-copper/90 md:-top-6 md:left-8 md:text-[8rem] lg:text-[12rem]"
             >
               &ldquo;
@@ -201,17 +205,17 @@ export default function Testimonials({
 
             <span className="label-caps relative text-copper underline underline-offset-4">Featured Client Story</span>
 
-            <p className="relative mt-3 font-display text-lg leading-[1.35] text-foreground md:text-xl lg:text-2xl">
+            <blockquote className="relative mt-3 m-0 font-display text-lg leading-[1.35] text-foreground md:text-xl lg:text-2xl">
               {featured.quote}
-            </p>
+            </blockquote>
 
-            <div className="relative mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.50rem] md:text-[0.64rem] uppercase tracking-[0.2em]">
-              <span className="font-semibold text-foreground">{featured.name}</span>
-              <span className="text-border">/</span>
+            <footer className="relative mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.50rem] md:text-[0.64rem] uppercase tracking-[0.2em]">
+              <cite className="font-semibold not-italic text-foreground">{featured.name}</cite>
+              <span aria-hidden="true" className="text-border">/</span>
               <span className="text-copper">{featured.role}</span>
-              <span className="text-border">/</span>
+              <span aria-hidden="true" className="text-border">/</span>
               <span className="text-muted-foreground">{featured.location}</span>
-            </div>
+            </footer>
           </div>
         </article>
       </Reveal>
@@ -229,6 +233,9 @@ export default function Testimonials({
             className="relative touch-pan-y select-none overflow-hidden px-6 py-6 sm:px-8 sm:py-6 md:px-9 md:py-7"
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
+            role="group"
+            aria-roledescription="carousel"
+            aria-label="Client testimonials"
           >
             <AnimatePresence mode="wait" custom={direction}>
               <motion.article
@@ -239,25 +246,30 @@ export default function Testimonials({
                 exit={{ opacity: 0, x: direction >= 0 ? -40 : 40 }}
                 transition={{ duration: 0.45, ease: "easeOut" }}
                 className="flex flex-col"
+                aria-roledescription="slide"
+                aria-label={`${index + 1} of ${total}`}
               >
                 <span
-                  aria-hidden
+                  aria-hidden="true"
                   className="mb-2 font-display text-3xl leading-none text-copper sm:text-4xl"
                 >
                   &ldquo;
                 </span>
-                <p className="max-w-2xl font-display text-lg leading-[1.4] text-foreground sm:text-xl lg:w-[70%] md:max-w-full md:text-xl lg:text-2xl">
+                <blockquote className="max-w-2xl m-0 font-display text-lg leading-[1.4] text-foreground sm:text-xl lg:w-[70%] md:max-w-full md:text-xl lg:text-2xl">
                   {testimonials[index].quote}
-                </p>
-                <div className="mt-4 h-px w-full bg-border" />
-                <div className="mt-4 flex flex-wrap items-center gap-3">
-                  <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-ink/5 font-display text-base text-ink">
+                </blockquote>
+                <div className="mt-4 h-px w-full bg-border" aria-hidden="true" />
+                <footer className="mt-4 flex flex-wrap items-center gap-3">
+                  <div
+                    aria-hidden="true"
+                    className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-ink/5 font-display text-base text-ink"
+                  >
                     {testimonials[index].name?.trim()?.[0] ?? "•"}
                   </div>
                   <div className="min-w-0">
-                    <div className="text-[0.58rem] font-semibold uppercase tracking-[0.2em] text-foreground">
+                    <cite className="block text-[0.58rem] font-semibold not-italic uppercase tracking-[0.2em] text-foreground">
                       {testimonials[index].name}
-                    </div>
+                    </cite>
                     <div className="mt-0.5 text-[0.54rem] uppercase tracking-[0.2em] text-copper">
                       {testimonials[index].role}
                     </div>
@@ -265,7 +277,7 @@ export default function Testimonials({
                       {testimonials[index].location}
                     </div>
                   </div>
-                </div>
+                </footer>
               </motion.article>
             </AnimatePresence>
           </div>
@@ -273,28 +285,35 @@ export default function Testimonials({
           {/* Slider controls */}
           <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border px-6 py-3 sm:px-8 md:px-9">
             <div className="flex items-center gap-3">
-              {testimonials.map((_, i) => {
-                const isActive = i === index;
-                return (
-                  <button
-                    key={i}
-                    type="button"
-                    aria-label={`Go to testimonial ${i + 1}`}
-                    onClick={() => goTo(i)}
-                    className={`relative h-1.5 overflow-hidden rounded-full bg-border transition-all ${
-                      isActive ? "w-9" : "w-1.5 hover:bg-muted-foreground/40"
-                    }`}
-                  >
-                    {isActive && (
-                      <span
-                        className="absolute inset-y-0 left-0 h-full rounded-full bg-copper"
-                        style={{ width: `${progress}%` }}
-                      />
-                    )}
-                  </button>
-                );
-              })}
-              <span className="ml-3 text-[0.68rem] uppercase tracking-[0.22em] text-muted-foreground">
+              <nav aria-label="Testimonial navigation">
+                <ul className="flex list-none items-center gap-3 p-0 m-0">
+                  {testimonials.map((_, i) => {
+                    const isActive = i === index;
+                    return (
+                      <li key={i}>
+                        <button
+                          type="button"
+                          aria-label={`Go to testimonial ${i + 1} of ${total}`}
+                          aria-current={isActive ? "true" : undefined}
+                          onClick={() => goTo(i)}
+                          className={`relative h-1.5 overflow-hidden rounded-full bg-border transition-all ${
+                            isActive ? "w-9" : "w-1.5 hover:bg-muted-foreground/40"
+                          }`}
+                        >
+                          {isActive && (
+                            <span
+                              aria-hidden="true"
+                              className="absolute inset-y-0 left-0 h-full rounded-full bg-copper"
+                              style={{ width: `${progress}%` }}
+                            />
+                          )}
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </nav>
+              <span aria-hidden="true" className="ml-3 text-[0.68rem] uppercase tracking-[0.22em] text-muted-foreground">
                 {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
               </span>
             </div>
@@ -305,7 +324,7 @@ export default function Testimonials({
                 aria-label="Previous testimonial"
                 className="grid h-9 w-9 place-items-center rounded-full border border-border text-foreground transition-colors hover:border-copper hover:text-copper"
               >
-                <ChevronLeft className="h-4 w-4" strokeWidth={1.5} />
+                <ChevronLeft className="h-4 w-4" strokeWidth={1.5} aria-hidden="true" focusable="false" />
               </button>
               <button
                 type="button"
@@ -313,7 +332,7 @@ export default function Testimonials({
                 aria-label="Next testimonial"
                 className="grid h-9 w-9 place-items-center rounded-full border border-copper bg-copper text-primary-foreground transition-colors hover:bg-copper-dark"
               >
-                <ChevronRight className="h-4 w-4" strokeWidth={1.5} />
+                <ChevronRight className="h-4 w-4" strokeWidth={1.5} aria-hidden="true" focusable="false" />
               </button>
             </div>
           </div>

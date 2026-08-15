@@ -5,13 +5,17 @@ export default function ProjectCard({ project }) {
   const visibleScope = project.scope?.slice(0, 3) || [];
   const extraScope = (project.scope?.length || 0) - visibleScope.length;
 
+  const imageAlt = project.location
+    ? `${project.name} — a ${project.location} project by Design Factory Group`
+    : `${project.name} — a project by Design Factory Group`;
+
   return (
     <Link to={`/projects/${project._id}`} className="group block">
       <div className="img-zoom relative overflow-hidden rounded-sm border border-border bg-card transition-colors duration-300 group-hover:border-copper/40">
         <div className="aspect-[4/3] w-full">
           <img
             src={project.imageUrl}
-            alt={project.name}
+            alt={imageAlt}
             className="h-full w-full object-cover"
             loading="lazy"
           />
@@ -26,6 +30,7 @@ export default function ProjectCard({ project }) {
             }`}
           >
             <span
+              aria-hidden="true"
               className={`h-1.5 w-1.5 rounded-full ${
                 project.status === "Ongoing" ? "bg-primary-foreground" : "bg-copper"
               }`}
@@ -38,7 +43,7 @@ export default function ProjectCard({ project }) {
         </div>
 
         <span className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-sm bg-background/90 text-foreground opacity-0 shadow-sm backdrop-blur transition-all duration-300 group-hover:opacity-100">
-          <ArrowUpRight size={16} />
+          <ArrowUpRight size={16} aria-hidden="true" focusable="false" />
         </span>
       </div>
 
@@ -51,7 +56,7 @@ export default function ProjectCard({ project }) {
               <span className="absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-copper transition-transform duration-300 ease-out group-hover:scale-x-100" />
             </h3>
             <p className="mt-1.5 flex items-center gap-1.5 label-caps text-muted-foreground">
-              <MapPin size={11} className="text-copper" />
+              <MapPin size={11} aria-hidden="true" focusable="false" className="text-copper" />
               {project.location}
             </p>
           </div>
@@ -64,21 +69,24 @@ export default function ProjectCard({ project }) {
         )}
 
         {visibleScope.length > 0 && (
-          <div className="mt-4 flex flex-wrap items-center gap-2">
+          <ul
+            aria-label="Project scope"
+            className="mt-4 flex list-none flex-wrap items-center gap-2 p-0 m-0"
+          >
             {visibleScope.map((s) => (
-              <span
+              <li
                 key={s}
                 className="rounded-sm border border-border px-2.5 py-1 text-xs text-foreground/80"
               >
                 {s}
-              </span>
+              </li>
             ))}
             {extraScope > 0 && (
-              <span className="rounded-sm border border-dashed border-border px-2.5 py-1 text-xs text-muted-foreground">
+              <li className="rounded-sm border border-dashed border-border px-2.5 py-1 text-xs text-muted-foreground">
                 +{extraScope} more
-              </span>
+              </li>
             )}
-          </div>
+          </ul>
         )}
       </div>
     </Link>

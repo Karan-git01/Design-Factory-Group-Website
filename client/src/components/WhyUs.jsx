@@ -75,13 +75,17 @@ export default function WhyUs() {
   return (
     <section
       id="why-us"
+      aria-labelledby="why-us-heading"
       className="mx-auto max-w-7xl px-5 pt-20 sm:px-8 md:py-2 md:mt-25"
     >
       <Reveal>
         <span className="label-caps text-copper">— Why choose us</span>
       </Reveal>
       <Reveal delay={80}>
-        <h2 className="mt-4 max-w-3xl font-display text-4xl leading-[1.05] tracking-tight md:text-5xl">
+        <h2
+          id="why-us-heading"
+          className="mt-4 max-w-3xl font-display text-4xl leading-[1.05] tracking-tight md:text-5xl"
+        >
           Why work with <em className="text-copper">Design Factory Group</em>.
         </h2>
       </Reveal>
@@ -103,7 +107,8 @@ export default function WhyUs() {
               <img
                 key={p.n}
                 src={p.image}
-                alt={p.title}
+                alt={`${p.caption} — Design Factory Group`}
+                aria-hidden={i !== active}
                 loading={i === 0 ? "eager" : "lazy"}
                 draggable={false}
                 className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ease-out ${
@@ -113,22 +118,30 @@ export default function WhyUs() {
             ))}
 
             {/* subtle grade so the caption and dots stay legible over any photo */}
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent"
+            />
 
             <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between gap-4 sm:bottom-6 sm:left-6 sm:right-6">
               {/* CTA — a signage tag (accent rule + label), not a
                   blurred glass pill, so it reads as a made choice
                   rather than a template default */}
-              <div className="flex items-center gap-2.5 rounded bg-background px-3.5 py-2 sm:gap-3 sm:px-4 sm:py-2.5">
-                <span className="h-3 w-px shrink-0 bg-copper" />
+              <div
+                aria-live="polite"
+                className="flex items-center gap-2.5 rounded bg-background px-3.5 py-2 sm:gap-3 sm:px-4 sm:py-2.5"
+              >
+                <span aria-hidden="true" className="h-3 w-px shrink-0 bg-copper" />
                 <span className="label-caps text-[10px] leading-none text-foreground sm:text-[11px] md:text-xs">
                   {whyPoints[active].caption}
                 </span>
               </div>
 
               {/* progress dots — unchanged, still the section's
-                  signature device reading the active pillar */}
-              <div className="flex items-center gap-1.5 pb-2 sm:pb-2.5">
+                  signature device reading the active pillar. Purely
+                  decorative: the list below already exposes the same
+                  state (and controls it) accessibly. */}
+              <div aria-hidden="true" className="flex items-center gap-1.5 pb-2 sm:pb-2.5">
                 {whyPoints.map((p, i) => (
                   <span
                     key={p.n}
@@ -170,6 +183,7 @@ export default function WhyUs() {
                     className="group grid w-full grid-cols-[auto_1fr] items-start gap-6 py-6 text-left"
                   >
                     <span
+                      aria-hidden="true"
                       className={`grid h-12 w-12 shrink-0 place-items-center rounded-full border font-display text-lg transition-all duration-300 ${
                         isActive
                           ? "border-copper bg-copper text-primary-foreground"

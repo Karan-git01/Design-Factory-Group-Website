@@ -219,7 +219,7 @@ export default function Hero() {
             <h1
               id="hero-heading"
               className="font-display font-normal leading-[0.98] tracking-[-0.02em] text-ink"
-              style={{ fontSize: "clamp(2.1rem, 1.5rem + 3.4vw, 4.25rem)" }}
+              style={{ fontSize: "clamp(2.4rem, 1.9rem + 3.4vw, 4.25rem)" }}
             >
               {headline.map((line, li) => (
                 <span key={li} className="df-line-mask">

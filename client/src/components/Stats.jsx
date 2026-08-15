@@ -76,7 +76,7 @@ function CornerBrackets() {
       {positions.map((pos) => (
         <span
           key={pos}
-          aria-hidden
+          aria-hidden="true"
           className={`pointer-events-none absolute h-3 w-3 border-copper/50 transition-colors duration-300 group-hover:border-copper ${pos}`}
         />
       ))}
@@ -92,9 +92,9 @@ function DimensionLine({ side = "left" }) {
     side === "left"
       ? "bg-gradient-to-r from-transparent to-copper/70"
       : "bg-gradient-to-l from-transparent to-copper/70";
-  const tick = <span aria-hidden className="h-2 w-px shrink-0 bg-copper/70" />;
+  const tick = <span aria-hidden="true" className="h-2 w-px shrink-0 bg-copper/70" />;
   return (
-    <span aria-hidden className="flex w-full items-center">
+    <span aria-hidden="true" className="flex w-full items-center">
       {side === "right" && tick}
       <span className={`block h-[1.5px] w-full rounded-full ${gradient}`} />
       {side === "left" && tick}
@@ -102,6 +102,12 @@ function DimensionLine({ side = "left" }) {
   );
 }
 
+// Renders the animated count-up figure plus its label. The figure itself is
+// hidden from assistive tech (it's injected imperatively by useCountUp, so
+// it's empty on first paint / before the scroll-triggered animation runs,
+// and an empty node is worse for screen readers than no node at all). A
+// visually-hidden fallback with the final value ships instead, so the
+// number is always available to screen readers and to search engines.
 function Stats({ target, suffix, label, icon: Icon }) {
   const elementId = `stat-${target}-${suffix}`;
 
@@ -117,16 +123,24 @@ function Stats({ target, suffix, label, icon: Icon }) {
   return (
     <div className="card-lift group relative flex items-center gap-5 overflow-hidden rounded-sm border border-border bg-background p-6 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-copper hover:shadow-md">
       <CornerBrackets />
-      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-border text-copper transition-colors duration-300 group-hover:border-copper group-hover:bg-copper group-hover:text-background">
-        <Icon size={16} />
+      <span
+        aria-hidden="true"
+        className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-border text-copper transition-colors duration-300 group-hover:border-copper group-hover:bg-copper group-hover:text-background"
+      >
+        <Icon size={16} aria-hidden="true" focusable="false" />
       </span>
       <div className="flex flex-1 items-baseline justify-between gap-4">
         <span
           id={elementId}
+          aria-hidden="true"
           className="font-display text-4xl tracking-tight tabular-nums md:text-5xl"
         />
         <span className="max-w-[7rem] text-right font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
           {label}
+        </span>
+        <span className="sr-only">
+          {target}
+          {suffix} {label}
         </span>
       </div>
     </div>
@@ -176,11 +190,15 @@ export default function GlobalPresence() {
   const totalLabel = String(STATES.length).padStart(2, "0");
 
   return (
-    <section className="relative isolate overflow-hidden border-t border-border bg-cream-alt py-20 md:py-32">
+    <section
+      id="global-presence"
+      aria-labelledby="global-presence-heading"
+      className="relative isolate overflow-hidden border-t border-border bg-cream-alt py-20 md:py-32"
+    >
       {/* Faint blueprint grid — ambient, low-contrast, ties the section to
           a drafting sheet without competing with content. */}
       <div
-        aria-hidden
+        aria-hidden="true"
         className="pointer-events-none absolute inset-0 z-0 opacity-[0.04]"
         style={{
           backgroundImage:
@@ -189,7 +207,10 @@ export default function GlobalPresence() {
         }}
       />
 
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[420px] overflow-hidden md:h-[560px]">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[420px] overflow-hidden md:h-[560px]"
+      >
         <WorldMapDots className="absolute left-1/2 top-0 w-[140%] max-w-none -translate-x-1/2 text-copper/25" />
         <div
           className="absolute inset-0"
@@ -202,22 +223,26 @@ export default function GlobalPresence() {
 
       <div className="relative z-10 mx-auto max-w-7xl px-5 sm:px-8">
         <div className="relative">
-          <div className="pointer-events-none absolute -inset-x-6 -inset-y-6 -z-10 rounded-[3rem] bg-cream-alt/80 blur-2xl sm:-inset-x-10" />
+          <div className="pointer-events-none absolute -inset-x-6 -inset-y-6 -z-10 rounded-[3rem] bg-cream-alt/80 blur-2xl sm:-inset-x-10" aria-hidden="true" />
           <div className="grid gap-8 md:grid-cols-[1fr_1fr] md:items-end">
             <div>
               <Reveal>
                 <span className="label-caps text-copper">— Presence Across India</span>
               </Reveal>
               <Reveal delay={80}>
-                <h2 className="mt-4 max-w-3xl font-display text-4xl leading-[1.05] tracking-tight md:text-6xl">
+                <h2
+                  id="global-presence-heading"
+                  className="mt-4 max-w-3xl font-display text-4xl leading-[1.05] tracking-tight md:text-6xl"
+                >
                   Building across <em className="text-copper">every state</em>.
                 </h2>
               </Reveal>
             </div>
             <Reveal delay={140}>
               <p className="max-w-md text-muted-foreground md:justify-self-end">
-                From private residences to large-scale developments, our studio delivers
-                considered architecture across India, wherever our clients are building.
+                From our studio in Siliguri, West Bengal, we deliver considered
+                architecture across every state in India, wherever our clients
+                are building.
               </p>
             </Reveal>
           </div>
@@ -228,26 +253,37 @@ export default function GlobalPresence() {
             <div className="relative overflow-hidden rounded-sm border border-border bg-background p-8 shadow-sm md:p-10">
               <CornerBrackets />
               <span
-                aria-hidden
+                aria-hidden="true"
                 className="pointer-events-none absolute inset-3 border border-border/40"
               />
-              <div className="dot-grid absolute inset-0 text-foreground/40" />
+              <div aria-hidden="true" className="dot-grid absolute inset-0 text-foreground/40" />
               <div className="relative">
                 <div className="flex items-center justify-between gap-4">
                   <p className="label-caps flex items-center gap-2 text-muted-foreground">
-                    <span className="relative flex h-2 w-2">
+                    <span aria-hidden="true" className="relative flex h-2 w-2">
                       <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-copper opacity-75" />
                       <span className="relative inline-flex h-2 w-2 rounded-full bg-copper" />
                     </span>
                     Currently active in
                   </p>
-                  <span className="font-mono text-xs tabular-nums tracking-[0.1em] text-muted-foreground">
+                  <span aria-hidden="true" className="font-mono text-xs tabular-nums tracking-[0.1em] text-muted-foreground">
                     <span className="text-copper">{indexLabel}</span> / {totalLabel}
                   </span>
                 </div>
 
+                {/* Live-region fallback: the scroller below is hidden from
+                    assistive tech (it's a fast-cycling decorative marquee —
+                    reading every transiting state name aloud would be
+                    unusable), so this visually-hidden node is the actual
+                    accessible source of truth for "which state is active
+                    now", updating in step with the visual highlight. */}
+                <p aria-live="polite" className="sr-only">
+                  Currently active in {STATES[highlightIdx]}
+                </p>
+
                 {/* Centered auto-scrolling state picker */}
                 <div
+                  aria-hidden="true"
                   className="relative mt-6 overflow-hidden"
                   style={{
                     height: `${containerHeight}rem`,
@@ -308,13 +344,15 @@ export default function GlobalPresence() {
             </div>
           </Reveal>
 
-          <div className="grid gap-4">
+          <ul aria-label="Key statistics" className="grid list-none gap-4 p-0 m-0">
             {STATS.map((s, i) => (
-              <Reveal key={s.label} delay={i * 60}>
-                <Stats target={s.target} suffix={s.suffix} label={s.label} icon={s.icon} />
-              </Reveal>
+              <li key={s.label}>
+                <Reveal delay={i * 60}>
+                  <Stats target={s.target} suffix={s.suffix} label={s.label} icon={s.icon} />
+                </Reveal>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       </div>
     </section>
