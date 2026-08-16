@@ -75,7 +75,7 @@ export default function App() {
   useScrollToHash();
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowSplash(false), 1200);
+    const timer = setTimeout(() => setShowSplash(false), 1700);
     return () => clearTimeout(timer);
   }, []);
 

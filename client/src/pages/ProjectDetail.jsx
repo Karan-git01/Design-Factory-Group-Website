@@ -12,7 +12,10 @@ export default function ProjectDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  usePageMeta(project?.name, project?.description);
+  usePageMeta(
+    project?.name ? `${project.name} | Design Factory Group` : undefined,
+    project?.description
+  );
 
   useEffect(() => {
     setLoading(true);
@@ -48,37 +51,41 @@ export default function ProjectDetail() {
     );
   }
 
+  // Richer, consistent alt text — matches the pattern already used in
+  // ProjectCard.jsx so the same project is described the same way
+  // wherever its image appears.
+  const imageAlt = project.location
+    ? `${project.name} — a ${project.location} project by Design Factory Group`
+    : `${project.name} — a project by Design Factory Group`;
+
+  // CreativeWork structured data for this individual project — the
+  // per-project counterpart to the ItemList/ListItem schema on the
+  // Projects listing page. Only real, present fields are included.
+  const projectSchema = {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    name: project.name,
+    ...(project.description && { description: project.description }),
+    ...(project.imageUrl && { image: project.imageUrl }),
+    ...(typeof window !== "undefined" && { url: window.location.href }),
+    creator: {
+      "@type": "Organization",
+      name: "Design Factory Group",
+    },
+    ...(project.location && {
+      locationCreated: { "@type": "Place", name: project.location },
+    }),
+    ...(project.year && { dateCreated: String(project.year) }),
+    ...(project.scope?.length > 0 && { keywords: project.scope.join(", ") }),
+  };
+
   return (
     <article className="relative pb-24">
-      {/* Page-level background layer: drafting grid + two copper glows (one near the title, one lower
-          near the image). This single full-width, overflow-hidden layer is a sibling to the content —
-          it never wraps the sticky scope rail below, so sticky positioning stays intact. Because it
-          spans edge-to-edge (inset-x-0) and clips its own contents, glows can bleed freely without
-          ever pushing the page wider than the viewport. */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[1000px] overflow-hidden">
-        <div
-          className="absolute inset-0 opacity-[0.07]"
-          style={{
-            backgroundImage:
-              "linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)",
-            backgroundSize: "48px 48px",
-            maskImage:
-              "radial-gradient(ellipse 70% 55% at 50% 0%, black 40%, transparent 85%)",
-            WebkitMaskImage:
-              "radial-gradient(ellipse 70% 55% at 50% 0%, black 40%, transparent 85%)",
-          }}
-        />
-        {/* Glow near the title */}
-        <div
-          className="absolute -top-32 left-[20%] h-[420px] w-[860px] -translate-x-1/2 rounded-full bg-copper/10 blur-[110px]"
-          aria-hidden="true"
-        />
-        {/* Glow near the hero image, sitting lower and to the right */}
-        <div
-          className="absolute right-0 top-[14rem] h-[300px] w-[380px] translate-x-1/3 rounded-full bg-copper/20 blur-[100px]"
-          aria-hidden="true"
-        />
-      </div>
+      {/* eslint-disable-next-line react/no-danger */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(projectSchema) }}
+      />
 
       <div className="mx-auto max-w-6xl px-5 pt-10 sm:px-8">
         <Link
@@ -123,7 +130,7 @@ export default function ProjectDetail() {
           <div className="img-zoom relative overflow-hidden">
             <img
               src={project.imageUrl}
-              alt={project.name}
+              alt={imageAlt}
               className="aspect-[16/8] w-full object-cover md:aspect-[21/9]"
             />
             <span className="pointer-events-none absolute left-0 top-0 h-7 w-7 border-l-2 border-t-2 border-copper" />

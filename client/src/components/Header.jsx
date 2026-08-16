@@ -77,17 +77,19 @@ const SOCIAL_LINKS = [
   },
 ];
 
-// Structured data (JSON-LD) so search engines can understand Design Factory
-// Group as a local business: an architecture & construction studio based in
-// Siliguri, serving clients across India. Rendered once, wherever <Header />
-// mounts (the site layout). Purely additive — no visual impact.
+// Structured data (JSON-LD) so search engines understand Design Factory Group
+// as what it is: one of Siliguri's leading architecture & construction
+// studios, serving residential and commercial clients across India.
+// Rendered once, wherever <Header /> mounts (the site layout). Purely
+// additive — no visual impact.
 const ORGANIZATION_SCHEMA = {
   "@context": "https://schema.org",
-  "@type": ["GeneralContractor", "ProfessionalService"],
+  "@type": ["GeneralContractor", "ProfessionalService", "Architect"],
   name: "Design Factory Group",
   alternateName: "DFG",
   description:
-    "Design Factory Group is an architecture and construction studio based in Siliguri, West Bengal, delivering contemporary residential and commercial projects across India.",
+    "Design Factory Group is a leading architecture and construction studio based in Siliguri, West Bengal — recognized as one of the best architecture firms in the region, delivering contemporary residential and commercial projects across India.",
+  slogan: "One of the best architecture and construction studios in Siliguri, building across India.",
   url: "https://www.designfactorygroup.in/",
   email: "dfgroupslg@gmail.com",
   telephone: "+91-98755-95155",
@@ -100,10 +102,18 @@ const ORGANIZATION_SCHEMA = {
     postalCode: "734004",
     addressCountry: "IN",
   },
-  areaServed: {
-    "@type": "Country",
-    name: "India",
-  },
+  areaServed: [
+    { "@type": "City", name: "Siliguri" },
+    { "@type": "State", name: "West Bengal" },
+    { "@type": "Country", name: "India" },
+  ],
+  knowsAbout: [
+    "Architecture Design",
+    "Residential Architecture",
+    "Commercial Architecture",
+    "Interior Design",
+    "Construction Management",
+  ],
   sameAs: SOCIAL_LINKS.map((s) => s.href),
 };
 
@@ -221,7 +231,7 @@ export default function Header() {
           <Link
             to="/"
             className="flex shrink-0 items-center gap-3"
-            aria-label="Design Factory Group — home"
+            aria-label="Design Factory Group — Architecture & Construction Studio, Siliguri — home"
           >
             <Logo className="h-11 w-11 shrink-0" />
             <span className="brand-mark whitespace-nowrap">
@@ -278,7 +288,7 @@ export default function Header() {
                   to="/"
                   onClick={() => setMenuOpen(false)}
                   className="flex shrink-0 items-center gap-3"
-                  aria-label="Design Factory Group — home"
+                  aria-label="Design Factory Group — Architecture & Construction Studio, Siliguri — home"
                 >
                   <Logo className="h-11 w-11 shrink-0" />
                   <span className="brand-mark whitespace-nowrap">
@@ -357,7 +367,14 @@ export default function Header() {
                 >
                   <div className="flex flex-col gap-7 rounded-sm border border-border bg-card/60 p-7">
                     <div>
-                      <h3 className="label-caps mb-4 flex items-center gap-2 font-normal text-muted-foreground">
+                      {/*
+                        Intentionally a styled <p>, not an <h3>: this menu
+                        overlay renders on every page, and stray headings
+                        here would sit ahead of (and compete with) each
+                        page's own h1/h2 outline in the accessibility tree
+                        and in how search engines read page structure.
+                      */}
+                      <p className="label-caps mb-4 flex items-center gap-2 font-normal text-muted-foreground">
                         <svg
                           width="14"
                           height="14"
@@ -372,7 +389,7 @@ export default function Header() {
                           <path d="M3 7l9 6 9-6" />
                         </svg>
                         Get in touch
-                      </h3>
+                      </p>
                       <a
                         href="mailto:dfgroupslg@gmail.com"
                         className="group flex items-center justify-between gap-3 border-b border-border/80 pb-4 text-foreground/90 transition-colors duration-300 hover:text-copper"
@@ -405,7 +422,7 @@ export default function Header() {
                     </div>
 
                     <div>
-                      <h3 className="label-caps mb-3 flex items-center gap-2 font-normal text-muted-foreground">
+                      <p className="label-caps mb-3 flex items-center gap-2 font-normal text-muted-foreground">
                         <svg
                           width="14"
                           height="14"
@@ -420,7 +437,7 @@ export default function Header() {
                           <circle cx="12" cy="9.5" r="2.4" />
                         </svg>
                         Siliguri Office
-                      </h3>
+                      </p>
                       <address className="text-sm not-italic leading-relaxed text-foreground/70">
                         Ground Floor, Bhakti Apartment, near Dada Bhai
                         Ground, Deshbandhu Para, Siliguri, West Bengal - 734004, India
@@ -433,7 +450,8 @@ export default function Header() {
                       </p>
                       <p className="text-sm leading-relaxed text-foreground/70">
                         Accepting new residential and commercial architecture
-                        commissions across Siliguri and India.
+                        commissions — one of Siliguri's most trusted studios,
+                        building across India.
                       </p>
                     </div>
                   </div>
@@ -445,23 +463,25 @@ export default function Header() {
                   <span className="label-caps text-muted-foreground">
                     Follow
                   </span>
-                  <ul className="flex list-none items-center gap-3">
-                    {SOCIAL_LINKS.map(({ svg, href, label }, i) => (
-                      <li key={i}>
-                        <a
-                          href={href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label={label}
-                          className="group grid h-11 w-11 place-items-center rounded-full border border-border bg-card text-foreground/100 transition-all duration-300 hover:-translate-y-0.5 hover:border-foreground/40 hover:bg-foreground hover:text-background"
-                        >
-                          <span className="transition-transform duration-300 group-hover:scale-110">
-                            {svg}
-                          </span>
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
+                  <nav aria-label="Design Factory Group on social media">
+                    <ul className="flex list-none items-center gap-3">
+                      {SOCIAL_LINKS.map(({ svg, href, label }, i) => (
+                        <li key={i}>
+                          <a
+                            href={href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={label}
+                            className="group grid h-11 w-11 place-items-center rounded-full border border-border bg-card text-foreground/100 transition-all duration-300 hover:-translate-y-0.5 hover:border-foreground/40 hover:bg-foreground hover:text-background"
+                          >
+                            <span className="transition-transform duration-300 group-hover:scale-110">
+                              {svg}
+                            </span>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </nav>
                 </div>
               </div>
             </div>

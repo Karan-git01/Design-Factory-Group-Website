@@ -3,36 +3,57 @@ import { Phone, Mail, MessageCircle } from "lucide-react";
 import ContactForm from "../components/ContactForm";
 import { Reveal } from "../components/Reveal";
 
+// Same brand marks used in Header.jsx's SOCIAL_LINKS — kept in sync so the
+// icon shapes match everywhere the socials appear on the site.
 const SOCIAL_ICONS = [
   {
-    label: "Instagram",
-    href: "#",
+    label: "Design Factory Group on Instagram",
+    href: "https://www.instagram.com/design_factory_group?igsh=MTgybzU2aG94Nmg2dw==",
     svg: (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-        <rect x="2" y="2" width="20" height="20" rx="5" />
-        <circle cx="12" cy="12" r="4" />
-        <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        fill="currentColor"
+        viewBox="0 0 16 16"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92s.546-.453.92-.598c.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334" />
       </svg>
     ),
   },
   {
-    label: "Facebook",
-    href: "#",
+    label: "Design Factory Group on Facebook",
+    href: "https://www.facebook.com/share/1CU3XF4ge8/",
     svg: (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        fill="currentColor"
+        viewBox="0 0 16 16"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951" />
       </svg>
     ),
   },
   {
-    label: "LinkedIn",
-    href: "#",
+    label: "Design Factory Group on YouTube",
+    href: "https://youtube.com/@designfactorygroup?si=9BS0WxsK1qII5Igb",
     svg: (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-        <rect x="2" y="9" width="4" height="12" />
-        <circle cx="4" cy="4" r="2" />
-        <path d="M10 9v12" />
-        <path d="M10 13a4 4 0 0 1 8 0v8" />
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        fill="currentColor"
+        viewBox="0 0 16 16"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.01 2.01 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.01 2.01 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.05 9.82l-.008-.104A31 31 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.01 2.01 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A100 100 0 0 1 7.858 2zM6.4 5.209v4.818l4.157-2.408z" />
       </svg>
     ),
   },
@@ -40,12 +61,35 @@ const SOCIAL_ICONS = [
 
 export default function Contact() {
   usePageMeta(
-    "Contact — Design Factory Group",
-    "Speak to a principal at Design Factory Group about your project."
+    "Contact | Design Factory Group — Architecture & Construction Studio, Siliguri",
+    "Get in touch with Design Factory Group, one of Siliguri's leading architecture and construction studios, about your residential or commercial project across India."
   );
+
+  // ContactPage structured data pointing at the same Organization details
+  // declared globally in Header.jsx — kept in sync with the real phone/
+  // email so this page's schema doesn't contradict the site-wide one.
+  const contactPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    name: "Contact Design Factory Group",
+    ...(typeof window !== "undefined" && { url: window.location.href }),
+    about: {
+      "@type": "Organization",
+      name: "Design Factory Group",
+      url: "https://www.designfactorygroup.in/",
+      email: "dfgroupslg@gmail.com",
+      telephone: "+91-98755-95155",
+    },
+  };
 
   return (
     <section className="mx-auto max-w-7xl px-5 py-16 sm:px-8 md:py-24">
+      {/* eslint-disable-next-line react/no-danger */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(contactPageSchema) }}
+      />
+
       <Reveal>
         <span className="label-caps text-copper">— Contact</span>
       </Reveal>
@@ -64,48 +108,63 @@ export default function Contact() {
       <div className="mt-14 grid gap-10 md:grid-cols-[1fr_1.2fr] md:gap-16">
         <div className="space-y-6">
           <Reveal>
-            <div className="rounded-3xl border border-border bg-card p-7">
-              <p className="label-caps text-muted-foreground">Talk to us</p>
-              <div className="mt-5 space-y-4">
-                <a
-                  href="tel:+13107428890"
-                  className="flex items-center gap-3 text-foreground link-underline"
-                >
-                  <Phone size={16} className="text-copper" /> +1 310 742 8890
-                </a>
-                <a
-                  href="mailto:info@designfactorygroup.com"
-                  className="flex items-center gap-3 text-foreground link-underline"
-                >
-                  <Mail size={16} className="text-copper" /> info@designfactorygroup.com
-                </a>
-                <a
-                  href="https://wa.me/13107428890"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-arrow inline-flex items-center gap-3 rounded-full bg-foreground px-5 py-3 label-caps text-background transition hover:bg-copper"
-                >
-                  <MessageCircle size={14} /> WhatsApp us
-                </a>
-              </div>
+            <div className="rounded-sm border border-border bg-card p-7">
+              <h2 className="label-caps text-muted-foreground">Talk to us</h2>
+              <address className="not-italic">
+                <div className="mt-5 flex flex-col gap-4 md:flex-row md:flex-wrap md:items-center">
+                  <a
+                    href="tel:+919875595155"
+                    className="flex items-center gap-3 text-foreground link-underline"
+                  >
+                    <Phone size={16} className="text-copper" aria-hidden="true" focusable="false" />
+                    +91 98755 95155
+                  </a>
+                  <a
+                    href="mailto:dfgroupslg@gmail.com"
+                    className="flex items-center gap-3 text-foreground link-underline md:basis-full"
+                  >
+                    <Mail size={16} className="text-copper" aria-hidden="true" focusable="false" />
+                    dfgroupslg@gmail.com
+                  </a>
+                  <a
+                    href="https://wa.me/919875595155"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-arrow inline-flex items-center gap-3 rounded-full bg-foreground px-5 py-3 label-caps text-background transition hover:bg-copper"
+                  >
+                    <MessageCircle size={14} aria-hidden="true" focusable="false" /> WhatsApp us
+                  </a>
+                </div>
+              </address>
             </div>
           </Reveal>
 
           <Reveal delay={80}>
-            <div className="rounded-3xl border border-border bg-card p-7">
-              <p className="label-caps text-muted-foreground">Follow</p>
-              <div className="mt-5 flex gap-3">
-                {SOCIAL_ICONS.map(({ svg, label, href }, i) => (
-                  <a
-                    key={i}
-                    href={href}
-                    aria-label={label}
-                    className="grid h-11 w-11 place-items-center rounded-full border border-border transition hover:bg-foreground hover:text-background"
-                  >
-                    {svg}
-                  </a>
-                ))}
-              </div>
+            <div className="rounded-sm border border-border bg-card p-7">
+              <h2 className="label-caps text-muted-foreground underline decoration-2 underline-offset-4">
+                Follow
+              </h2>
+              <nav aria-label="Design Factory Group on social media">
+                <ul className="mt-5 flex list-none gap-3">
+                  {SOCIAL_ICONS.map(({ svg, label, href }, i) => (
+                    <li key={i}>
+                      <a
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={label}
+                        className="group relative grid h-11 w-11 place-items-center rounded-full border border-border transition hover:bg-foreground hover:text-background"
+                      >
+                        {svg}
+                        <span
+                          aria-hidden="true"
+                          className="pointer-events-none absolute -bottom-1 left-1/2 h-px w-0 -translate-x-1/2 bg-current transition-all duration-300 group-hover:w-4"
+                        />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
             </div>
           </Reveal>
         </div>
@@ -117,145 +176,3 @@ export default function Contact() {
     </section>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import { usePageMeta } from "../hooks/usePageMeta";
-// import ContactForm from "../components/ContactForm";
-
-// export default function Contact() {
-//   usePageMeta("Contact", "Get in touch with Design Factory Group for your next project.");
-
-//   return (
-//     <main className="min-h-screen border-t border-secondary/20 bg-ink pt-28 pb-24">
-//       <div className="mx-auto max-w-7xl px-6 sm:px-8 md:px-12 lg:px-16 xl:px-20">
-//         <div className="mb-8 flex items-center gap-4">
-//           <div className="h-px w-14 bg-primary" />
-//           <span className="text-[11px] font-medium uppercase tracking-[0.45em] text-secondary-light">
-//             Contact
-//           </span>
-//         </div>
-
-//         <div className="mb-20 grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
-//           <div>
-//             <h1 className="font-display text-5xl font-light leading-[0.92] tracking-[-0.05em] text-surface sm:text-6xl lg:text-7xl">
-//               Let's create
-//               <br />
-//               <span className="text-primary">something remarkable.</span>
-//             </h1>
-//           </div>
-//           <p className="max-w-md text-base leading-8 text-secondary-light">
-//             Whether you're planning a residence, commercial space or renovation,
-//             our team is ready to discuss your vision and guide you through every
-//             stage of the process.
-//           </p>
-//         </div>
-
-//         <div className="grid gap-14 lg:grid-cols-[380px_1fr]">
-//           <div className="space-y-10">
-//             <div className="rounded-[1.75rem] border border-secondary/20 bg-ink-light p-8">
-//               <div className="mb-8 flex items-center gap-3">
-//                 <div className="h-px w-10 bg-primary" />
-//                 <span className="text-[10px] uppercase tracking-[0.35em] text-secondary-light">
-//                   Contact
-//                 </span>
-//               </div>
-
-//               <div className="space-y-6">
-//                 <div>
-//                   <p className="mb-2 text-[10px] uppercase tracking-[0.3em] text-secondary">
-//                     Phone
-//                   </p>
-//                   <a
-//                     href="tel:+13107428890"
-//                     className="text-lg text-surface transition hover:text-primary"
-//                   >
-//                     +1 310 742 8890
-//                   </a>
-//                 </div>
-
-//                 <div className="border-t border-secondary/20 pt-6">
-//                   <p className="mb-2 text-[10px] uppercase tracking-[0.3em] text-secondary">
-//                     Email
-//                   </p>
-//                   <a
-//                     href="mailto:info@designfactorygroup.com"
-//                     className="break-all text-lg text-surface transition hover:text-primary"
-//                   >
-//                     info@designfactorygroup.com
-//                   </a>
-//                 </div>
-
-//                 <div className="border-t border-secondary/20 pt-6">
-//                   <a
-//                     href="https://wa.me/13107428890"
-//                     target="_blank"
-//                     rel="noopener noreferrer"
-//                     className="group inline-flex items-center gap-5"
-//                   >
-//                     <span className="font-display text-lg font-light text-surface transition-colors duration-300 group-hover:text-primary">
-//                       Chat on WhatsApp
-//                     </span>
-//                     <div className="flex h-11 w-11 items-center justify-center rounded-full border border-secondary/30 transition-all duration-300 group-hover:border-primary">
-//                       <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-ink transition-transform duration-300 group-hover:translate-x-1">
-//                         →
-//                       </div>
-//                     </div>
-//                   </a>
-//                 </div>
-//               </div>
-//             </div>
-
-//             <div className="rounded-[1.75rem] border border-secondary/20 bg-ink-light p-8">
-//               <div className="mb-8 flex items-center gap-3">
-//                 <div className="h-px w-10 bg-primary" />
-//                 <span className="text-[10px] uppercase tracking-[0.35em] text-secondary-light">
-//                   Follow Us
-//                 </span>
-//               </div>
-//               <div className="flex flex-col gap-5">
-//                 <a href="#" className="text-secondary-light transition hover:text-primary">
-//                   Instagram
-//                 </a>
-//                 <a href="#" className="text-secondary-light transition hover:text-primary">
-//                   Facebook
-//                 </a>
-//                 <a href="#" className="text-secondary-light transition hover:text-primary">
-//                   LinkedIn
-//                 </a>
-//               </div>
-//             </div>
-//           </div>
-
-//           <div>
-//             <ContactForm />
-//           </div>
-//         </div>
-//       </div>
-//     </main>
-//   );
-// }

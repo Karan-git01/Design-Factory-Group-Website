@@ -183,13 +183,16 @@ export default function Footer() {
 
           <div className="md:border-l md:border-border md:pl-8">
             <h3 className="label-caps mb-5 text-muted-foreground">Contact</h3>
-            <ul className="space-y-3.5">
-              {CONTACT_DETAILS.map(({ Icon, label, href }) => {
-                const isAddress = Icon === MapPin;
-                const TextTag = isAddress ? "address" : "span";
-                if (href) {
-                  return (
-                    <li key={label}>
+            {/* Whole NAP block in one <address> — the element is meant to
+                hold all of a document's contact info (physical address,
+                tel, email alike), not just the street line. One consistent
+                block reads as a single, stronger local-business signal to
+                search engines instead of three unrelated list items. */}
+            <address className="not-italic">
+              <ul className="space-y-3.5">
+                {CONTACT_DETAILS.map(({ Icon, label, href }) => (
+                  <li key={label}>
+                    {href ? (
                       <a
                         href={href}
                         className="group/contact flex items-start gap-2.5 text-sm text-foreground/80 transition-colors duration-300 hover:text-copper"
@@ -202,19 +205,21 @@ export default function Footer() {
                         />
                         {label}
                       </a>
-                    </li>
-                  );
-                }
-                return (
-                  <li key={label}>
-                    <TextTag className="flex items-start gap-2.5 text-sm not-italic text-foreground/80">
-                      <Icon size={15} aria-hidden="true" focusable="false" className="mt-0.5 flex-none text-muted-foreground/70" />
-                      {label}
-                    </TextTag>
+                    ) : (
+                      <span className="flex items-start gap-2.5 text-sm text-foreground/80">
+                        <Icon
+                          size={15}
+                          aria-hidden="true"
+                          focusable="false"
+                          className="mt-0.5 flex-none text-muted-foreground/70"
+                        />
+                        {label}
+                      </span>
+                    )}
                   </li>
-                );
-              })}
-            </ul>
+                ))}
+              </ul>
+            </address>
           </div>
         </div>
 
@@ -240,6 +245,7 @@ export default function Footer() {
           <div className="flex items-center justify-between gap-5 md:justify-end">
             <Link
               to="/admin/login"
+              rel="nofollow"
               className="text-muted-foreground/70 transition-colors duration-300 hover:text-foreground"
             >
               Admin

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowUpRight, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { Reveal } from "../components/Reveal";
 
 const SLIDES = [
@@ -159,42 +159,85 @@ export default function Hero() {
            declared values, which don't match the live output. */
         .df-caption-mark {
           font-family: var(--font-sans);
-          font-size: 1.05rem;
+          font-size: 0.95rem;
           font-weight: 500;
           line-height: 1.5;
         }
         @media (min-width: 768px) {
-          .df-caption-mark { font-size: 1.2rem; }
+          .df-caption-mark { font-size: 1.05rem; }
+        }
+
+        /* Background photo mask: hidden behind the text column, then
+           reveals starting where the text column ends. Below lg the
+           layout stacks (grid-cols-1) so we use the same ~38.5% split
+           as a reasonable default; at lg, where the grid is actually
+           1fr / 1.6fr (text column ≈ 38.5% width), the reveal starts
+           sooner so more of the photo shows behind the wider slider. */
+        .df-bg-mask {
+          -webkit-mask-image: linear-gradient(
+            to right,
+            transparent 0%,
+            transparent 38.5%,
+            white 100%
+          );
+          mask-image: linear-gradient(
+            to right,
+            transparent 0%,
+            transparent 38.5%,
+            white 100%
+          );
+        }
+        @media (min-width: 1024px) {
+          .df-bg-mask {
+            -webkit-mask-image: linear-gradient(
+              to right,
+              transparent 0%,
+              transparent 28%,
+              white 100%
+            );
+            mask-image: linear-gradient(
+              to right,
+              transparent 0%,
+              transparent 28%,
+              white 100%
+            );
+          }
+        }
+
+        /* "View Our Work" hairline underline — sits fully out to the
+           left at rest and translates in to full width on hover, rather
+           than growing/scaling from a point. */
+        .df-work-underline {
+          transform: translateX(-100%);
+          transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .df-work-link:hover .df-work-underline,
+        .df-work-link:focus-visible .df-work-underline {
+          transform: translateX(0);
+        }
+        .df-work-arrow {
+          transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .df-work-link:hover .df-work-arrow,
+        .df-work-link:focus-visible .df-work-arrow {
+          transform: translateX(4px);
         }
       `}</style>
 
-      {/* Background photo — a real modern concrete residence, not an
-          abstract texture, kept at a visible-but-quiet opacity so the
-          headline still reads cleanly on top. Starts below the nav band
-          (top-16/20/24) instead of inset-0, so it never sits under or
-          behind the site nav at the very top of the page. */}
+      {/* Background photo — soft, elegant palm frond shadows cast across
+          a light wall (Dubai), well-composed rather than busy/scattered.
+          Masked via the .df-bg-mask class above (hidden behind the text
+          column, reveals starting where the text ends — sooner at lg). */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 -top-50 md:-top-70 lg:top-24"
+        className="df-bg-mask pointer-events-none absolute inset-x-0 bottom-0 -top-50 md:-top-70 lg:top-0"
         style={{
           zIndex: 0,
-          opacity: 0.16,
+          opacity: 0.4,
           backgroundImage:
-            "url(https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=2000&q=80)",
+            "url(https://images.unsplash.com/photo-1530177150700-84cd9a3b059b?auto=format&fit=crop&w=2000&q=80)",
           backgroundSize: "cover",
           backgroundPosition: "center",
-        }}
-      />
-      {/* Scrim from the page background so text stays legible over the
-          photo, strongest behind the headline column and easing off
-          toward the slider — same bounds as the photo above it */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 top-16 sm:top-20 lg:top-24"
-        style={{
-          zIndex: 0,
-          background:
-            "linear-gradient(100deg, var(--background) 0%, var(--background) 35%, color-mix(in oklch, var(--background) 55%, transparent) 65%, transparent 100%)",
         }}
       />
       {/* Copper blob — an irregular organic shape sitting behind the
@@ -207,7 +250,7 @@ export default function Hero() {
           opacity: 0.11,
           filter: "blur(20px)",
           background:
-            "linear-gradient(150deg, var(--copper), color-mix(in oklch, var(--copper) 25%, transparent))",
+            "linear-gradient(150deg, var(--copper), color-mix(in oklch, var(--copper) 45%, transparent))",
           borderRadius: "58% 42% 63% 37% / 41% 55% 45% 59%",
         }}
       />
@@ -284,21 +327,29 @@ export default function Hero() {
                       style={{
                         transform: `translate(${magnet.x}px, ${magnet.y}px)`,
                       }}
-                      className="btn-arrow btn-primary-copper group ring-focus"
+                      className="btn-arrow btn-primary-copper group ring-focus !gap-2 !px-5 !py-2.5 !text-xs"
                     >
                       <span>Discuss the Project</span>
-                      <span className="grid h-8 w-8 place-items-center rounded-full bg-background text-copper transition group-hover:bg-ink group-hover:text-background">
-                        <ArrowUpRight size={14} />
+                      <span className="grid h-7 w-7 place-items-center rounded-full bg-background text-copper transition group-hover:bg-ink group-hover:text-background">
+                        <ArrowUpRight size={12} />
                       </span>
                     </Link>
                   </div>
 
                   <Link
                     to="/projects"
-                    className="link-grow group inline-flex flex-col items-start text-ink"
+                    className="df-work-link ring-focus group inline-flex flex-col items-start text-ink"
                   >
-                    <span className="label-caps transition group-hover:text-copper">
+                    <span className="label-caps inline-flex items-center gap-1.5 transition group-hover:text-copper">
                       View Our Work
+                      <ArrowRight
+                        size={14}
+                        className="df-work-arrow"
+                        aria-hidden
+                      />
+                    </span>
+                    <span className="relative mt-1.5 h-px w-full overflow-hidden bg-border">
+                      <span className="df-work-underline absolute inset-0 bg-copper" />
                     </span>
                   </Link>
                 </div>

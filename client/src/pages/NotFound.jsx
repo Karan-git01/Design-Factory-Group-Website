@@ -1,87 +1,116 @@
-import { usePageMeta } from "../hooks/usePageMeta";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { ArrowLeft, ArrowUpRight } from "lucide-react";
+import { usePageMeta } from "../hooks/usePageMeta";
+import { Reveal } from "../components/Reveal";
+
+// Internal links surfaced for a lost visitor — also gives crawlers a real
+// path back into the site from a page that's otherwise a dead end.
+const QUICK_LINKS = [
+  { label: "About", to: "/about" },
+  { label: "Projects", to: "/projects" },
+  { label: "Careers", to: "/careers" },
+  { label: "Contact", to: "/contact" },
+];
 
 export default function NotFound() {
   usePageMeta(
-    "404 Not Found",
-    "The page you're looking for doesn't exist. Return to the homepage.",
+    "Page Not Found | Design Factory Group",
+    "The page you're looking for doesn't exist or may have moved. Return to the Design Factory Group homepage to keep exploring our architecture and construction work."
   );
 
+  // 404s should never be indexed or followed as if they were real content —
+  // a client-side route match here doesn't send a real HTTP 404 status, so
+  // this meta tag is what tells crawlers to disregard the page. Reset on
+  // unmount since the <head> is shared across client-side route changes.
+  useEffect(() => {
+    const meta = document.createElement("meta");
+    meta.name = "robots";
+    meta.content = "noindex, nofollow";
+    document.head.appendChild(meta);
+    return () => {
+      document.head.removeChild(meta);
+    };
+  }, []);
+
   return (
-    <main className="flex min-h-screen items-center border-t border-white/10 bg-[#0F0F10] pt-28 pb-20">
-      <div className="mx-auto flex w-full max-w-7xl flex-col items-center px-6 text-center sm:px-8 md:px-12 lg:px-16 xl:px-20">
-        {/* Section Label */}
-        <div className="mb-10 flex items-center gap-4">
-          <div className="h-px w-14 bg-primary" />
-          <span className="text-[11px] font-medium uppercase tracking-[0.45em] text-white/45">
-            Error
+    <main className="relative flex min-h-screen items-center overflow-hidden border-t border-border bg-background pt-28 pb-20">
+      {/* Decorative accent, same dot-grid motif used in Header's menu */}
+      <div className="pointer-events-none absolute right-8 top-24 hidden lg:block">
+        <div className="dot-grid text-copper h-28 w-28" />
+      </div>
+      <div className="pointer-events-none absolute -left-16 bottom-10 hidden lg:block">
+        <div className="dot-grid text-copper h-20 w-20" />
+      </div>
+
+      <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center px-6 text-center sm:px-8 md:px-12 lg:px-16 xl:px-20">
+        <Reveal>
+          <span className="label-caps text-copper">— Error</span>
+        </Reveal>
+
+        <Reveal delay={80}>
+          <span className="mt-6 block font-display text-[7rem] font-light leading-none tracking-[-0.08em] text-copper sm:text-[9rem] lg:text-[12rem]">
+            404
           </span>
-        </div>
+        </Reveal>
 
-        {/* 404 */}
-        <span className="font-display text-[7rem] font-light leading-none tracking-[-0.08em] text-primary sm:text-[9rem] lg:text-[12rem]">
-          404
-        </span>
+        <Reveal delay={140}>
+          <h1 className="mt-6 font-display text-4xl leading-tight tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+            Page not found
+          </h1>
+        </Reveal>
 
-        {/* Heading */}
-        <h1 className="mt-6 font-display text-4xl font-light leading-tight tracking-[-0.04em] text-white sm:text-5xl lg:text-6xl">
-          Page not found
-        </h1>
+        <Reveal delay={200}>
+          <p className="mt-6 max-w-2xl text-base leading-8 text-muted-foreground sm:text-lg">
+            The page you're looking for doesn't exist, may have been moved,
+            or the link you followed is no longer available.
+          </p>
+        </Reveal>
 
-        {/* Description */}
-        <p className="mt-8 max-w-2xl text-base leading-8 text-white/55 sm:text-lg">
-          The page you're looking for doesn't exist, may have been moved,
-          or the link you're trying to access is no longer available.
-        </p>
+        <Reveal delay={260}>
+          <Link to="/" className="group mt-14 inline-flex items-center gap-5">
+            <span className="grid h-12 w-12 place-items-center rounded-full border border-border transition-all duration-300 group-hover:border-copper group-hover:bg-foreground group-hover:text-background">
+              <ArrowLeft
+                size={18}
+                aria-hidden="true"
+                focusable="false"
+                className="transition-transform duration-300 group-hover:-translate-x-0.5"
+              />
+            </span>
+            <span className="label-caps text-foreground transition-colors duration-300 group-hover:text-copper">
+              Back to Home
+            </span>
+          </Link>
+        </Reveal>
 
-        {/* CTA */}
-        <Link
-          to="/"
-          className="group mt-14 inline-flex items-center gap-5"
-        >
-          <span className="font-display text-lg font-light text-white transition-colors duration-300 group-hover:text-primary">
-            Back to Home
-          </span>
-
-          <div className="flex h-12 w-12 items-center justify-center rounded-full border border-white/15 transition-all duration-300 group-hover:border-primary">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-black transition-transform duration-300 group-hover:-translate-x-0.5">
-              ←
-            </div>
+        <Reveal delay={320}>
+          <div className="mt-16 w-full max-w-2xl border-t border-border pt-10">
+            <p className="label-caps mb-6 text-muted-foreground">
+              Or try one of these
+            </p>
+            <nav aria-label="Suggested pages">
+              <ul className="flex flex-wrap items-center justify-center gap-3">
+                {QUICK_LINKS.map(({ label, to }) => (
+                  <li key={to}>
+                    <Link
+                      to={to}
+                      className="group/pill inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-2.5 text-sm text-foreground/85 transition-all duration-300 hover:border-copper hover:text-copper"
+                    >
+                      {label}
+                      <ArrowUpRight
+                        size={13}
+                        aria-hidden="true"
+                        focusable="false"
+                        className="text-copper opacity-0 transition-all duration-300 -translate-x-1 group-hover/pill:translate-x-0 group-hover/pill:opacity-100"
+                      />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
           </div>
-        </Link>
+        </Reveal>
       </div>
     </main>
   );
 }
-
-
-
-// import { usePageMeta } from "../hooks/usePageMeta";
-// import { Link } from "react-router-dom";
-
-// export default function NotFound() {
-//   usePageMeta(
-//     "404 Not Found",
-//     "The page you're looking for doesn't exist. Return to the homepage.",
-//   );
-//   return (
-//     <main className="flex min-h-screen flex-col items-center justify-center gap-6 bg-ink px-6 text-center">
-//       <span className="font-display text-8xl font-medium text-primary sm:text-9xl">
-//         404
-//       </span>
-//       <h1 className="font-display text-3xl font-medium text-surface sm:text-4xl">
-//         Page not found
-//       </h1>
-//       <p className="max-w-md text-secondary-light">
-//         The page you're looking for doesn't exist, may have been moved, or
-//         the link might be broken.
-//       </p>
-//       <Link
-//         to="/"
-//         className="rounded-full bg-primary px-8 py-4 text-surface transition hover:bg-primary-dark"
-//       >
-//         Back to Home
-//       </Link>
-//     </main>
-//   );
-// }
