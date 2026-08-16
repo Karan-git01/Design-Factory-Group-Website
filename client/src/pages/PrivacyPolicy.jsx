@@ -2,347 +2,215 @@ import { usePageMeta } from "../hooks/usePageMeta";
 import { Link } from "react-router-dom";
 import { Reveal } from "../components/Reveal";
 
+const SITE_URL = "https://designfactorygroup.com";
+const POLICY_EFFECTIVE_DATE = "2026-08-16"; // update whenever the policy text changes
+const POLICY_VERSION = "1.2";
+
 const SECTIONS = [
   {
+    id: "introduction",
     title: "Introduction",
     body: [
-      `Design Factory Group ("we," "us," or "our") respects your privacy and is committed to protecting the personal data you share with us through this website. This Privacy Policy explains what information we collect, how we use it, and your rights regarding that information.`,
+      `Design Factory Group ("we," "us," or "our") respects your privacy and is committed to protecting the personal data you share with us through this website (the "Site"). This Privacy Policy explains what information we collect, how and why we use it, who we share it with, how long we keep it, and the rights you have over it.`,
+      `By using the Site, you agree to the collection and use of information in accordance with this Privacy Policy. If you do not agree with the terms of this policy, please do not use the Site.`,
     ],
   },
   {
+    id: "information-we-collect",
     title: "Information We Collect",
     body: [
-      "We collect information you voluntarily provide when you submit our contact form (name, email, phone number, message), or reach out regarding a career opportunity (contact details you choose to share).",
-      "We do not collect payment information, government identification, or other sensitive personal data through this website.",
+      "We only collect personal information that you voluntarily provide to us directly through our contact form on the Site — namely your name, email address, phone number, and the content of your message.",
+      "We do not use cookies, analytics tools, tracking pixels, or any other technology to automatically collect information about your visit, and we do not knowingly collect payment card details, government identification numbers, or other special categories of sensitive personal data through this Site.",
     ],
   },
   {
+    id: "legal-basis",
+    title: "Legal Basis for Processing",
+    body: [
+      "Where applicable law requires it (including the EU/UK GDPR), we process the information you submit through the contact form on the basis of your consent, given when you complete and submit the form, and our legitimate interest in responding to your enquiry.",
+      "You may withdraw consent at any time by contacting us; this will not affect the lawfulness of any processing carried out before withdrawal.",
+    ],
+  },
+  {
+    id: "how-we-use-information",
     title: "How We Use Your Information",
     body: [
-      "To respond to your enquiries and requests, to communicate with you about projects or opportunities, and to maintain internal business records.",
-      "We do not sell, rent or trade your personal information to third parties.",
+      "We use the information submitted through the contact form solely to:",
+      "• Respond to your enquiry, quote request, or project or career submission.",
+      "• Communicate with you about the specific project or opportunity you contacted us about.",
+      "• Maintain internal business, accounting, and administrative records.",
+      "We do not sell, rent, or trade your personal information to third parties for their own marketing purposes.",
     ],
   },
   {
+    id: "sharing-disclosure",
+    title: "How We Share Information",
+    body: [
+      "We may share your contact form submission with service providers who help us operate the Site or deliver our services on our behalf (for example, website hosting or email delivery), and who are contractually obligated to keep it confidential and use it only for the purposes we specify.",
+      "We may also disclose information where required to do so by law, regulation, legal process, or governmental request, or where we believe disclosure is necessary to protect our rights, your safety, or the safety of others.",
+      "If Design Factory Group is involved in a merger, acquisition, or sale of assets, your information may be transferred as part of that transaction; we will notify you of any such change and any choices you may have.",
+    ],
+  },
+  {
+    id: "data-storage-security",
     title: "Data Storage & Security",
     body: [
-      "Information submitted through our contact form is stored securely in our database. We use industry-standard security practices, including encrypted HTTPS connections, to protect your data during transmission and storage.",
+      "Information submitted through our contact form is stored securely in our database. We use industry-standard security measures, including encrypted HTTPS connections in transit and access controls at rest, to help protect your data from unauthorized access, alteration, disclosure, or destruction.",
+      "No method of transmission or electronic storage is completely secure, and we cannot guarantee absolute security.",
     ],
   },
   {
+    id: "data-retention",
     title: "Data Retention",
     body: [
-      "We retain contact form submissions for as long as reasonably necessary to respond to your enquiry and maintain business records, unless you request earlier deletion.",
+      "We retain contact form and enquiry submissions for as long as reasonably necessary to respond to you, deliver the services requested, and maintain business, legal, or accounting records, after which we delete or anonymize the data — unless you request earlier deletion or a longer retention period is required by law.",
     ],
   },
   {
+    id: "your-rights",
     title: "Your Rights",
     body: [
-      "You may request access to your personal information, request correction of inaccurate information, or request deletion of your personal data.",
-      "To exercise these rights, contact us using the details on our Contact page.",
+      "Depending on your location, you may have the right to: access the personal information we hold about you; request correction of inaccurate or incomplete information; request deletion of your personal data; restrict or object to certain processing; request a portable copy of your data; and, where processing is based on consent, withdraw that consent at any time.",
+      "If you are a California resident, you may have additional rights under applicable state privacy law, including the right to know what personal information is collected and the right to opt out of its sale or sharing; we do not sell personal information as defined under such laws.",
+      "To exercise any of these rights, contact us using the details on our Contact page. We will respond within the timeframe required by applicable law.",
     ],
   },
   {
-    title: "Cookies & Analytics",
+    id: "childrens-privacy",
+    title: "Children's Privacy",
     body: [
-      "We may use privacy-friendly analytics tools that do not rely on personally identifying cookies to understand website usage and improve our services.",
+      "The Site is not directed to individuals under the age of 18, and we do not knowingly collect personal information from children. If you believe a child has provided us with personal information, please contact us so we can delete it.",
     ],
   },
   {
+    id: "third-party-links",
+    title: "Third-Party Links",
+    body: [
+      "The Site may contain links to third-party websites. We are not responsible for the privacy practices or content of those sites, and we encourage you to review their privacy policies before providing any personal information.",
+    ],
+  },
+  {
+    id: "changes-to-policy",
     title: "Changes to This Policy",
     body: [
-      "We may update this Privacy Policy periodically. Any changes will be posted on this page together with the revised date.",
+      "We may update this Privacy Policy from time to time to reflect changes in our practices or for legal, operational, or regulatory reasons. Any changes will be posted on this page together with a revised effective date.",
     ],
   },
   {
+    id: "contact-us",
     title: "Contact Us",
     body: [
-      "If you have any questions regarding this Privacy Policy, please visit our Contact page.",
+      "If you have any questions regarding this Privacy Policy or wish to exercise your rights, please visit our Contact page.",
     ],
   },
 ];
 
+// WebPage schema (this page is a legal/policy document, not an article) plus
+// a BreadcrumbList so search engines can render the breadcrumb trail in
+// results. dateModified drives the "last updated" freshness signal Google
+// uses for policy pages.
+const privacyPolicySchema = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: "Privacy Policy — Design Factory Group",
+  url: `${SITE_URL}/privacy-policy`,
+  description:
+    "How Design Factory Group collects, uses, and protects personal information submitted through the contact form on this website.",
+  dateModified: POLICY_EFFECTIVE_DATE,
+  isPartOf: {
+    "@type": "WebSite",
+    name: "Design Factory Group",
+    url: SITE_URL,
+  },
+  breadcrumb: {
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: "Privacy Policy", item: `${SITE_URL}/privacy-policy` },
+    ],
+  },
+};
+
 export default function PrivacyPolicy() {
   usePageMeta(
     "Privacy Policy — Design Factory Group",
-    "Learn how we collect, use, and protect your personal information."
+    "Read how Design Factory Group collects, uses, and protects the information you submit through our contact form, and learn your rights under GDPR and CCPA."
   );
 
-  const lastUpdated = new Date().toLocaleDateString("en-IN", {
+  const lastUpdated = new Date(POLICY_EFFECTIVE_DATE).toLocaleDateString("en-IN", {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
 
   return (
-    <section className="mx-auto max-w-3xl px-5 py-16 sm:px-8 md:py-24">
-      <Reveal>
-        <span className="label-caps text-copper">— Legal</span>
-      </Reveal>
-      <Reveal delay={80}>
-        <h1 className="mt-4 font-display text-5xl leading-[1.02] tracking-tight md:text-6xl">
-          Privacy Policy
-        </h1>
-      </Reveal>
-      <p className="mt-4 label-caps text-muted-foreground">Last updated · {lastUpdated}</p>
+    <main>
+      <script type="application/ld+json">{JSON.stringify(privacyPolicySchema)}</script>
 
-      <div className="mt-12 max-w-none space-y-10 text-foreground/85">
-        {SECTIONS.map((s, i) => (
-          <Reveal key={s.title} delay={i * 30}>
-            <section className="border-t border-border pt-10">
-              <h2 className="font-display text-2xl tracking-tight md:text-3xl">
-                <span className="mr-3 text-muted-foreground">
-                  {String(i + 1).padStart(2, "0")}.
-                </span>
-                {s.title}
-              </h2>
-              <div className="mt-4 space-y-4 text-base leading-relaxed">
-                {s.body.map((p, j) => {
-                  if (p.includes("Contact page")) {
-                    const [before, after] = p.split("Contact page");
-                    return (
-                      <p key={j}>
-                        {before}
-                        <Link to="/contact" className="link-underline text-copper">
-                          Contact page
-                        </Link>
-                        {after}
-                      </p>
-                    );
-                  }
-                  return <p key={j}>{p}</p>;
-                })}
-              </div>
-            </section>
-          </Reveal>
-        ))}
-      </div>
+      <section className="mx-auto max-w-3xl px-5 py-16 sm:px-8 md:py-24">
+        <Reveal>
+          <span className="label-caps text-copper">— Legal</span>
+        </Reveal>
+        <Reveal delay={80}>
+          <h1 className="mt-4 font-display text-5xl leading-[1.02] tracking-tight md:text-6xl">
+            Privacy Policy
+          </h1>
+        </Reveal>
+        <p className="mt-4 label-caps text-muted-foreground">
+          Last updated ·{" "}
+          <time dateTime={POLICY_EFFECTIVE_DATE}>{lastUpdated}</time>
+          <span className="ml-2">(v{POLICY_VERSION})</span>
+        </p>
 
-      <Reveal delay={SECTIONS.length * 30}>
-        <div className="mt-16 rounded-2xl border border-dashed border-border bg-cream-alt p-6 text-sm text-muted-foreground">
-          This Privacy Policy is provided as a general template and does not constitute
-          legal advice. We recommend having it reviewed by a qualified legal professional
-          before relying on it for compliance purposes.
+        {/* Table of contents — improves in-page navigation and gives Google
+            clear anchor targets/jump-link candidates for sitelinks. */}
+        <Reveal delay={40}>
+          <nav aria-label="Table of contents" className="mt-10 rounded-sm border border-border bg-cream-alt p-6">
+            <h2 className="label-caps text-muted-foreground">On this page</h2>
+            <ol className="mt-4 grid gap-2 sm:grid-cols-2">
+              {SECTIONS.map((s, i) => (
+                <li key={s.id}>
+                  <a href={`#${s.id}`} className="link-underline text-sm text-foreground/85">
+                    {String(i + 1).padStart(2, "0")}. {s.title}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        </Reveal>
+
+        <div className="mt-12 max-w-none space-y-10 text-foreground/85">
+          {SECTIONS.map((s, i) => (
+            <Reveal key={s.id} delay={i * 20}>
+              <section id={s.id} aria-labelledby={`${s.id}-heading`} className="scroll-mt-24 border-t border-border pt-10">
+                <h2 id={`${s.id}-heading`} className="font-display text-2xl tracking-tight md:text-3xl">
+                  <span className="mr-3 text-muted-foreground">
+                    {String(i + 1).padStart(2, "0")}.
+                  </span>
+                  {s.title}
+                </h2>
+                <div className="mt-4 space-y-4 text-base leading-relaxed">
+                  {s.body.map((p, j) => {
+                    if (p.includes("Contact page")) {
+                      const [before, after] = p.split("Contact page");
+                      return (
+                        <p key={j}>
+                          {before}
+                          <Link to="/contact" className="link-underline text-copper">
+                            Contact page
+                          </Link>
+                          {after}
+                        </p>
+                      );
+                    }
+                    return <p key={j}>{p}</p>;
+                  })}
+                </div>
+              </section>
+            </Reveal>
+          ))}
         </div>
-      </Reveal>
-    </section>
+      </section>
+    </main>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import { usePageMeta } from "../hooks/usePageMeta";
-
-// export default function PrivacyPolicy() {
-//   usePageMeta(
-//     "Privacy Policy",
-//     "Learn how we collect, use, and protect your personal information."
-//   );
-
-//   return (
-//     <main className="min-h-screen border-t border-secondary/20 bg-ink pt-32 pb-24">
-//       <div className="mx-auto max-w-5xl px-6 sm:px-8 md:px-12 lg:px-16 xl:px-20">
-//         <div className="mb-20">
-//           <div className="mb-6 flex items-center gap-4">
-//             <div className="h-px w-14 bg-primary" />
-//             <span className="text-[11px] uppercase tracking-[0.45em] text-secondary-light">
-//               Legal
-//             </span>
-//           </div>
-
-//           <h1 className="font-display text-5xl font-light tracking-[-0.05em] text-surface sm:text-6xl lg:text-7xl">
-//             Privacy
-//             <br />
-//             <span className="text-primary">Policy</span>
-//           </h1>
-
-//           <p className="mt-8 max-w-2xl text-lg leading-8 text-secondary-light">
-//             We respect your privacy and are committed to protecting the information
-//             you share with Design Factory Group.
-//           </p>
-
-//           <p className="mt-6 text-sm uppercase tracking-[0.25em] text-secondary">
-//             Last Updated ·{" "}
-//             {new Date().toLocaleDateString("en-IN", {
-//               year: "numeric",
-//               month: "long",
-//               day: "numeric",
-//             })}
-//           </p>
-//         </div>
-
-//         <div className="space-y-16">
-//           <section className="border-t border-secondary/20 pt-12">
-//             <h2 className="font-display mb-6 text-3xl font-light text-surface">
-//               1. Introduction
-//             </h2>
-//             <p className="max-w-3xl leading-8 text-secondary-light">
-//               Design Factory Group ("we," "us," or "our") respects your privacy and
-//               is committed to protecting the personal data you share with us through
-//               this website. This Privacy Policy explains what information we
-//               collect, how we use it, and your rights regarding that information.
-//             </p>
-//           </section>
-
-//           <section className="border-t border-secondary/20 pt-12">
-//             <h2 className="font-display mb-6 text-3xl font-light text-surface">
-//               2. Information We Collect
-//             </h2>
-//             <p className="mb-6 leading-8 text-secondary-light">
-//               We collect information you voluntarily provide when you:
-//             </p>
-//             <ul className="space-y-4 text-secondary-light">
-//               <li className="flex gap-4">
-//                 <span className="mt-2 h-2 w-2 rounded-full bg-primary" />
-//                 <span>Submit our contact form (name, email, phone number, message)</span>
-//               </li>
-//               <li className="flex gap-4">
-//                 <span className="mt-2 h-2 w-2 rounded-full bg-primary" />
-//                 <span>Reach out regarding a career opportunity (contact details you choose to share)</span>
-//               </li>
-//             </ul>
-//             <p className="mt-8 max-w-3xl leading-8 text-secondary-light">
-//               We do not collect payment information, government identification, or
-//               other sensitive personal data through this website.
-//             </p>
-//           </section>
-
-//           <section className="border-t border-secondary/20 pt-12">
-//             <h2 className="font-display mb-6 text-3xl font-light text-surface">
-//               3. How We Use Your Information
-//             </h2>
-//             <ul className="space-y-4 text-secondary-light">
-//               <li className="flex gap-4">
-//                 <span className="mt-2 h-2 w-2 rounded-full bg-primary" />
-//                 <span>To respond to your enquiries and requests.</span>
-//               </li>
-//               <li className="flex gap-4">
-//                 <span className="mt-2 h-2 w-2 rounded-full bg-primary" />
-//                 <span>To communicate with you about projects or opportunities.</span>
-//               </li>
-//               <li className="flex gap-4">
-//                 <span className="mt-2 h-2 w-2 rounded-full bg-primary" />
-//                 <span>To maintain internal business records.</span>
-//               </li>
-//             </ul>
-//             <p className="mt-8 max-w-3xl leading-8 text-secondary-light">
-//               We do not sell, rent or trade your personal information to third
-//               parties.
-//             </p>
-//           </section>
-
-//           <section className="border-t border-secondary/20 pt-12">
-//             <h2 className="font-display mb-6 text-3xl font-light text-surface">
-//               4. Data Storage & Security
-//             </h2>
-//             <p className="max-w-3xl leading-8 text-secondary-light">
-//               Information submitted through our contact form is stored securely in
-//               our database. We use industry-standard security practices, including
-//               encrypted HTTPS connections, to protect your data during transmission
-//               and storage.
-//             </p>
-//           </section>
-
-//           <section className="border-t border-secondary/20 pt-12">
-//             <h2 className="font-display mb-6 text-3xl font-light text-surface">
-//               5. Data Retention
-//             </h2>
-//             <p className="max-w-3xl leading-8 text-secondary-light">
-//               We retain contact form submissions for as long as reasonably
-//               necessary to respond to your enquiry and maintain business records,
-//               unless you request earlier deletion.
-//             </p>
-//           </section>
-
-//           <section className="border-t border-secondary/20 pt-12">
-//             <h2 className="font-display mb-6 text-3xl font-light text-surface">
-//               6. Your Rights
-//             </h2>
-//             <ul className="space-y-4 text-secondary-light">
-//               <li className="flex gap-4">
-//                 <span className="mt-2 h-2 w-2 rounded-full bg-primary" />
-//                 <span>Request access to your personal information.</span>
-//               </li>
-//               <li className="flex gap-4">
-//                 <span className="mt-2 h-2 w-2 rounded-full bg-primary" />
-//                 <span>Request correction of inaccurate information.</span>
-//               </li>
-//               <li className="flex gap-4">
-//                 <span className="mt-2 h-2 w-2 rounded-full bg-primary" />
-//                 <span>Request deletion of your personal data.</span>
-//               </li>
-//             </ul>
-//             <p className="mt-8 leading-8 text-secondary-light">
-//               To exercise these rights, contact us using the details on our{" "}
-//               <a href="/contact" className="text-primary transition hover:text-surface">
-//                 Contact page
-//               </a>
-//               .
-//             </p>
-//           </section>
-
-//           <section className="border-t border-secondary/20 pt-12">
-//             <h2 className="font-display mb-6 text-3xl font-light text-surface">
-//               7. Cookies & Analytics
-//             </h2>
-//             <p className="max-w-3xl leading-8 text-secondary-light">
-//               We may use privacy-friendly analytics tools that do not rely on
-//               personally identifying cookies to understand website usage and improve
-//               our services.
-//             </p>
-//           </section>
-
-//           <section className="border-t border-secondary/20 pt-12">
-//             <h2 className="font-display mb-6 text-3xl font-light text-surface">
-//               8. Changes to This Policy
-//             </h2>
-//             <p className="max-w-3xl leading-8 text-secondary-light">
-//               We may update this Privacy Policy periodically. Any changes will be
-//               posted on this page together with the revised date.
-//             </p>
-//           </section>
-
-//           <section className="border-t border-secondary/20 pt-12">
-//             <h2 className="font-display mb-6 text-3xl font-light text-surface">
-//               9. Contact Us
-//             </h2>
-//             <p className="max-w-3xl leading-8 text-secondary-light">
-//               If you have any questions regarding this Privacy Policy, please visit
-//               our{" "}
-//               <a href="/contact" className="text-primary transition hover:text-surface">
-//                 Contact page
-//               </a>
-//               .
-//             </p>
-//           </section>
-//         </div>
-
-//         {/* Restored: important disclaimer — this is a template, not legal advice */}
-//         <div className="mt-24 rounded-[2rem] border border-secondary/20 bg-ink-light p-8">
-//           <p className="text-sm leading-7 text-secondary-light">
-//             This Privacy Policy is provided as a general template and does not
-//             constitute legal advice. We recommend having it reviewed by a qualified
-//             legal professional before relying on it for compliance purposes.
-//           </p>
-//         </div>
-//       </div>
-//     </main>
-//   );
-// }

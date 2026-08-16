@@ -2,7 +2,7 @@ import { Phone, Mail, MapPin } from "lucide-react";
 
 export default function JobCard({ job }) {
   return (
-    <article className="card-lift grid gap-5 overflow-hidden rounded-2xl border border-border bg-card p-5 sm:p-6 md:grid-cols-[1.5fr_1fr] md:gap-6 md:p-7">
+    <article className="card-lift grid gap-5 overflow-hidden rounded-sm border border-border bg-card p-5 sm:p-6 md:grid-cols-[1.5fr_1fr] md:gap-6 md:p-7">
       <div className="min-w-0">
         <div className="flex flex-wrap items-center gap-2">
           <span className="label-caps rounded-full border border-border px-2.5 py-1 text-foreground/80">

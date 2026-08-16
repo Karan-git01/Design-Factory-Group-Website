@@ -172,6 +172,28 @@ function Logo({ className }) {
   );
 }
 
+// Brand wordmark shown next to the logo. Uses Montserrat — a geometric
+// sans-serif commonly used in architecture/construction branding, chosen to
+// pair with the mark's straight-edged towers — loaded via the Google Fonts
+// <link> in index.html:
+//   <link rel="preconnect" href="https://fonts.googleapis.com">
+//   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+//   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600&display=swap" rel="stylesheet">
+// Sized down from the raw `.brand-mark` default and constrained to a fixed
+// line-height/tracking so it reads as a compact lockup with the 44px
+// (h-11 w-11) logo mark instead of overpowering it — same treatment used in
+// the sticky header and the full-screen mobile menu.
+function BrandWordmark() {
+  return (
+    <span
+      className="brand-mark whitespace-nowrap pb-0.5 text-base font-semibold leading-none tracking-tight text-sm md:text-lg"
+      style={{ fontFamily: "'Montserrat', sans-serif" }}
+    >
+      Design Factory Group
+    </span>
+  );
+}
+
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const lenisRef = useLenis();
@@ -230,16 +252,14 @@ export default function Header() {
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-5 sm:px-8 md:h-20 lg:px-12">
           <Link
             to="/"
-            className="flex shrink-0 items-center gap-3"
+            className="flex shrink-0 items-end gap-3"
             aria-label="Design Factory Group — Architecture & Construction Studio, Siliguri — home"
           >
             <Logo className="h-11 w-11 shrink-0" />
-            <span className="brand-mark whitespace-nowrap">
-              Design Factory Group
-            </span>
+            <BrandWordmark />
           </Link>
 
-          <nav className="hidden items-center gap-8 xl:flex" aria-label="Primary">
+          <nav className="hidden items-end gap-8 xl:pt-4 xl:flex" aria-label="Primary">
             {INLINE_LINKS.map((link) => (
               <Link
                 key={link.label}
@@ -287,13 +307,11 @@ export default function Header() {
                 <Link
                   to="/"
                   onClick={() => setMenuOpen(false)}
-                  className="flex shrink-0 items-center gap-3"
+                  className="flex shrink-0 items-end gap-3"
                   aria-label="Design Factory Group — Architecture & Construction Studio, Siliguri — home"
                 >
                   <Logo className="h-11 w-11 shrink-0" />
-                  <span className="brand-mark whitespace-nowrap">
-                    Design Factory Group
-                  </span>
+                  <BrandWordmark />
                 </Link>
 
                 <button

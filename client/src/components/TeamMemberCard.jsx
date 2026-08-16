@@ -1,6 +1,6 @@
 export default function TeamMemberCard({ member }) {
   return (
-    <div className="group flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-card transition-all duration-300 hover:border-copper/30">
+    <div className="group flex h-full flex-col overflow-hidden rounded-sm border border-border bg-card transition-all duration-300 hover:border-copper/30">
       <div className="img-zoom relative aspect-[3/2] overflow-hidden">
         <img
           src={member.photoUrl}

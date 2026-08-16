@@ -123,7 +123,9 @@ export default function About() {
           <div className="relative hidden md:block">
 
             <figure className="relative">
-              {/* Corner ticks frame */}
+              {/* Corner ticks frame — absolutely positioned off the figure box,
+                  so it auto-tracks the image's height at every breakpoint
+                  (tablet-tall aspect ratio included) with no separate tuning needed */}
               <div aria-hidden className="pointer-events-none absolute -inset-3 hidden md:block">
                 <span className="absolute left-0 top-0 h-4 w-px bg-copper" />
                 <span className="absolute left-0 top-0 h-px w-4 bg-copper" />
@@ -141,13 +143,14 @@ export default function About() {
                 className="dot-grid pointer-events-none absolute -left-9 -top-9 z-10 hidden h-20 w-20 text-copper md:block"
               />
 
-              <div className="relative overflow-hidden rounded-[2rem] bg-card shadow-[0_50px_100px_-40px_rgb(31_27_22_/_0.4)]">
+              <div className="relative overflow-hidden rounded-sm bg-card">
                 <img
                   src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=1200"
-                  alt="Design Factory Group architects and designers collaborating in the studio"
-                  loading="lazy"
+                  alt="Architects and interior designers at Design Factory Group reviewing a residential project in the studio"
+                  loading="eager"
+                  fetchPriority="high"
                   draggable={false}
-                  className="aspect-[8/5] w-full object-cover"
+                  className="aspect-[3/4] w-full object-cover md:aspect-[3/4] lg:aspect-[8/5]"
                 />
                 <div
                   aria-hidden

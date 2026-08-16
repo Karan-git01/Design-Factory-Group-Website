@@ -143,7 +143,7 @@ export default function BranchPage() {
 
       <Reveal>
         <div className="mx-auto mt-8 max-w-7xl px-5 sm:px-8">
-          <div className="img-zoom relative overflow-hidden rounded-[2rem] border border-border">
+          <div className="img-zoom relative overflow-hidden rounded-sm border border-border">
             <img
               src={branch.photoUrl}
               alt={imageAlt}
