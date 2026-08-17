@@ -90,7 +90,7 @@ const ORGANIZATION_SCHEMA = {
   description:
     "Design Factory Group is a leading architecture and construction studio based in Siliguri, West Bengal — recognized as one of the best architecture firms in the region, delivering contemporary residential and commercial projects across India.",
   slogan: "One of the best architecture and construction studios in Siliguri, building across India.",
-  url: "https://www.designfactorygroup.in/",
+  url: "https://www.designfactorygroup.com/",
   email: "dfgroupslg@gmail.com",
   telephone: "+91-98755-95155",
   address: {
@@ -119,7 +119,7 @@ const ORGANIZATION_SCHEMA = {
 
 // Brand mark — three-tower skyline logo (red / black / blue), pixel-matched
 // vector version of the studio's mark. Reused for both the sticky header
-// and the full-screen mobile menu header. Marked decorative (aria-hidden)
+// and the full-screen mobile menu. Marked decorative (aria-hidden)
 // since the adjacent "Design Factory Group" text already gives the link
 // its accessible name — avoids a redundant announcement for screen readers
 // and search engines alike.
@@ -183,10 +183,14 @@ function Logo({ className }) {
 // line-height/tracking so it reads as a compact lockup with the 44px
 // (h-11 w-11) logo mark instead of overpowering it — same treatment used in
 // the sticky header and the full-screen mobile menu.
+// FIX: previously also carried `text-base`, which is the same-specificity
+// utility as `text-sm`/`md:text-lg` below and was silently winning on
+// mobile depending on Tailwind's generated stylesheet order — removed so
+// the intended text-sm -> md:text-lg responsive sizing actually applies.
 function BrandWordmark() {
   return (
     <span
-      className="brand-mark whitespace-nowrap pb-0.5 text-base font-semibold leading-none tracking-tight text-sm md:text-lg"
+      className="brand-mark whitespace-nowrap pb-0.5 font-semibold leading-none tracking-tight text-sm md:text-lg"
       style={{ fontFamily: "'Montserrat', sans-serif" }}
     >
       Design Factory Group
@@ -200,6 +204,11 @@ export default function Header() {
 
   const [hideNav, setHideNav] = useState(false);
   const lastScrollY = useRef(0);
+
+  // Refs for focus management: return focus to whichever button opened the
+  // menu, and move focus into the menu's close button when it opens.
+  const menuButtonRef = useRef(null);
+  const closeButtonRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -236,6 +245,37 @@ export default function Header() {
     };
   }, [menuOpen, lenisRef]);
 
+  // FIX: modal accessibility for the full-screen menu.
+  // - Moves focus into the overlay when it opens (close button).
+  // - Restores focus to the button that opened it when it closes.
+  // - Lets Escape close the menu, matching standard dialog behavior.
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    closeButtonRef.current?.focus();
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setMenuOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      menuButtonRef.current?.focus();
+    };
+  }, [menuOpen]);
+
+  // FIX: while the sticky header is scrolled off-screen (hideNav) or hidden
+  // behind the full-screen menu overlay (menuOpen), it was still fully
+  // focusable/announceable even though it's invisible — a keyboard or
+  // screen-reader user could tab into links they can't see. `inert` (widely
+  // supported in evergreen browsers) removes it from focus/AT entirely in
+  // both cases; `aria-hidden` is kept alongside as a fallback for any older
+  // AT that doesn't yet honor `inert`.
+  const headerInert = hideNav || menuOpen;
+
   return (
     <>
       {/* eslint-disable-next-line react/no-danger */}
@@ -245,6 +285,8 @@ export default function Header() {
       />
 
       <header
+        inert={headerInert ? "" : undefined}
+        aria-hidden={headerInert ? "true" : undefined}
         className={`sticky top-0 z-40 w-full border-b border-border/80 bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70 transition-transform duration-300 ${
           hideNav ? "-translate-y-full" : "translate-y-0"
         }`}
@@ -272,6 +314,7 @@ export default function Header() {
           </nav>
 
           <button
+            ref={menuButtonRef}
             onClick={() => setMenuOpen(true)}
             aria-label="Open menu"
             aria-expanded={menuOpen}
@@ -291,6 +334,9 @@ export default function Header() {
         {menuOpen && (
           <motion.div
             id="site-menu"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Site menu"
             data-lenis-prevent
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -315,6 +361,7 @@ export default function Header() {
                 </Link>
 
                 <button
+                  ref={closeButtonRef}
                   onClick={() => setMenuOpen(false)}
                   aria-label="Close menu"
                   className="group grid h-11 w-11 place-items-center rounded-full border border-border bg-card transition-all duration-300 hover:border-copper hover:bg-copper/10"

@@ -5,12 +5,12 @@ import { Reveal } from "../components/Reveal";
 
 import aboutHero from "../assets/images/about-hero.webp";
 
-import himanshuSinghPhoto from "../assets/images/himanshu-singh.webp";
-import abhinashKumarSinghPhoto from "../assets/images/abhinash-kumar-singh.webp";
-import mukulJoshiPhoto from "../assets/images/mukul-joshi.webp";
-import aishikSarkarPhoto from "../assets/images/aishik-sarkar.webp";
-import sunitaSurPhoto from "../assets/images/sunita-sur.webp";
-import abhishekhSharma from "../assets/images/abhishekh-sharma.webp";
+import himanshuSinghPhoto from "../assets/images/himanshuSingh.webp";
+import abhinashKumarSinghPhoto from "../assets/images/abhinashKumarSingh.webp";
+import mukulJoshiPhoto from "../assets/images/mukulJoshi.webp";
+import aishikSarkarPhoto from "../assets/images/aishikSarkar.webp";
+import sunitaSurPhoto from "../assets/images/sunitaSur.webp";
+import abhishekhSharma from "../assets/images/abhishekhSharma.webp";
 
 const SITE_URL = "https://designfactorygroup.com";
 
