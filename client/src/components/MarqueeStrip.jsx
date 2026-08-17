@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react";
 
 const DEFAULT_ITEMS = [
-  "COA-Registered Architects",
+  "Turnkey Project Delivery",
   "Vastu-Compliant Design",
-  "Since 2004",
+  "In-House Design & Execution Team",
   "Design-to-Handover Construction",
   "Custom Homes Across India",
+  "260+ Clients Served",
+  "Present in 28 States",
+  "850K+ Sq. Ft. Delivered",
+  "Residential & Interior Design",
+  "One Accountable Team",
 ];
 
 export default function MarqueeStrip({ items = DEFAULT_ITEMS }) {

@@ -3,12 +3,14 @@ import TeamMemberCard from "../components/TeamMemberCard";
 import TextReveal from "../components/TextReveal";
 import { Reveal } from "../components/Reveal";
 
-import himanshuSinghPhoto from "../assets/images/Himanshu-Singh.webp";
-import abhinashKumarSinghPhoto from "../assets/images/Abhinash-Kumar-Singh.webp";
-import mukulJoshiPhoto from "../assets/images/Mukul-Joshi.webp";
-import aishikSarkarPhoto from "../assets/images/Aishik-Sarkar.webp";
-import sunitaSurPhoto from "../assets/images/Sunita-Sur.webp";
-import abhishekhSharma from "../assets/images/Abhishekh-Sharma.webp";
+import aboutHero from "../assets/images/about-hero.webp";
+
+import himanshuSinghPhoto from "../assets/images/himanshu-singh.webp";
+import abhinashKumarSinghPhoto from "../assets/images/abhinash-kumar-singh.webp";
+import mukulJoshiPhoto from "../assets/images/mukul-joshi.webp";
+import aishikSarkarPhoto from "../assets/images/aishik-sarkar.webp";
+import sunitaSurPhoto from "../assets/images/sunita-sur.webp";
+import abhishekhSharma from "../assets/images/abhishekh-sharma.webp";
 
 const SITE_URL = "https://designfactorygroup.com";
 
@@ -33,8 +35,8 @@ const TEAM = [
   },
   {
     name: "Abhishekh Sharma",
-    role: "Architectural Visualizer & Interior Designer",
-    bio: "Over seven years of experience creating immersive visual narratives that bring architectural concepts to life with realism, detail, and creativity.",
+    role: "Finance Manager",
+    bio: "Overseeing budgets, project costing, and financial planning to keep every engagement on track, transparent, and aligned with our clients' expectations from proposal to final handover.",
     photoUrl: abhishekhSharma,
   },
   {
@@ -82,12 +84,14 @@ const aboutPageSchema = {
 export default function About() {
   usePageMeta(
     "About Us — Architecture, Interiors & Construction",
-    "Meet the architects, designers and engineers behind Design Factory Group, a global studio delivering high-end residential and commercial architecture, interiors and construction under one accountable team."
+    "Meet the architects, designers and engineers behind Design Factory Group, a global studio delivering high-end residential and commercial architecture, interiors and construction under one accountable team.",
   );
 
   return (
     <>
-      <script type="application/ld+json">{JSON.stringify(aboutPageSchema)}</script>
+      <script type="application/ld+json">
+        {JSON.stringify(aboutPageSchema)}
+      </script>
 
       {/* Hero intro */}
       <section
@@ -103,17 +107,19 @@ export default function About() {
               id="about-heading"
               className="mt-3 max-w-5xl font-display text-5xl leading-[1.02] tracking-tight md:mt-4 md:text-7xl"
             >
-              Building spaces with <em className="text-copper">purpose</em> &amp; precision.
+              Building spaces with <em className="text-copper">purpose</em>{" "}
+              &amp; precision.
             </h1>
           </Reveal>
           <Reveal delay={160}>
             <div className="mt-6 grid gap-6 sm:grid-cols-[auto_1fr] sm:gap-8 md:mt-8">
               <span className="hidden h-px w-8 translate-y-3 bg-copper sm:block" />
               <p className="max-w-md text-base leading-relaxed text-muted-foreground md:text-lg">
-                Design Factory Group is a global studio for high-end residential architecture,
-                interiors and construction. We concentrate on a limited number of projects at a
-                time, ensuring full attention, consistency and control from the first conversation
-                to the final handover.
+                Design Factory Group is a global studio for high-end residential
+                architecture, interiors and construction. We concentrate on a
+                limited number of projects at a time, ensuring full attention,
+                consistency and control from the first conversation to the final
+                handover.
               </p>
             </div>
           </Reveal>
@@ -121,12 +127,14 @@ export default function About() {
 
         <Reveal delay={220}>
           <div className="relative hidden md:block">
-
             <figure className="relative">
               {/* Corner ticks frame — absolutely positioned off the figure box,
                   so it auto-tracks the image's height at every breakpoint
                   (tablet-tall aspect ratio included) with no separate tuning needed */}
-              <div aria-hidden className="pointer-events-none absolute -inset-3 hidden md:block">
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -inset-3 hidden md:block"
+              >
                 <span className="absolute left-0 top-0 h-4 w-px bg-copper" />
                 <span className="absolute left-0 top-0 h-px w-4 bg-copper" />
                 <span className="absolute right-0 top-0 h-4 w-px bg-copper" />
@@ -145,7 +153,7 @@ export default function About() {
 
               <div className="relative overflow-hidden rounded-sm bg-card">
                 <img
-                  src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=1200"
+                  src={aboutHero}
                   alt="Architects and interior designers at Design Factory Group reviewing a residential project in the studio"
                   loading="eager"
                   fetchPriority="high"
@@ -156,7 +164,6 @@ export default function About() {
                   aria-hidden
                   className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/70 via-black/25 to-transparent"
                 />
-                
               </div>
             </figure>
           </div>
@@ -164,27 +171,35 @@ export default function About() {
       </section>
 
       {/* Two-column supporting text */}
-      <section aria-label="Our approach" className="mx-auto max-w-7xl px-5 pb-10 pt-0 sm:px-8 md:pb-14">
+      <section
+        aria-label="Our approach"
+        className="mx-auto max-w-7xl px-5 pb-10 pt-0 sm:px-8 md:pb-14"
+      >
         <div className="grid gap-6 md:grid-cols-2 md:gap-12">
           <Reveal>
             <p className="text-base leading-relaxed text-foreground/85 md:text-lg">
-              We keep architecture, interiors and construction under one accountable team.
-              That closeness lets us hold intent all the way from first sketch to the moment
-              a client turns the key — details survive the journey.
+              We keep architecture, interiors and construction under one
+              accountable team. That closeness lets us hold intent all the way
+              from first sketch to the moment a client turns the key — details
+              survive the journey.
             </p>
           </Reveal>
           <Reveal delay={100}>
             <p className="text-base leading-relaxed text-foreground/85 md:text-lg">
-              Our approach combines careful design thinking with hands-on construction
-              expertise, giving every client one accountable team throughout the entire
-              journey — from the first conversation to the final handover.
+              Our approach combines careful design thinking with hands-on
+              construction expertise, giving every client one accountable team
+              throughout the entire journey — from the first conversation to the
+              final handover.
             </p>
           </Reveal>
         </div>
       </section>
 
       {/* Team */}
-      <section aria-labelledby="team-heading" className="border-t border-border bg-cream-alt py-12 md:py-16">
+      <section
+        aria-labelledby="team-heading"
+        className="border-t border-border bg-cream-alt py-12 md:py-16"
+      >
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
           <div className="grid gap-4 md:grid-cols-[1fr_1.4fr] md:items-end md:gap-10">
             <div>
@@ -203,9 +218,9 @@ export default function About() {
             </div>
             <Reveal delay={140}>
               <p className="max-w-md text-muted-foreground md:justify-self-end">
-                A multidisciplinary team of architects, engineers and construction
-                professionals working together to deliver timeless spaces with
-                uncompromising quality.
+                A multidisciplinary team of architects, engineers and
+                construction professionals working together to deliver timeless
+                spaces with uncompromising quality.
               </p>
             </Reveal>
           </div>

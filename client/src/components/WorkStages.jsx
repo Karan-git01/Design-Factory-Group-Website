@@ -1,42 +1,49 @@
 import { useEffect, useRef, useState } from "react";
-import { PhoneCall, ClipboardList, MapPin, Lightbulb, PenTool } from "lucide-react";
+import {
+  PhoneCall,
+  ClipboardList,
+  MapPin,
+  Lightbulb,
+  PenTool,
+} from "lucide-react";
 import { Reveal } from "../components/Reveal";
+
+import stage01 from "../assets/images/stage-01-initial-contact.webp";
+import stage02 from "../assets/images/stage-02-project-briefing.webp";
+import stage03 from "../assets/images/stage-03-location-analysis.webp";
+import stage04 from "../assets/images/stage-04-concept-development.webp";
+import stage05 from "../assets/images/stage-05-detailed-design.webp";
 
 const workStages = [
   {
     n: "01",
     title: "Initial contact",
     body: "You get in touch with us to discuss your goals, preferences and overall expectations for the project.",
-    image:
-      "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1200&auto=format&fit=crop",
+    image: stage01,
   },
   {
     n: "02",
     title: "Project briefing",
     body: "We define the scope, budget range, timeline and key requirements to establish a clear project brief.",
-    image:
-      "https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1200&auto=format&fit=crop",
+    image: stage02,
   },
   {
     n: "03",
     title: "Location analysis",
     body: "The location is carefully reviewed to understand its conditions, context and any existing constraints.",
-    image:
-      "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1200&auto=format&fit=crop",
+    image: stage03,
   },
   {
     n: "04",
     title: "Concept development",
     body: "Initial architectural ideas are developed, focusing on layout, spatial organisation and direction.",
-    image:
-      "https://images.unsplash.com/photo-1503387837-b154d5074bd2?q=80&w=1200&auto=format&fit=crop",
+    image: stage04,
   },
   {
     n: "05",
     title: "Detailed design",
     body: "The approved concept is developed further through detailed architectural and technical solutions.",
-    image:
-      "https://images.unsplash.com/photo-1487958449943-2429e8be8625?q=80&w=1200&auto=format&fit=crop",
+    image: stage05,
   },
 ];
 
@@ -121,7 +128,9 @@ function StageRow({ s, Icon, index, isActive, rowRef }) {
           the image/text below become direct grid children instead) */}
       <div className="flex flex-1 flex-col gap-4 md:contents">
         {/* Image */}
-        <div className={`w-full md:col-span-5 ${isEven ? "md:order-1" : "md:order-3"}`}>
+        <div
+          className={`w-full md:col-span-5 ${isEven ? "md:order-1" : "md:order-3"}`}
+        >
           <div className="relative aspect-[16/10] w-full overflow-hidden rounded-sm bg-border/30 md:aspect-[4/3]">
             <img
               src={s.image}
@@ -129,12 +138,17 @@ function StageRow({ s, Icon, index, isActive, rowRef }) {
               className="h-full w-full object-cover grayscale-[20%] transition-all duration-700 ease-out group-hover:scale-105 group-hover:grayscale-0"
               loading="lazy"
             />
-            <div className="absolute inset-0 ring-1 ring-inset ring-black/5" aria-hidden="true" />
+            <div
+              className="absolute inset-0 ring-1 ring-inset ring-black/5"
+              aria-hidden="true"
+            />
           </div>
         </div>
 
         {/* Text */}
-        <div className={`md:col-span-5 md:flex md:flex-col md:justify-center ${isEven ? "md:order-3" : "md:order-1"}`}>
+        <div
+          className={`md:col-span-5 md:flex md:flex-col md:justify-center ${isEven ? "md:order-3" : "md:order-1"}`}
+        >
           <span
             className={`label-caps transition-colors duration-300 ${
               isActive ? "text-copper" : "text-muted-foreground"
@@ -144,7 +158,10 @@ function StageRow({ s, Icon, index, isActive, rowRef }) {
           </span>
           <h3 className="relative mt-3 block w-fit pb-1.5 font-display text-2xl leading-tight tracking-tight md:text-3xl lg:text-4xl">
             {s.title}
-            <span className="absolute inset-x-0 bottom-0 h-px bg-foreground/20" aria-hidden="true" />
+            <span
+              className="absolute inset-x-0 bottom-0 h-px bg-foreground/20"
+              aria-hidden="true"
+            />
             <span
               aria-hidden="true"
               className="absolute inset-x-0 bottom-0 h-px origin-left scale-x-0 bg-copper transition-transform duration-500 ease-out group-hover:scale-x-100"
@@ -176,7 +193,11 @@ export default function WorkStages() {
   const { progress, activeIndex } = useScrollSpine(listRef, rowRefs);
 
   return (
-    <section id="work-stages" aria-labelledby="work-stages-heading" className="relative overflow-hidden py-20 md:py-32">
+    <section
+      id="work-stages"
+      aria-labelledby="work-stages-heading"
+      className="relative overflow-hidden py-20 md:py-32"
+    >
       <div
         aria-hidden="true"
         className="absolute inset-0 -z-10 opacity-[0.06]"
@@ -194,7 +215,10 @@ export default function WorkStages() {
               <span className="label-caps text-copper">— Work process</span>
             </Reveal>
             <Reveal delay={80}>
-              <h2 id="work-stages-heading" className="mt-4 font-display text-4xl leading-[1.05] tracking-tight md:text-5xl lg:text-6xl">
+              <h2
+                id="work-stages-heading"
+                className="mt-4 font-display text-4xl leading-[1.05] tracking-tight md:text-5xl lg:text-6xl"
+              >
                 Steps to your <em className="text-copper">new home</em>.
               </h2>
             </Reveal>
@@ -203,7 +227,9 @@ export default function WorkStages() {
           <Reveal delay={140}>
             <div className="flex flex-col items-start gap-3 border-t border-border pt-5 md:items-end md:border-l md:border-t-0 md:pl-8 md:pt-0">
               <p className="max-w-xs text-sm leading-relaxed text-muted-foreground md:text-right">
-                Five stages, from the first call to a fully resolved design — each one building directly on the last, wherever you're building in India.
+                Five stages, from the first call to a fully resolved design —
+                each one building directly on the last, wherever you're building
+                in India.
               </p>
             </div>
           </Reveal>
@@ -219,11 +245,18 @@ export default function WorkStages() {
           >
             <div
               className="w-px bg-copper"
-              style={{ height: `${progress}%`, transition: "height 120ms linear" }}
+              style={{
+                height: `${progress}%`,
+                transition: "height 120ms linear",
+              }}
             />
           </div>
 
-          <ol ref={listRef} aria-label="Design Factory Group's five-stage project process" className="list-none divide-y divide-border p-0 m-0">
+          <ol
+            ref={listRef}
+            aria-label="Design Factory Group's five-stage project process"
+            className="list-none divide-y divide-border p-0 m-0"
+          >
             {workStages.map((s, i) => (
               <Reveal key={s.n} delay={i * 80}>
                 <StageRow

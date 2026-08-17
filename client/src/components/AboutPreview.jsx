@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { Reveal } from "../components/Reveal";
 import TextReveal from "./TextReveal";
+import aboutPreviewImg from "../assets/images/about-preview-img.webp";
 
 /* ---------- ABOUT PREVIEW ---------- */
 export default function AboutPreview() {
@@ -51,7 +52,7 @@ export default function AboutPreview() {
         <div className="relative md:flex md:flex-col md:justify-center">
           <div className="img-zoom overflow-hidden rounded-sm border border-border bg-card">
             <img
-              src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&h=1400&q=80"
+              src={aboutPreviewImg}
               alt="Team working on architectural drawings"
               className="aspect-[4/3] w-full max-h-[360px] object-cover sm:max-h-[420px] md:aspect-auto md:h-[540px] md:max-h-none lg:aspect-[4/3] lg:h-auto lg:max-h-[480px]"
             />

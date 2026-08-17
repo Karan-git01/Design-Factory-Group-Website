@@ -1,39 +1,38 @@
-"use client";
-
 import { useEffect, useRef, useState } from "react";
 import { Reveal } from "../components/Reveal";
+
+import responsibilityImg from "../assets/images/why-responsibility.webp";
+import collaborationImg from "../assets/images/why-collaboration.webp";
+import workflowImg from "../assets/images/why-workflow.webp";
+import involvementImg from "../assets/images/why-involvement.webp";
 
 const whyPoints = [
   {
     n: "01",
     title: "Responsibility",
     body: "We take responsibility for the full scope of work, allowing decisions, coordination and execution to remain aligned throughout the project.",
-    image:
-      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?q=80&w=1600",
+    image: responsibilityImg,
     caption: "Full-scope ownership",
   },
   {
     n: "02",
     title: "Collaboration",
     body: "Clients work directly with the team involved in the project, ensuring clear communication and faster, more informed decisions.",
-    image:
-      "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=1600",
+    image: collaborationImg,
     caption: "Direct, not filtered",
   },
   {
     n: "03",
     title: "Workflow",
     body: "Each project is developed through a clear and structured process, helping to minimise uncertainty and avoid unnecessary complexity.",
-    image:
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=1600",
+    image: workflowImg,
     caption: "Structured, not rigid",
   },
   {
     n: "04",
     title: "Involvement",
     body: "We stay closely involved at every stage of the project, maintaining continuity from early planning through construction and completion.",
-    image:
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1600",
+    image: involvementImg,
     caption: "Site to sign-off",
   },
 ];

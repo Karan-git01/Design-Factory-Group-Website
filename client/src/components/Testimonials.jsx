@@ -3,6 +3,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Reveal } from "../components/Reveal";
 
+import featuredImg from "../assets/images/featured-testimonial.webp";
+
 const DEFAULT_TESTIMONIALS = {
   featured: {
     quote:
@@ -10,8 +12,7 @@ const DEFAULT_TESTIMONIALS = {
     name: "Bikash Choudhary",
     role: "Private Client",
     location: "Siliguri, West Bengal",
-    image:
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&h=1000&q=80",
+    image: featuredImg,
   },
   cards: [
     {
@@ -186,7 +187,7 @@ export default function Testimonials({
       {/* Featured story */}
       <Reveal delay={200}>
         <article className="mt-10 grid grid-cols-1 rounded-sm border border-border bg-card md:grid-cols-[0.7fr_1.3fr]">
-          <figure className="img-zoom aspect-[16/10] w-full overflow-hidden rounded-t m-0 md:aspect-auto md:max-h-[360px] md:self-center md:rounded-l md:rounded-tr-none">
+          <figure className="img-zoom aspect-[16/10] w-full overflow-hidden rounded-t m-0 md:rounded-l md:rounded-tr-none md:h-full lg:aspect-auto lg:h-full lg:max-h-[360px] lg:self-stretch">
             <img
               src={featured.image}
               alt={`Residential interior completed by Design Factory Group for a private client in ${featured.location}`}

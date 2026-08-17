@@ -2,37 +2,38 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowUpRight, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { Reveal } from "../components/Reveal";
+import lakeHaveliImg from "../assets/images/bg-lake-haveli.webp";
+import jharokhaHouseImg from "../assets/images/bg-jharokha-house.webp";
+import nalukettuResidenceImg from "../assets/images/bg-nalukettu-residence.webp";
+import bikanerHouseImg from "../assets/images/bg-bikaner-house.webp";
+import heroBgImg from "../assets/images/hero-bg-img.webp";
 
 const SLIDES = [
   {
     project: "The Lake Haveli",
     location: "Udaipur, Rajasthan",
-    image:
-      "https://images.unsplash.com/photo-1682414180825-c0df1934387f?auto=format&fit=crop&w=2400&h=2000&q=85",
+    image: lakeHaveliImg,
     alt: "The Lake Haveli, a stepped sandstone residence overlooking the lake in Udaipur",
     copy: "A quiet courtyard residence built into the city, using sandstone and jaali screens to soften the lake light.",
   },
   {
     project: "Jharokha House",
     location: "Jodhpur, Rajasthan",
-    image:
-      "https://images.unsplash.com/photo-1682414181845-a725f154a14a?auto=format&fit=crop&w=2400&h=2000&q=85",
+    image: jharokhaHouseImg,
     alt: "Jharokha House, a sandstone residence with carved overhanging balconies in Jodhpur",
     copy: "Latticed sandstone jharokhas and deep verandahs turn every quiet room into a frame for the old city beyond.",
   },
   {
     project: "Nalukettu Residence",
     location: "Palakkad, Kerala",
-    image:
-      "https://images.unsplash.com/photo-1642667670006-6b3059ccf96d?auto=format&fit=crop&w=2400&h=2000&q=85",
+    image: nalukettuResidenceImg,
     alt: "Nalukettu Residence, a white courtyard house with sloped tiled roofs in Palakkad",
     copy: "Sloped tile roofs and deep verandahs keep the interior cool while the plan opens to the central courtyard.",
   },
   {
     project: "The Bikaner House",
     location: "Bikaner, Rajasthan",
-    image:
-      "https://images.unsplash.com/photo-1629725053305-9bb7886f9545?auto=format&fit=crop&w=2400&h=2000&q=85",
+    image: bikanerHouseImg,
     alt: "The Bikaner House, a red sandstone residence set among trees in Bikaner",
     copy: "Sandstone and aged teak read as one material from a distance, softening into grain and carving up close.",
   },
@@ -234,8 +235,7 @@ export default function Hero() {
         style={{
           zIndex: 0,
           opacity: 0.4,
-          backgroundImage:
-            "url(https://images.unsplash.com/photo-1530177150700-84cd9a3b059b?auto=format&fit=crop&w=2000&q=80)",
+          backgroundImage: `url(${heroBgImg})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}

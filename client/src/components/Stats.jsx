@@ -77,7 +77,7 @@ function CornerBrackets() {
         <span
           key={pos}
           aria-hidden="true"
-          className={`pointer-events-none absolute h-3 w-3 border-copper/50 transition-colors duration-300 group-hover:border-copper ${pos}`}
+          className={`pointer-events-none absolute h-3 w-3 border-copper/50 ${pos}`}
         />
       ))}
     </>
@@ -121,7 +121,7 @@ function Stats({ target, suffix, label, icon: Icon }) {
   });
 
   return (
-    <div className="card-lift group relative flex items-center gap-5 overflow-hidden rounded-sm border border-border bg-background p-6 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-copper hover:shadow-md">
+    <div className="group relative flex items-center gap-5 overflow-hidden rounded-sm border border-border bg-background p-6">
       <CornerBrackets />
       <span
         aria-hidden="true"

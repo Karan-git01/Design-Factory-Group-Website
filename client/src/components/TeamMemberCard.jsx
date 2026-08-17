@@ -1,12 +1,12 @@
 export default function TeamMemberCard({ member }) {
   return (
     <div className="group flex h-full flex-col overflow-hidden rounded-sm border border-border bg-card transition-all duration-300 hover:border-copper/30">
-      <div className="img-zoom relative aspect-[3/2] overflow-hidden">
+      <div className="img-zoom relative aspect-[5/4] overflow-hidden">
         <img
           src={member.photoUrl}
           alt={`${member.name}, ${member.role} at Design Factory Group`}
           loading="lazy"
-          className="h-full w-full object-cover object-top"
+          className="h-full w-full object-cover object-[50%_10%]"
         />
       </div>
 

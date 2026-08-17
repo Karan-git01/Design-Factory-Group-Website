@@ -30,7 +30,7 @@ export default function Philosophy() {
   return (
     <section aria-labelledby="philosophy-heading" className="py-20 md:py-32">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
-        <div className="grid gap-10 md:grid-cols-[1fr_1.4fr]">
+        <div className="grid gap-10 lg:grid-cols-[1fr_1.4fr]">
           <div>
             <Reveal>
               <span className="label-caps text-copper">— Studio focus</span>
@@ -44,7 +44,7 @@ export default function Philosophy() {
               </h2>
             </Reveal>
             <Reveal delay={160}>
-              <p className="mt-5 max-w-md text-muted-foreground">
+              <p className="mt-5 max-w-md md:max-w-lg text-muted-foreground">
                 Design Factory Group is a Siliguri-based architecture and
                 construction studio serving residential and commercial
                 clients across India, guided by four core principles.

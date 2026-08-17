@@ -1,5 +1,6 @@
 import { Reveal } from "../components/Reveal";
 import TextReveal from "./TextReveal";
+import whatWeDoImg from "../assets/images/what-we-do-img.webp";
 
 export default function WhatWeDo() {
   return (
@@ -12,7 +13,7 @@ export default function WhatWeDo() {
         <figure className="relative order-2 m-0 md:order-1">
           <div className="img-zoom overflow-hidden rounded-sm border border-border">
             <img
-              src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=1600"
+              src={whatWeDoImg}
               alt="Contemporary residential architecture project by Design Factory Group in Siliguri, India"
               loading="lazy"
               className="aspect-[4/3] w-full max-h-[360px] object-cover sm:max-h-[420px] md:aspect-auto md:h-[420px] md:max-h-none lg:aspect-[4/3] lg:h-auto lg:max-h-[480px]"
