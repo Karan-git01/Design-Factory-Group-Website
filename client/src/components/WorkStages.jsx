@@ -20,34 +20,37 @@ const workStages = [
     title: "Initial contact",
     body: "You get in touch with us to discuss your goals, preferences and overall expectations for the project.",
     image: stage01,
+    icon: PhoneCall,
   },
   {
     n: "02",
     title: "Project briefing",
     body: "We define the scope, budget range, timeline and key requirements to establish a clear project brief.",
     image: stage02,
+    icon: ClipboardList,
   },
   {
     n: "03",
     title: "Location analysis",
     body: "The location is carefully reviewed to understand its conditions, context and any existing constraints.",
     image: stage03,
+    icon: MapPin,
   },
   {
     n: "04",
     title: "Concept development",
     body: "Initial architectural ideas are developed, focusing on layout, spatial organisation and direction.",
     image: stage04,
+    icon: Lightbulb,
   },
   {
     n: "05",
     title: "Detailed design",
     body: "The approved concept is developed further through detailed architectural and technical solutions.",
     image: stage05,
+    icon: PenTool,
   },
 ];
-
-const stageIcons = [PhoneCall, ClipboardList, MapPin, Lightbulb, PenTool];
 
 /**
  * Continuous scroll progress (0–100) across the whole list, plus which row
@@ -134,7 +137,7 @@ function StageRow({ s, Icon, index, isActive, rowRef }) {
           <div className="relative aspect-[16/10] w-full overflow-hidden rounded-sm bg-border/30 md:aspect-[4/3]">
             <img
               src={s.image}
-              alt={`${s.title} — stage ${s.n} of Design Factory Group's residential design process, Siliguri, India`}
+              alt={`${s.title} — stage ${s.n} of the design process`}
               className="h-full w-full object-cover grayscale-[20%] transition-all duration-700 ease-out group-hover:scale-105 group-hover:grayscale-0"
               loading="lazy"
             />
@@ -254,14 +257,14 @@ export default function WorkStages() {
 
           <ol
             ref={listRef}
-            aria-label="Design Factory Group's five-stage project process"
+            aria-label="Design Factory Group's project process"
             className="list-none divide-y divide-border p-0 m-0"
           >
             {workStages.map((s, i) => (
               <Reveal key={s.n} delay={i * 80}>
                 <StageRow
                   s={s}
-                  Icon={stageIcons[i]}
+                  Icon={s.icon}
                   index={i}
                   isActive={i <= activeIndex}
                   rowRef={addRowRef}

@@ -9,25 +9,30 @@ export function Reveal({
 }) {
   const ref = useRef(null);
 
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
+ useEffect(() => {
+  const el = ref.current;
+  if (!el) return;
 
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            setTimeout(() => el.classList.add("in"), delay);
-            io.unobserve(el);
-          }
-        });
-      },
-      { threshold, rootMargin }
-    );
+  let timeoutId;
 
-    io.observe(el);
-    return () => io.disconnect();
-  }, [delay, threshold, rootMargin]);
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          timeoutId = setTimeout(() => el.classList.add("in"), delay);
+          io.unobserve(el);
+        }
+      });
+    },
+    { threshold, rootMargin }
+  );
+
+  io.observe(el);
+  return () => {
+    io.disconnect();
+    clearTimeout(timeoutId);
+  };
+}, [delay, threshold, rootMargin]);
 
   return (
     <div ref={ref} className={`reveal ${className}`}>

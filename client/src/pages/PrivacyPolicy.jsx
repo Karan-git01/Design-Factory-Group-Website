@@ -2,7 +2,13 @@ import { usePageMeta } from "../hooks/usePageMeta";
 import { Link } from "react-router-dom";
 import { Reveal } from "../components/Reveal";
 
-const SITE_URL = "https://designfactorygroup.com";
+// FIX: was "https://designfactorygroup.com" (no www) — usePageMeta.js's
+// own SITE_URL (which sets this page's canonical <link>) is
+// "https://www.designfactorygroup.com". With the two disagreeing, this
+// page's canonical tag and its own JSON-LD url/isPartOf/breadcrumb values
+// contradicted each other. Normalized to match — please confirm www is
+// correct.
+const SITE_URL = "https://www.designfactorygroup.com";
 const POLICY_EFFECTIVE_DATE = "2026-08-16"; // update whenever the policy text changes
 const POLICY_VERSION = "1.2";
 
@@ -131,13 +137,68 @@ const privacyPolicySchema = {
   },
 };
 
+// FIX: pulled the "Contact page" text-splitting into a small helper so it
+// can be reused for both <p> and <li> body lines (needed once bullet
+// lines get grouped into a real list below) without duplicating the logic.
+function renderBodyText(text, key) {
+  if (text.includes("Contact page")) {
+    const [before, after] = text.split("Contact page");
+    return (
+      <>
+        {before}
+        <Link to="/contact" className="link-underline text-copper">
+          Contact page
+        </Link>
+        {after}
+      </>
+    );
+  }
+  return text;
+}
+
+// FIX: SECTIONS' "how-we-use-information" body mixes plain sentences with
+// lines manually prefixed "• " — previously each rendered as its own <p>,
+// so the bullets were visual-only: no <ul>/<li>, meaning screen readers
+// didn't announce it as a list (no item count, no list navigation), and
+// the literal "•" character could be read aloud as "bullet" by some
+// assistive tech. This groups consecutive "• "-prefixed lines into a real
+// list at render time, without changing any of the underlying copy.
+function groupBody(body) {
+  const groups = [];
+  for (const line of body) {
+    if (line.startsWith("• ")) {
+      const last = groups[groups.length - 1];
+      const item = line.slice(2);
+      if (last?.type === "list") {
+        last.items.push(item);
+      } else {
+        groups.push({ type: "list", items: [item] });
+      }
+    } else {
+      groups.push({ type: "p", text: line });
+    }
+  }
+  return groups;
+}
+
 export default function PrivacyPolicy() {
+  // FIX: previously "Privacy Policy — Design Factory Group" — usePageMeta
+  // already appends " | Design Factory Group" itself, so this produced a
+  // duplicated suffix in the actual <title> tag (same bug fixed in
+  // Contact.jsx, Home.jsx, NotFound.jsx, Projects.jsx, ProjectDetail.jsx).
+  // Also added the canonical path, matching the other pages' calls.
   usePageMeta(
-    "Privacy Policy — Design Factory Group",
-    "Read how Design Factory Group collects, uses, and protects the information you submit through our contact form, and learn your rights under GDPR and CCPA."
+    "Privacy Policy",
+    "Read how Design Factory Group collects, uses, and protects the information you submit through our contact form, and learn your rights under GDPR and CCPA.",
+    "/privacy-policy"
   );
 
-  const lastUpdated = new Date(POLICY_EFFECTIVE_DATE).toLocaleDateString("en-IN", {
+  // FIX: new Date("2026-08-16") parses as UTC midnight; toLocaleDateString
+  // then renders it in the visitor's local timezone, so anyone in a
+  // timezone behind UTC could see it roll back to the previous day.
+  // Building the Date from its numeric parts keeps it in local time.
+  const [effYear, effMonth, effDay] = POLICY_EFFECTIVE_DATE.split("-").map(Number);
+  const lastUpdated = new Date(effYear, effMonth - 1, effDay).toLocaleDateString("en-IN", {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -190,21 +251,17 @@ export default function PrivacyPolicy() {
                   {s.title}
                 </h2>
                 <div className="mt-4 space-y-4 text-base leading-relaxed">
-                  {s.body.map((p, j) => {
-                    if (p.includes("Contact page")) {
-                      const [before, after] = p.split("Contact page");
-                      return (
-                        <p key={j}>
-                          {before}
-                          <Link to="/contact" className="link-underline text-copper">
-                            Contact page
-                          </Link>
-                          {after}
-                        </p>
-                      );
-                    }
-                    return <p key={j}>{p}</p>;
-                  })}
+                  {groupBody(s.body).map((group, j) =>
+                    group.type === "list" ? (
+                      <ul key={j} className="list-disc space-y-2 pl-5">
+                        {group.items.map((item, k) => (
+                          <li key={k}>{renderBodyText(item, k)}</li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p key={j}>{renderBodyText(group.text, j)}</p>
+                    )
+                  )}
                 </div>
               </section>
             </Reveal>

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence, useMotionValue } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, animate } from "framer-motion";
 
 // Same three-tower mark as Header.jsx's <Logo />, rebuilt with motion.path
 // so each tower draws itself in on load instead of appearing as a static
@@ -18,46 +18,44 @@ function Stroke({ d, color, delay, duration, reduceMotion }) {
   const dotX = useMotionValue(0);
   const dotY = useMotionValue(0);
   const dotOpacity = useMotionValue(0);
-  const [ready, setReady] = useState(false);
+  // FIX: pathLength is now a single motion value that both the visible
+  // stroke (via `style`) and the dot-position calculation (via `onUpdate`)
+  // read from. Previously the stroke was drawn by Framer's declarative
+  // `animate={{ pathLength: 1 }}` (cubic-bezier(0.22,1,0.36,1)) while the
+  // dot was positioned by a separate hand-rolled rAF loop using a
+  // different easing formula (1 - (1-v)^3) — same delay/duration, but a
+  // different curve, so the dot visibly drifted from the actual tip of
+  // the drawing stroke. Driving both from one value makes them sync by
+  // construction instead of by matching two independent formulas.
+  const pathLength = useMotionValue(0);
   const startDelay = reduceMotion ? 0 : delay;
   const dur = reduceMotion ? 0 : duration;
 
   useEffect(() => {
-    if (pathRef.current) setReady(true);
-  }, []);
-
-  useEffect(() => {
-    if (!ready || reduceMotion) return;
     const path = pathRef.current;
-    const length = path.getTotalLength();
-    const delayMs = startDelay * 1000;
-    const durationMs = dur * 1000;
-    let raf;
-    let start;
+    if (!path) return;
 
-    const tick = (t) => {
-      if (start === undefined) start = t;
-      const elapsed = t - start - delayMs;
-      if (elapsed < 0) {
-        raf = requestAnimationFrame(tick);
-        return;
-      }
-      const v = Math.min(1, elapsed / durationMs);
-      const eased = 1 - Math.pow(1 - v, 3);
-      const point = path.getPointAtLength(eased * length);
-      dotX.set(point.x);
-      dotY.set(point.y);
-      dotOpacity.set(v > 0.03 && v < 0.97 ? 1 : 0);
-      if (v < 1) {
-        raf = requestAnimationFrame(tick);
-      } else {
-        dotOpacity.set(0);
-      }
-    };
+    if (reduceMotion) {
+      pathLength.set(1);
+      return;
+    }
 
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [ready, reduceMotion, startDelay, dur]);
+    const controls = animate(pathLength, 1, {
+      delay: startDelay,
+      duration: dur,
+      ease: [0.22, 1, 0.36, 1],
+      onUpdate: (v) => {
+        const length = path.getTotalLength();
+        const point = path.getPointAtLength(v * length);
+        dotX.set(point.x);
+        dotY.set(point.y);
+        dotOpacity.set(v > 0.03 && v < 0.97 ? 1 : 0);
+      },
+      onComplete: () => dotOpacity.set(0),
+    });
+
+    return () => controls.stop();
+  }, [reduceMotion, startDelay, dur, pathLength, dotX, dotY, dotOpacity]);
 
   return (
     <>
@@ -69,8 +67,9 @@ function Stroke({ d, color, delay, duration, reduceMotion }) {
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: 1 }}
+        style={{ pathLength }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         transition={{ delay: startDelay, duration: dur, ease: [0.22, 1, 0.36, 1] }}
       />
       {!reduceMotion && (
@@ -118,7 +117,6 @@ function AnimatedLogo({ reduceMotion }) {
       viewBox="0 0 512 577"
       className="h-16 w-16 sm:h-20 sm:w-20"
       xmlns="http://www.w3.org/2000/svg"
-      role="img"
       aria-hidden="true"
       focusable="false"
     >

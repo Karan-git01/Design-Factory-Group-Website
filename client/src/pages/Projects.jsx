@@ -7,9 +7,17 @@ import { Reveal } from "../components/Reveal";
 const FILTERS = ["All", "Ongoing", "Completed"];
 
 export default function Projects() {
+  // FIX: previously passed
+  // "Architecture & Construction Projects in Siliguri | Design Factory
+  // Group" as the title, but usePageMeta already appends
+  // " | Design Factory Group" itself — that produced a duplicated suffix
+  // in the actual <title> tag (same bug fixed in Contact.jsx, Home.jsx,
+  // NotFound.jsx). Also added the canonical path, matching the other
+  // pages' calls.
   usePageMeta(
-    "Architecture & Construction Projects in Siliguri | Design Factory Group",
-    "Explore residential and commercial projects by Design Factory Group — one of the best architecture and construction studios in Siliguri, West Bengal, delivering completed and ongoing work across India."
+    "Architecture & Construction Projects in Siliguri",
+    "Explore residential and commercial projects by Design Factory Group — one of the best architecture and construction studios in Siliguri, West Bengal, delivering completed and ongoing work across India.",
+    "/projects"
   );
 
   const api = useApi();
@@ -19,11 +27,30 @@ export default function Projects() {
   const [filter, setFilter] = useState("All");
 
   useEffect(() => {
+    // FIX: this effect previously had no unmount guard — same class of
+    // bug already fixed in Careers.jsx and BranchPage.jsx. A slow request
+    // resolving after the user has navigated away from /projects would
+    // call setState on an unmounted component.
+    let ignore = false;
+
+    setLoading(true);
+    setError(null);
+
     api
       .get("/projects")
-      .then(setProjects)
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
+      .then((data) => {
+        if (!ignore) setProjects(data);
+      })
+      .catch((err) => {
+        if (!ignore) setError(err.message);
+      })
+      .finally(() => {
+        if (!ignore) setLoading(false);
+      });
+
+    return () => {
+      ignore = true;
+    };
   }, [api]);
 
   const filtered =
@@ -47,7 +74,11 @@ export default function Projects() {
                 "@type": "ListItem",
                 position: i + 1,
                 name: project.name,
-                url: `https://www.designfactorygroup.in/projects/${project._id}`,
+                // FIX: was designfactorygroup.in — contradicts every other
+                // file (Header.jsx JSON-LD, BranchPage.jsx, Contact.jsx,
+                // all .com). Normalized to .com per the registry — please
+                // confirm .com is correct across all of these.
+                url: `https://www.designfactorygroup.com/projects/${project._id}`,
               };
             })
             .filter(Boolean),
@@ -141,8 +172,15 @@ export default function Projects() {
         </div>
       )}
 
+      {/* FIX: added role="status" — this state is often reached by a user
+          switching filters (e.g. "Ongoing" with zero matches), so it's a
+          dynamic status message that deserves the same accessible
+          announcement the loading and error states already get. */}
       {!loading && !error && filtered.length === 0 && (
-        <div className="mt-16 rounded-3xl border border-dashed border-border bg-cream-alt p-12 text-center">
+        <div
+          role="status"
+          className="mt-16 rounded-3xl border border-dashed border-border bg-cream-alt p-12 text-center"
+        >
           <p className="font-display text-2xl">No projects to show</p>
           <p className="mt-2 text-sm text-muted-foreground">
             Try switching filters — more work coming soon.

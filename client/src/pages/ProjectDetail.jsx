@@ -12,18 +12,43 @@ export default function ProjectDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // FIX: previously built the title as
+  // `${project.name} | Design Factory Group`, but usePageMeta already
+  // appends " | Design Factory Group" itself — that produced a duplicated
+  // suffix in the actual <title> tag (same bug fixed in Contact.jsx,
+  // Home.jsx, NotFound.jsx, Projects.jsx). Also added the canonical path,
+  // matching BranchPage.jsx's conditional pattern for a dynamic route.
   usePageMeta(
-    project?.name ? `${project.name} | Design Factory Group` : undefined,
-    project?.description
+    project?.name,
+    project?.description,
+    project ? `/projects/${id}` : undefined
   );
 
   useEffect(() => {
+    // FIX: this effect re-runs on every `id` change (navigating between
+    // project detail pages) but had no guard against a stale response
+    // resolving after a newer one, or against setting state after unmount
+    // — same class of bug already fixed in BranchPage.jsx.
+    let ignore = false;
+
     setLoading(true);
+    setError(null);
+
     api
       .get(`/projects/${id}`)
-      .then(setProject)
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
+      .then((data) => {
+        if (!ignore) setProject(data);
+      })
+      .catch((err) => {
+        if (!ignore) setError(err.message);
+      })
+      .finally(() => {
+        if (!ignore) setLoading(false);
+      });
+
+    return () => {
+      ignore = true;
+    };
   }, [api, id]);
 
   if (loading) {
@@ -111,10 +136,24 @@ export default function ProjectDetail() {
               />
               {project.status}
             </span>
-            <span className="h-3 w-px bg-border" />
-            <span className="label-caps text-muted-foreground">{project.year}</span>
-            <span className="h-3 w-px bg-border" />
-            <span className="label-caps text-muted-foreground">{project.location}</span>
+            {/* FIX: year and location previously rendered unconditionally,
+                each preceded by a divider — a project record missing
+                either field (already treated as optional in the schema
+                above) would leave a stray divider next to empty text.
+                Guarded both, matching the project.scope?.length > 0
+                pattern already used further down this file. */}
+            {project.year && (
+              <>
+                <span className="h-3 w-px bg-border" />
+                <span className="label-caps text-muted-foreground">{project.year}</span>
+              </>
+            )}
+            {project.location && (
+              <>
+                <span className="h-3 w-px bg-border" />
+                <span className="label-caps text-muted-foreground">{project.location}</span>
+              </>
+            )}
           </div>
         </Reveal>
 

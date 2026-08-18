@@ -6,25 +6,27 @@ const philosophyPoints = [
     n: "01",
     title: "Focused expertise",
     body: "We concentrate on a limited number of projects to ensure full attention, consistency and control at every stage of the process.",
+    icon: PenTool,
   },
   {
     n: "02",
     title: "Thoughtful execution",
     body: "Every element is carefully considered — from overall composition to the smallest architectural and technical decisions, with precision.",
+    icon: Layers,
   },
   {
     n: "03",
     title: "Long-term quality",
     body: "Our work is guided by durability, relevance and carefully developed solutions that remain strong, refined and appropriate over time.",
+    icon: ShieldCheck,
   },
   {
     n: "04",
     title: "Collaborative partnership",
     body: "We believe exceptional projects are built through transparent communication, close collaboration and a shared vision from concept to completion.",
+    icon: Users,
   },
 ];
-
-const philosophyIcons = [PenTool, Layers, ShieldCheck, Users];
 
 export default function Philosophy() {
   return (
@@ -57,7 +59,7 @@ export default function Philosophy() {
       <div className="mt-12 px-5 sm:px-8 md:mx-auto md:max-w-7xl">
         <ul className="grid list-none gap-5 p-0 m-0 sm:grid-cols-2">
           {philosophyPoints.map((p, i) => {
-            const Icon = philosophyIcons[i];
+            const Icon = p.icon;
             return (
               <li key={p.n} className="flex">
                 <Reveal delay={i * 70}>

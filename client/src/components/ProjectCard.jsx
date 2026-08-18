@@ -10,7 +10,18 @@ export default function ProjectCard({ project }) {
     : `${project.name} — a project by Design Factory Group`;
 
   return (
-    <Link to={`/projects/${project._id}`} className="group block">
+    // FIX: without an aria-label, this link's accessible name is the
+    // concatenation of everything inside it — status badge, year, name,
+    // location, description, and every scope tag — read out as one blob
+    // to screen reader users. A concise label keeps the rich visual card
+    // but gives assistive tech a clean, predictable name.
+    <Link
+      to={`/projects/${project._id}`}
+      className="group block"
+      aria-label={`View ${project.name}${
+        project.location ? `, ${project.location}` : ""
+      } project`}
+    >
       {/*
         <article>: each card is a self-contained, independently
         distributable piece of content (one project entry) — the

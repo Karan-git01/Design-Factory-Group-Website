@@ -11,6 +11,8 @@ function Field({
   type = "text",
   required = false,
   autoComplete,
+  invalid = false,
+  errorId,
 }) {
   return (
     <div>
@@ -25,6 +27,8 @@ function Field({
         onChange={onChange}
         required={required}
         autoComplete={autoComplete}
+        aria-invalid={invalid || undefined}
+        aria-describedby={invalid ? errorId : undefined}
         className="mt-2 w-full rounded-sm border border-border bg-background px-5 py-3 text-sm outline-none focus:border-copper"
       />
     </div>
@@ -42,27 +46,46 @@ export default function ContactForm() {
   });
   const [status, setStatus] = useState("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  // FIX: tracks which specific field(s) are missing/invalid so they can
+  // carry aria-invalid + aria-describedby, instead of only a generic
+  // error banner with no field-level signal for screen reader users.
+  const [invalidFields, setInvalidFields] = useState({});
 
   function handleChange(e) {
     const { name, value, type, checked } = e.target;
     setForm((f) => ({ ...f, [name]: type === "checkbox" ? checked : value }));
+    // FIX: clear a field's invalid flag as soon as the user fixes it,
+    // so aria-invalid doesn't keep announcing a field that's now filled in.
+    setInvalidFields((prev) => (prev[name] ? { ...prev, [name]: false } : prev));
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
 
+    // FIX: guard against a second submit firing while one is already in
+    // flight — previously only the (disabled) submit button prevented
+    // this, with no check in the handler itself.
+    if (status === "submitting") return;
+
     if (!form.name || !form.email || !form.message) {
       setStatus("error");
       setErrorMsg("Please fill in your name, email and a short message.");
+      setInvalidFields({
+        name: !form.name,
+        email: !form.email,
+        message: !form.message,
+      });
       return;
     }
 
     if (!form.consent) {
       setStatus("error");
       setErrorMsg("Please agree to the privacy policy to continue.");
+      setInvalidFields({ consent: true });
       return;
     }
 
+    setInvalidFields({});
     setStatus("submitting");
     setErrorMsg("");
 
@@ -115,6 +138,8 @@ export default function ContactForm() {
           onChange={handleChange}
           autoComplete="name"
           required
+          invalid={invalidFields.name}
+          errorId="contact-form-error"
         />
         <Field
           label="Email"
@@ -124,6 +149,8 @@ export default function ContactForm() {
           onChange={handleChange}
           autoComplete="email"
           required
+          invalid={invalidFields.email}
+          errorId="contact-form-error"
         />
       </div>
 
@@ -149,6 +176,8 @@ export default function ContactForm() {
           value={form.message}
           onChange={handleChange}
           required
+          aria-invalid={invalidFields.message || undefined}
+          aria-describedby={invalidFields.message ? "contact-form-error" : undefined}
           className="mt-2 w-full rounded-sm border border-border bg-background px-4 py-3 text-sm outline-none focus:border-copper"
         />
       </div>
@@ -159,6 +188,8 @@ export default function ContactForm() {
           name="consent"
           checked={form.consent}
           onChange={handleChange}
+          aria-invalid={invalidFields.consent || undefined}
+          aria-describedby={invalidFields.consent ? "contact-form-error" : undefined}
           className="mt-1 h-4 w-4 accent-[color:var(--copper)]"
         />
         <span>
@@ -172,6 +203,7 @@ export default function ContactForm() {
 
       {status === "error" && (
         <p
+          id="contact-form-error"
           className="mt-4 rounded-xl border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive"
           role="alert"
         >

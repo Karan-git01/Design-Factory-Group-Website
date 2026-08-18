@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-export default function TextReveal({ text, className = "", emphasize = [] }) {
+export default function TextReveal({ text, className = "", emphasize = [], id }) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
 
@@ -34,7 +34,7 @@ export default function TextReveal({ text, className = "", emphasize = [] }) {
     );
 
   return (
-    <h2 ref={ref} className={className}>
+    <h2 ref={ref} id={id} className={className}>
       {lines.map((line, li) => {
         const words = line.split(" ");
         return (
@@ -65,4 +65,3 @@ export default function TextReveal({ text, className = "", emphasize = [] }) {
     </h2>
   );
 }
-

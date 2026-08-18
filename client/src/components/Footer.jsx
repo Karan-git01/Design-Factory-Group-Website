@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowUp, ArrowUpRight, Mail, MapPin, Phone } from "lucide-react";
+import { useLenis } from "../context/LenisContext";
 
 const NAV_LINKS = [
   { label: "Home", to: "/" },
@@ -120,6 +121,23 @@ function FooterCol({ title, links, bordered = true }) {
 }
 
 export default function Footer() {
+  // FIX: the site's scroll is managed by Lenis (see Header.jsx / LenisContext).
+  // Reused here so "Back to top" scrolls through the same smooth-scroll
+  // instance instead of calling the native API behind Lenis's back, which
+  // can either no-op or desync Lenis's internal scroll position depending
+  // on how Lenis is configured. Falls back to the native call if no Lenis
+  // instance is available, so behavior is never worse than before.
+  const lenisRef = useLenis();
+
+  const handleScrollToTop = () => {
+    const lenis = lenisRef?.current;
+    if (lenis) {
+      lenis.scrollTo(0);
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   return (
     <footer className="border-t border-border bg-cream-alt">
       <div className="mx-auto max-w-7xl px-5 pt-16 pb-8 sm:px-8 md:pt-24 md:pb-10">
@@ -157,26 +175,43 @@ export default function Footer() {
               high-end residential and commercial work across India, from
               concept through completion.
             </p>
-            <ul className="mt-6 flex list-none items-center gap-3 p-0 m-0">
-              {SOCIAL_LINKS.map(({ svg, href, label }, i) => (
-                <li key={i}>
-                  <a
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={label}
-                    className="group grid h-11 w-11 place-items-center rounded-full border border-border bg-card text-foreground/100 transition-all duration-300 hover:-translate-y-0.5 hover:border-foreground/40 hover:bg-foreground hover:text-background"
-                  >
-                    <span className="transition-transform duration-300 group-hover:scale-110">
-                      {svg}
-                    </span>
-                  </a>
-                </li>
-              ))}
-            </ul>
+            {/* FIX: wrapped in a nav landmark with the same aria-label
+                pattern Header.jsx uses for the identical social links, so
+                screen-reader users browsing by landmark get a consistent
+                "social media" nav in both places. */}
+            <nav aria-label="Design Factory Group on social media">
+              <ul className="mt-6 flex list-none items-center gap-3 p-0 m-0">
+                {SOCIAL_LINKS.map(({ svg, href, label }, i) => (
+                  <li key={i}>
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={label}
+                      className="group grid h-11 w-11 place-items-center rounded-full border border-border bg-card text-foreground/100 transition-all duration-300 hover:-translate-y-0.5 hover:border-foreground/40 hover:bg-foreground hover:text-background"
+                    >
+                      <span className="transition-transform duration-300 group-hover:scale-110">
+                        {svg}
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
           </div>
 
-          <nav aria-label="Footer" className="contents">
+          {/* FIX: previously `className="contents"` so this nav's two
+              children could sit directly as columns 2–3 of the outer grid.
+              `display: contents` on a semantic landmark has documented
+              accessibility-tree bugs in some Safari/VoiceOver and older
+              Chromium builds (the element's role can be dropped entirely).
+              This gets the identical visual result — nav spans the same
+              two column tracks and lays its children out side by side —
+              without applying `contents` to the landmark itself. */}
+          <nav
+            aria-label="Footer"
+            className="grid gap-10 md:col-span-2 md:grid-cols-2 md:gap-8"
+          >
             <FooterCol title="Pages" links={NAV_LINKS} />
             <FooterCol title="Explore" links={SECTION_LINKS} />
           </nav>
@@ -252,7 +287,7 @@ export default function Footer() {
             </Link>
             <button
               type="button"
-              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              onClick={handleScrollToTop}
               aria-label="Back to top"
               className="group grid h-9 w-9 place-items-center rounded-full border border-border transition-all duration-300 hover:border-copper hover:text-copper"
             >

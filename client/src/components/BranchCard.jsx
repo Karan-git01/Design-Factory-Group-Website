@@ -5,7 +5,14 @@ export default function BranchCard({ branch }) {
   const { slug, name, address, photoUrl, isMain } = branch;
 
   return (
-    <Link to={`/branches/${slug}`} className="group block">
+    // FIX: without aria-label, this link's accessible name is the name +
+    // full street address concatenated together — matches the same
+    // overloaded-link-name issue fixed in ProjectCard.jsx.
+    <Link
+      to={`/branches/${slug}`}
+      className="group block"
+      aria-label={`View ${name || "branch"} details`}
+    >
       <div className="relative aspect-[16/9] overflow-hidden rounded-md border border-border bg-card transition-colors duration-300 group-hover:border-copper/40">
         <img
           src={photoUrl}

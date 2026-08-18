@@ -88,11 +88,22 @@ function useFaqCarousel(length) {
 export default function FAQ() {
   const { index, phase, direction, next, prev, goTo } = useFaqCarousel(FAQS.length);
   const current = FAQS[index];
+  // FIX: ref to the carousel container. The previous keydown handler was
+  // attached to `window` with no check on where focus currently was, so
+  // ArrowLeft/ArrowRight anywhere on the page — including inside an
+  // unrelated native <select>, another carousel, or any other
+  // arrow-key-driven widget elsewhere on the site — would also silently
+  // advance this FAQ carousel. Scoping the handler to fire only when focus
+  // is inside this carousel keeps the shortcut working for keyboard users
+  // who are actually interacting with it, without hijacking arrow-key
+  // input everywhere else on the page (present or future components).
+  const carouselRef = useRef(null);
 
   useEffect(() => {
     const onKey = (e) => {
       const tag = document.activeElement?.tagName;
       if (tag === "INPUT" || tag === "TEXTAREA") return;
+      if (!carouselRef.current?.contains(document.activeElement)) return;
       if (e.key === "ArrowRight") next();
       if (e.key === "ArrowLeft") prev();
     };
@@ -154,6 +165,7 @@ export default function FAQ() {
 
         <Reveal delay={100}>
           <div
+            ref={carouselRef}
             className="rounded-sm border border-border bg-card p-8 shadow-sm md:p-12"
             role="group"
             aria-roledescription="carousel"

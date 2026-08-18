@@ -31,11 +31,23 @@ export default function BranchesSection() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    let isMounted = true;
+
     api
       .get("/branches")
-      .then(setBranches)
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
+      .then((data) => {
+        if (isMounted) setBranches(data);
+      })
+      .catch((err) => {
+        if (isMounted) setError(err.message);
+      })
+      .finally(() => {
+        if (isMounted) setLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
   }, [api]);
 
   return (

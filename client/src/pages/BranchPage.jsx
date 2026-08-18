@@ -33,9 +33,16 @@ function BranchMap({ branch }) {
         scrollWheelZoom={false}
         style={{ height: "100%", width: "100%" }}
       >
+        {/* FIX: was https://{s}.tile.openstreetmap.org/... — OSM's own
+            usage policy reserves that endpoint for low-volume/dev use and
+            explicitly asks production sites to use a dedicated tile
+            provider. Swapped to CARTO's free Voyager basemap, which is
+            built for production traffic and needs no API key. */}
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+          subdomains="abcd"
+          maxZoom={19}
         />
         <Marker position={[branch.latitude, branch.longitude]}>
           <Popup>{branch.name}</Popup>
@@ -53,18 +60,48 @@ export default function BranchPage() {
   const [error, setError] = useState(null);
 
   usePageMeta(
-    branch?.name ? `${branch.name} | Design Factory Group` : undefined,
-    branch ? `${branch.name} — ${branch.address}` : undefined
+    branch?.name,
+    branch ? `${branch.name} — ${branch.address}` : undefined,
+    branch ? `/branches/${slug}` : undefined
   );
 
   useEffect(() => {
+    // FIX: this component stays mounted across `/branches/:slug` ->
+    // `/branches/:otherSlug` navigations (only `slug` changes), so a slow
+    // first request could resolve after a second one and overwrite the
+    // correct branch with stale data — plus a setState-after-unmount
+    // warning if the user navigates away entirely before it resolves.
+    // Same guard already used in Careers.jsx.
+    let ignore = false;
+
     setLoading(true);
+    setError(null);
+
     api
       .get(`/branches/${slug}`)
-      .then(setBranch)
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
+      .then((data) => {
+        if (!ignore) setBranch(data);
+      })
+      .catch((err) => {
+        if (!ignore) setError(err.message);
+      })
+      .finally(() => {
+        if (!ignore) setLoading(false);
+      });
+
+    return () => {
+      ignore = true;
+    };
   }, [api, slug]);
+
+  // FIX: guard against a branch record missing (or having non-numeric)
+  // coordinates. Previously MapContainer received center={[undefined,
+  // undefined]} in that case, which throws and crashes the whole page —
+  // and the JSON-LD below would have emitted an invalid GeoCoordinates
+  // block. Now both fall back gracefully instead.
+  const lat = branch ? Number(branch.latitude) : NaN;
+  const lng = branch ? Number(branch.longitude) : NaN;
+  const hasCoords = Number.isFinite(lat) && Number.isFinite(lng);
 
   // LocalBusiness structured data for this branch — each office gets its
   // own entry, linked back to the parent organization, so search engines
@@ -80,22 +117,25 @@ export default function BranchPage() {
         email: branch.email,
         ...(branch.photoUrl && { image: branch.photoUrl }),
         ...(typeof window !== "undefined" && { url: window.location.href }),
-        geo: {
-          "@type": "GeoCoordinates",
-          latitude: branch.latitude,
-          longitude: branch.longitude,
-        },
+        ...(hasCoords && {
+          geo: { "@type": "GeoCoordinates", latitude: lat, longitude: lng },
+        }),
         parentOrganization: {
           "@type": "Organization",
           name: "Design Factory Group",
-          url: "https://www.designfactorygroup.in/",
+          // FIX: was "https://www.designfactorygroup.in/" — every other
+          // file (Header.jsx JSON-LD, index.html canonical/OG) uses
+          // designfactorygroup.com. Flagging per the conflict-reporting
+          // rule rather than silently picking one — please confirm .com
+          // is correct; reverting this is a one-line change if not.
+          url: "https://www.designfactorygroup.com/",
         },
       }
     : null;
 
   if (loading) {
     return (
-      <div className="mx-auto max-w-3xl px-5 py-32 text-center">
+      <div className="mx-auto max-w-3xl px-5 py-32 text-center" role="status" aria-live="polite">
         <p className="text-muted-foreground">Loading branch details...</p>
       </div>
     );
@@ -103,7 +143,7 @@ export default function BranchPage() {
 
   if (error || !branch) {
     return (
-      <div className="mx-auto max-w-3xl px-5 py-32 text-center">
+      <div className="mx-auto max-w-3xl px-5 py-32 text-center" role="alert">
         <h1 className="font-display text-5xl">Branch not found</h1>
         <p className="mt-4 text-muted-foreground">
           This branch may have been removed or the link is incorrect.
@@ -197,7 +237,15 @@ export default function BranchPage() {
 
         <Reveal delay={100} className="h-full">
           <div className="h-full overflow-hidden rounded-3xl border border-border">
-            <BranchMap branch={branch} />
+            {/* FIX: only render the map when we have valid coordinates;
+                otherwise show a plain fallback instead of crashing. */}
+            {hasCoords ? (
+              <BranchMap branch={{ ...branch, latitude: lat, longitude: lng }} />
+            ) : (
+              <div className="grid h-full min-h-[320px] place-items-center p-8 text-center text-sm text-muted-foreground">
+                Map unavailable for this branch.
+              </div>
+            )}
           </div>
         </Reveal>
       </div>

@@ -5,12 +5,35 @@
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>client</title>
+
+  <!-- FIX: was the placeholder "client" -->
+  <title>Design Factory Group | Architecture & Construction Studio, Siliguri</title>
+  <!-- FIX: was missing entirely -->
+  <meta name="description"
+    content="Design Factory Group is an architecture and construction studio based in Siliguri, West Bengal, delivering residential and commercial projects across India." />
+  <!-- NOTE: fallback only — each route should set its own title/description/canonical
+       via react-helmet-async or equivalent for correct per-page SEO. -->
+  <link rel="canonical" href="https://www.designfactorygroup.com/" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Design Factory Group" />
+  <meta property="og:title" content="Design Factory Group | Architecture & Construction Studio, Siliguri" />
+  <meta property="og:description"
+    content="Design Factory Group is an architecture and construction studio based in Siliguri, West Bengal, delivering residential and commercial projects across India." />
+  <meta property="og:url" content="https://www.designfactorygroup.com/" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Design Factory Group | Architecture & Construction Studio, Siliguri" />
+  <meta name="twitter:description"
+    content="Design Factory Group is an architecture and construction studio based in Siliguri, West Bengal, delivering residential and commercial projects across India." />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- FIX: added Montserrat:wght@500;600 — Header.jsx's BrandWordmark sets
+       fontFamily: 'Montserrat' but it was never loaded here, so it was
+       silently falling back to the browser's default sans-serif. -->
   <link
-    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;600&display=swap"
     rel="stylesheet">
 </head>
 

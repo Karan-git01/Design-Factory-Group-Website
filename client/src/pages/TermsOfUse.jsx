@@ -2,7 +2,13 @@ import { usePageMeta } from "../hooks/usePageMeta";
 import { Link } from "react-router-dom";
 import { Reveal } from "../components/Reveal";
 
-const SITE_URL = "https://designfactorygroup.com";
+// FIX: was "https://designfactorygroup.com" (no www) — usePageMeta.js's
+// own SITE_URL (which sets this page's canonical <link>) is
+// "https://www.designfactorygroup.com". With the two disagreeing, this
+// page's canonical tag and its own JSON-LD url/isPartOf/breadcrumb values
+// contradicted each other (same fix applied in PrivacyPolicy.jsx). Please
+// confirm www is correct.
+const SITE_URL = "https://www.designfactorygroup.com";
 const TERMS_EFFECTIVE_DATE = "2026-08-16"; // update whenever the terms text changes
 const TERMS_VERSION = "1.1";
 
@@ -134,12 +140,24 @@ const termsOfUseSchema = {
 };
 
 export default function TermsOfUse() {
+  // FIX: previously "Terms of Use — Design Factory Group" — usePageMeta
+  // already appends " | Design Factory Group" itself, so this produced a
+  // duplicated suffix in the actual <title> tag (same bug fixed across
+  // Contact.jsx, Home.jsx, NotFound.jsx, Projects.jsx, ProjectDetail.jsx,
+  // PrivacyPolicy.jsx). Also added the canonical path.
   usePageMeta(
-    "Terms of Use — Design Factory Group",
-    "Review the terms and conditions governing your access to and use of the Design Factory Group website, including intellectual property, liability, and governing law."
+    "Terms of Use",
+    "Review the terms and conditions governing your access to and use of the Design Factory Group website, including intellectual property, liability, and governing law.",
+    "/terms-of-use"
   );
 
-  const lastUpdated = new Date(TERMS_EFFECTIVE_DATE).toLocaleDateString("en-IN", {
+  // FIX: new Date("2026-08-16") parses as UTC midnight; toLocaleDateString
+  // then renders it in the visitor's local timezone, so anyone in a
+  // timezone behind UTC could see it roll back to the previous day.
+  // Building the Date from its numeric parts keeps it in local time (same
+  // fix applied in PrivacyPolicy.jsx).
+  const [effYear, effMonth, effDay] = TERMS_EFFECTIVE_DATE.split("-").map(Number);
+  const lastUpdated = new Date(effYear, effMonth - 1, effDay).toLocaleDateString("en-IN", {
     year: "numeric",
     month: "long",
     day: "numeric",

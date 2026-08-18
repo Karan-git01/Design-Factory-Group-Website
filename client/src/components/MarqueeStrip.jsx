@@ -50,10 +50,7 @@ export default function MarqueeStrip({ items = DEFAULT_ITEMS }) {
 
   if (reduced) {
     return (
-      <section
-        className="marquee-strip relative w-full overflow-x-auto overflow-y-hidden border-y border-background/10 bg-ink py-5"
-        aria-label="Studio highlights"
-      >
+      <section className="marquee-strip relative w-full overflow-x-auto overflow-y-hidden border-y border-background/10 bg-ink py-5">
         <h2 className="sr-only">Studio Highlights</h2>
         <Row />
       </section>
@@ -61,10 +58,7 @@ export default function MarqueeStrip({ items = DEFAULT_ITEMS }) {
   }
 
   return (
-    <section
-      className="marquee-strip group relative w-full overflow-hidden border-y border-background/10 bg-ink py-5"
-      aria-label="Studio highlights"
-    >
+    <section className="marquee-strip group relative w-full overflow-hidden border-y border-background/10 bg-ink py-5">
       {/* Visually hidden but crawlable heading — gives the strip a real
           document-outline entry instead of relying only on aria-label,
           which search engines weight less than actual page content. */}

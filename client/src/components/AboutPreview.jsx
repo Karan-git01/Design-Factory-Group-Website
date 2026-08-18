@@ -15,13 +15,12 @@ export default function AboutPreview() {
             <span className="label-caps text-copper">— About</span>
           </Reveal>
 
-          <div id="about-heading">
-            <TextReveal
-              className="mt-4 font-display text-[2.25rem] leading-[1.1] tracking-tight sm:text-4xl md:text-5xl md:leading-[1.08]"
-              text="Design Factory Group is a team working at the intersection of architecture, construction and technology."
-              emphasize={["architecture,"]}
-            />
-          </div>
+          <TextReveal
+            id="about-heading"
+            className="mt-4 font-display text-[2.25rem] leading-[1.1] tracking-tight sm:text-4xl md:text-5xl md:leading-[1.08]"
+            text="Design Factory Group is a team working at the intersection of architecture, construction and technology."
+            emphasize={["architecture,"]}
+          />
 
           <Reveal delay={160}>
             <p className="mt-6 max-w-lg text-balance text-muted-foreground">

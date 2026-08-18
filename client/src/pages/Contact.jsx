@@ -60,9 +60,18 @@ const SOCIAL_ICONS = [
 ];
 
 export default function Contact() {
+  // FIX: previously passed
+  // "Contact | Design Factory Group — Architecture & Construction Studio,
+  // Siliguri" as the title, but usePageMeta already appends
+  // " | Design Factory Group" itself — that produced a duplicated suffix
+  // in the actual <title> tag (same bug already fixed in Careers.jsx and
+  // BranchPage.jsx). The descriptive part moved into the description arg,
+  // where it belongs. Also added the canonical path, matching the other
+  // pages' calls now that BranchPage/Careers set that precedent.
   usePageMeta(
-    "Contact | Design Factory Group — Architecture & Construction Studio, Siliguri",
-    "Get in touch with Design Factory Group, one of Siliguri's leading architecture and construction studios, about your residential or commercial project across India."
+    "Contact",
+    "Get in touch with Design Factory Group, one of Siliguri's leading architecture and construction studios, about your residential or commercial project across India.",
+    "/contact"
   );
 
   // ContactPage structured data pointing at the same Organization details
@@ -76,7 +85,12 @@ export default function Contact() {
     about: {
       "@type": "Organization",
       name: "Design Factory Group",
-      url: "https://www.designfactorygroup.in/",
+      // FIX: was "https://www.designfactorygroup.in/" — contradicts every
+      // other file (Header.jsx JSON-LD, index.html, and the same .in/.com
+      // conflict already flagged and normalized in BranchPage.jsx).
+      // Normalized to .com per the registry established in Header.jsx —
+      // please confirm .com is correct; reverting is a one-line change.
+      url: "https://www.designfactorygroup.com/",
       email: "dfgroupslg@gmail.com",
       telephone: "+91-98755-95155",
     },

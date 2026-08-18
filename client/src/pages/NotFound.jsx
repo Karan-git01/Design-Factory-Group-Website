@@ -14,22 +14,45 @@ const QUICK_LINKS = [
 ];
 
 export default function NotFound() {
+  // FIX: previously passed "Page Not Found | Design Factory Group" —
+  // usePageMeta already appends " | Design Factory Group" itself, so this
+  // produced a duplicated suffix in the actual <title> tag (same bug
+  // fixed in Careers.jsx, BranchPage.jsx, and Contact.jsx).
   usePageMeta(
-    "Page Not Found | Design Factory Group",
+    "Page Not Found",
     "The page you're looking for doesn't exist or may have moved. Return to the Design Factory Group homepage to keep exploring our architecture and construction work."
   );
 
   // 404s should never be indexed or followed as if they were real content —
   // a client-side route match here doesn't send a real HTTP 404 status, so
-  // this meta tag is what tells crawlers to disregard the page. Reset on
-  // unmount since the <head> is shared across client-side route changes.
+  // this meta tag is what tells crawlers to disregard the page.
+  // FIX: previously always created a brand new <meta name="robots"> node
+  // regardless of whether one already existed (e.g. a default one set in
+  // index.html). If one did, this left two <meta name="robots"> tags in
+  // the document at once with possibly conflicting directives — an
+  // unreliable signal to crawlers on exactly the page where "noindex"
+  // needs to be unambiguous. Now reuses an existing tag if present
+  // (restoring its previous value on unmount) and only creates/removes a
+  // new one if none existed — same pattern usePageMeta.js already uses
+  // for description/canonical.
   useEffect(() => {
-    const meta = document.createElement("meta");
-    meta.name = "robots";
+    let meta = document.querySelector('meta[name="robots"]');
+    const alreadyExisted = Boolean(meta);
+    const previousContent = meta?.content;
+
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.name = "robots";
+      document.head.appendChild(meta);
+    }
     meta.content = "noindex, nofollow";
-    document.head.appendChild(meta);
+
     return () => {
-      document.head.removeChild(meta);
+      if (alreadyExisted) {
+        meta.content = previousContent;
+      } else {
+        document.head.removeChild(meta);
+      }
     };
   }, []);
 

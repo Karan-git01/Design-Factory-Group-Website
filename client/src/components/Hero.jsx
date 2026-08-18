@@ -107,6 +107,20 @@ export default function Hero() {
     }
   };
 
+  // FIX: previously `onBlur={() => setPaused(false)}` fired every time
+  // focus moved from the slider's outer wrapper to ANY nested control
+  // (a chevron or a pagination dot), because blur fires on the wrapper
+  // whenever focus leaves it — including moving to its own children.
+  // That meant autoplay resumed mid-interaction, e.g. the instant a
+  // keyboard user tabbed from the wrapper onto a pagination dot. Checking
+  // `relatedTarget` against the wrapper only resumes autoplay once focus
+  // actually leaves the whole carousel.
+  const handleSliderBlur = (e) => {
+    if (!e.currentTarget.contains(e.relatedTarget)) {
+      setPaused(false);
+    }
+  };
+
   const handleMagnetMove = (e) => {
     const el = magnetRef.current;
     if (!el || reducedMotion || !finePointer) return;
@@ -228,7 +242,12 @@ export default function Hero() {
       {/* Background photo — soft, elegant palm frond shadows cast across
           a light wall (Dubai), well-composed rather than busy/scattered.
           Masked via the .df-bg-mask class above (hidden behind the text
-          column, reveals starting where the text ends — sooner at lg). */}
+          column, reveals starting where the text ends — sooner at lg).
+          NOTE: `-top-50` / `-top-70` below assume a Tailwind config whose
+          spacing scale (or v4's default numeric scale) actually defines
+          50 and 70 — worth confirming against this project's Tailwind
+          version/config, since on a scale that doesn't define those steps
+          the classes are dropped and this offset silently becomes 0. */}
       <div
         aria-hidden
         className="df-bg-mask pointer-events-none absolute inset-x-0 bottom-0 -top-50 md:-top-70 lg:top-0"
@@ -299,9 +318,17 @@ export default function Hero() {
 
             <Reveal delay={250}>
               <div className="mt-6 flex flex-col gap-8 border-t border-border pt-6 sm:mt-8 sm:pt-8">
+                {/* FIX: dropped aria-live="polite". This paragraph updates
+                    every AUTOPLAY_MS (6s) on its own — with aria-live it
+                    interrupted screen reader users with a fresh
+                    announcement every 6 seconds regardless of where their
+                    focus actually was on the page, since autoplay only
+                    pauses once focus/hover/touch lands inside the slider
+                    itself. Manual navigation (arrow keys, dots, chevrons)
+                    already moves focus to a control inside the carousel,
+                    where users can read the caption directly. */}
                 <p
                   key={active}
-                  aria-live="polite"
                   className="df-caption-mark max-w-sm text-muted-foreground"
                   style={
                     reducedMotion
@@ -375,7 +402,7 @@ export default function Hero() {
               onMouseEnter={() => setPaused(true)}
               onMouseLeave={() => setPaused(false)}
               onFocus={() => setPaused(true)}
-              onBlur={() => setPaused(false)}
+              onBlur={handleSliderBlur}
             >
               {SLIDES.map((s, i) => (
                 <img
@@ -437,13 +464,21 @@ export default function Hero() {
               )}
 
               <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between gap-4 sm:bottom-6 sm:left-6 sm:right-6">
-                {/* signage tag — accent rule + label, matches the Why Us caption */}
+                {/* signage tag — accent rule + label, matches the Why Us caption.
+                    FIX: the project name was previously wrapped in an <h2>.
+                    Two problems: (1) <h2> is heading content, not phrasing
+                    content, so nesting it inside the parent <span> was
+                    invalid HTML; (2) same reasoning already applied in
+                    Header.jsx's menu overlay — this is rotating carousel
+                    signage, not a document section, so a heading here
+                    would misrepresent the page's structure to screen
+                    readers and search engines. Swapped for <strong>, which
+                    is valid phrasing content and still conveys that the
+                    project name is the key term in the caption. */}
                 <div className="flex items-center gap-2.5 rounded bg-background px-3.5 py-2 sm:gap-3 sm:px-4 sm:py-2.5">
                   <span className="h-3 w-px shrink-0 bg-copper" />
                   <span className="label-caps text-[10px] leading-none text-foreground sm:text-[11px] md:text-xs">
-                    <h2 className="m-0 inline text-inherit font-inherit">
-                      {slide.project}
-                    </h2>{" "}
+                    <strong className="font-inherit">{slide.project}</strong>{" "}
                     · {slide.location}
                   </span>
                 </div>

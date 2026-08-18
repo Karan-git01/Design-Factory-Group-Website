@@ -209,6 +209,21 @@ export default function Header() {
   // menu, and move focus into the menu's close button when it opens.
   const menuButtonRef = useRef(null);
   const closeButtonRef = useRef(null);
+  const headerRef = useRef(null);
+
+  // FIX: the header becomes aria-hidden/inert whenever it's scrolled
+  // off-screen or covered by the menu overlay (see `headerInert` below).
+  // If a header element still has keyboard focus at that exact moment
+  // (e.g. the hamburger button was just clicked, or a nav link has focus
+  // when the user scrolls), the browser blocks aria-hidden and warns:
+  // "Blocked aria-hidden on an element because its descendant retained
+  // focus." Blurring proactively, synchronously, before the state change
+  // that triggers aria-hidden/inert avoids that entirely.
+  const blurActiveElementWithin = (container) => {
+    if (container && container.contains(document.activeElement)) {
+      document.activeElement.blur();
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -216,6 +231,7 @@ export default function Header() {
       if (currentY <= 80) {
         setHideNav(false);
       } else if (currentY > lastScrollY.current) {
+        blurActiveElementWithin(headerRef.current);
         setHideNav(true);
       } else {
         setHideNav(false);
@@ -285,7 +301,8 @@ export default function Header() {
       />
 
       <header
-        inert={headerInert ? "" : undefined}
+        ref={headerRef}
+        inert={headerInert ? true : undefined}
         aria-hidden={headerInert ? "true" : undefined}
         className={`sticky top-0 z-40 w-full border-b border-border/80 bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70 transition-transform duration-300 ${
           hideNav ? "-translate-y-full" : "translate-y-0"
@@ -315,7 +332,10 @@ export default function Header() {
 
           <button
             ref={menuButtonRef}
-            onClick={() => setMenuOpen(true)}
+            onClick={() => {
+              blurActiveElementWithin(headerRef.current);
+              setMenuOpen(true);
+            }}
             aria-label="Open menu"
             aria-expanded={menuOpen}
             aria-controls="site-menu"
